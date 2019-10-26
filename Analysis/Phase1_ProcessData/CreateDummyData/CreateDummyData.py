@@ -84,6 +84,11 @@ for scenario in this_experiment_id:
     #save ds
     with open(output_path+'dummyData_modelData_'+scenario+'.pickle', 'wb') as handle:
         pickle.dump(ds, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    #save ds to zarr
+    ds.chunk({'lon':10,'lat':10,'time':-1})
+    ds.to_zarr(output_path+'dummyData_modelData_'+scenario+'.zarr')
+    
 
 ########### Create files for "observation" data
 
@@ -93,6 +98,10 @@ activity_id='CMIP'
 ds = initializeDataSet(activity_id,experiment_id,modelname='CAMS-CSM1-0')
 ds['mean'] = ds['mean'] - 0.5
 
-#save ds
+#save ds to pickle
 with open(output_path+'dummyData_observationData'+'.pickle', 'wb') as handle:
     pickle.dump(ds, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+#save ds to zarr
+ds.chunk({'lon':10,'lat':10,'time':-1})
+ds.to_zarr(output_path+'dummyData_observationData'+'.zarr')
