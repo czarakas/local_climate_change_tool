@@ -69,7 +69,7 @@ def initializeDataSet(activity_id,experiment_id,modelname):
     newtimes = reindex_time(startingtimes = thisdata['time'])
     thistime = xr.DataArray(newtimes, coords=[newtimes], dims=['time'])
     thisdata['time'] = thistime
-    thisdata=thisdata.groupby('time.year').mean('time')
+    #thisdata=thisdata.groupby('time.year').mean('time')
     thisdata.load()
     ###### Regrid 
     
@@ -122,7 +122,7 @@ def fillDataSet():
                 thisdata['time'] = xr.DataArray(newtimes, coords=[newtimes], dims=['time'])
                 ###### Regrid this
                 thisdata=RegridModel(thisdata)
-                thisdata=thisdata.groupby('time.year').mean('time')
+                #thisdata=thisdata.groupby('time.year').mean('time')
                 thisdata.load() #if this is commented out, lazily loading and will be dask function call
                 thisval=thisdata[this_variable_id] #.mean(dim=['lat','lon'])
                 ds[modelname]=thisval
