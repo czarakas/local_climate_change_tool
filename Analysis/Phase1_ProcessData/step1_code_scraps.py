@@ -1,51 +1,5 @@
-######### Define Settings for Data Dictionary
-this_experiment_id = ['historical','ssp126', 'ssp370','ssp245','ssp585']
-this_variable_id = 'tas'
-this_table_id = 'Amon'
-this_grid_label='gn'
-
-
-######## Load Packages
-import xarray as xr
-import intake
-import pandas as pd
-import xarray as xr
-import numpy as np
-import matplotlib.pyplot as plt
-import cftime
-import xesmf as xe
-import pickle
-import copy
-import sys
-import util 
-import DirectoryInfo
-
-output_path=DirectoryInfo.dir_processedData
-
-######### Create Data Dictionary
-import CreateDataDict
-[dataset_info, dset_dict, modelnames]=CreateDataDict.createDataDict(this_experiment_id, this_variable_id, this_table_id, this_grid_label)
-
 ######### Create Functions
 ### Create ds_out reference file
-def CreateReferenceGrid(modelname, experiment_id,activity_id):
-    dataset_info_subset = dataset_info[dataset_info['source_id']==modelname]
-    institution_id = list(set(dataset_info_subset['institution_id']))[0]
-    nametag=activity_id+'.'+institution_id+'.'+modelname+'.'+experiment_id+'.'+this_table_id+'.'+this_grid_label
-    thisdata=dset_dict[nametag]
-    ds_out = xr.Dataset({'lat': thisdata['lat'],
-                         'lon': thisdata['lon']})
-    return ds_out
-
-def RegridModel(thisdata,latvariable='lat',lonvariable='lon'):
-    ds_in = xr.Dataset({'lat': thisdata[latvariable],
-                    'lon': thisdata[lonvariable],
-                    'time': thisdata['time'],
-                    this_variable_id: thisdata[this_variable_id]})
-    regridder = xe.Regridder(ds_in, ds_out, 'nearest_s2d')
-    thisdata_regridded = regridder(ds_in)
-    thisdata_regridded.attrs.update(thisdata.attrs)
-    return thisdata_regridded
 
 def reindex_time(startingtimes):
     newtimes = startingtimes.values
@@ -97,13 +51,13 @@ def fillDataSet():
                 # ERROR Different names for lat and lon
                 print('** Skipping '+modelname)
             elif (experiment_id=='historical')and(modelname=='CESM2'):
-                #ValueError: cannot reindex or align along dimension 'time' because the index has duplicate values
+                #ValueError
                 print('** Skipping '+modelname)
             elif (experiment_id=='ssp126')and(modelname=='CanESM5'):
-                #OutOfBoundsDatetime: Cannot decode times from a non-standard calendar, '365_day', using pandas.
+                #OutOfBoundsDatetime
                 print('** Skipping '+modelname)
             elif (experiment_id=='ssp370')and(modelname=='CESM2-WACCM'):
-                #ValueError: cannot reindex or align along dimension 'time' because the index has duplicate values
+                #ValueErrorvalues
                 print('** Skipping '+modelname)
             elif (experiment_id=='ssp245')and ((modelname=='CAMS-CSM1-0')or (modelname=='HadGEM3-GC31-LL')):
                 print('** Skipping '+modelname)
@@ -126,6 +80,8 @@ def fillDataSet():
                 thisdata.load() #if this is commented out, lazily loading and will be dask function call
                 thisval=thisdata[this_variable_id] #.mean(dim=['lat','lon'])
                 ds[modelname]=thisval
+        else:
+            continue
     return ds,modelnames_toplot
 
 ########### Main Workflow
@@ -139,7 +95,6 @@ for scenario in this_experiment_id:
     else:
         activity_id='ScenarioMIP'
     ds= initializeDataSet(activity_id,experiment_id,modelname='CAMS-CSM1-0')
-    ds_out = CreateReferenceGrid(modelname='CAMS-CSM1-0', activity_id = 'CMIP', experiment_id='historical')
     
     # read data from all other models into xarray dataset
     [ds,modelnames_toplot] = fillDataSet()

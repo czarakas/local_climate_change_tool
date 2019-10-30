@@ -1,0 +1,1 @@
+This file will be populated with intermediate processed data files when step1_process_climate_model_data.py is run. However, these files are too big to upload to Github.
