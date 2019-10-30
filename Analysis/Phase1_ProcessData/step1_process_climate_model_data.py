@@ -1,15 +1,19 @@
 """
-This module processes raw CMIP6 output to create files with consistent dimensions for all models
+This module processes raw CMIP6 output to create files with consistent dimensions for all models.
+
+Running this script for all models with just averaging over ensembles, regridding, and saving takes
+X mins.
 """
 
-######## Load Packages
+################## Load Packages ######################################## 
+import time
 import xarray as xr
 import xesmf as xe
 
 import analysis_parameters
 import create_data_dict
 
-######### Read in Settings for Data Dictionary
+######### Read in Settings for Data Dictionary#############################
 THIS_EXPERIMENT_ID = analysis_parameters.EXPERIMENT_LIST
 THIS_VARIABLE_ID = analysis_parameters.VARIABLE_ID
 THIS_TABLE_ID = analysis_parameters.TABLE_ID
@@ -17,13 +21,15 @@ THIS_GRID_LABEL = analysis_parameters.GRID_LABEL
 OUTPUT_PATH = analysis_parameters.DIR_PROCESSED_DATA
 DIR_INTERMEDIATE = '/home/jovyan/local-climate-data-tool/Data/IntermediateData/'
 
-######### Create Data Dictionary to test
+######### Create Data Dictionary to test#################################### 
 [DATASET_INFO,
  DSET_DICT,
  MODELNAMES] = create_data_dict.create_data_dict(THIS_EXPERIMENT_ID,
                                                  THIS_VARIABLE_ID,
                                                  THIS_TABLE_ID,
                                                  THIS_GRID_LABEL)
+
+######### Create functions for analysis #################################### 
 
 def create_reference_grid(modelname, experiment_id, activity_id):
     """Creates reference grid to which all model output will be regridded"""
@@ -83,19 +89,38 @@ def save_dataset(ds, fname):
     ds.to_zarr(DIR_INTERMEDIATE+fname+'.zarr')
     
 
-###############################
+################### Main Workflow ##########################################
 
 FINAL_GRID = create_reference_grid(modelname='CAMS-CSM1-0',
                                    activity_id='CMIP',
                                    experiment_id='historical')
+KEY_LIST = [key for key in DSET_DICT.keys()]
 
-for key in DSET_DICT.keys():
+start_time = time.time()
+for key in KEY_LIST:
     # Generate new filename for intermediate processed data
     fname = generate_new_filename(key)
     print(fname)
+    
+    # Check if one of cases that throws exceptions (to investigate later)
+    if fname in ('tas_historical_CESM2', 
+                 'tas_historical_MCM-UA-1-0',
+                 'tas_ssp126_CanESM5',
+                 'tas_ssp245_CAMS-CSM1-0',
+                 'tas_ssp245_HadGEM3-GC31-LL',
+                 'tas_ssp370_CESM2-WACCM',
+                 'tas_ssp370_MPI-ESM1-2-HR',
+                 'tas_ssp585_CAMS-CSM1-0',
+                 'tas_ssp585_CanESM5'
+                ):
+        print('******** skipping ************')
+    else:
+        # Process data
+        ds_processed = process_dataset(key)
 
-    # Process data
-    ds_processed = process_dataset(key)
+        # Save processed data
+        save_dataset(ds_processed, fname)
+    elapsed_time = time.time() - start_time
+    print(elapsed_time)
 
-    # Save processed data
-    save_dataset(ds_processed, fname)
+# Print how much time has passed in going through all the files
