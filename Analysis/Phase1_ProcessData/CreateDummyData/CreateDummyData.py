@@ -9,8 +9,10 @@ import matplotlib.pyplot as plt
 import cftime
 import pickle
 
+dir_analysis = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData'
+sys.path.insert(0, dir_analysis)
 import util
-import DirectoryInfo
+import analysis_parameters
 
 ######### Create Functions
 def reindex_time(startingtimes):
@@ -59,11 +61,11 @@ this_experiment_id = ['historical', 'ssp126', 'ssp370', 'ssp245', 'ssp585']
 this_variable_id = 'tas'
 this_table_id = 'Amon'
 this_grid_label = 'gn'
-output_path = DirectoryInfo.dir_dummyData
+output_path = analysis_parameters.DIR_DUMMY_DATA
 
 ######### Create Data Dictionary
-import CreateDataDict
-[dataset_info, dset_dict, modelnames] = CreateDataDict.createDataDict(this_experiment_id, this_variable_id,
+import create_data_dict
+[dataset_info, dset_dict, modelnames] = create_data_dict.create_data_dict(this_experiment_id, this_variable_id,
                                                                     this_table_id, this_grid_label)
 
 ########### Create files for model data
