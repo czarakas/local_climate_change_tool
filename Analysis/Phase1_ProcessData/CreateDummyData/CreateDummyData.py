@@ -96,7 +96,7 @@ experiment_id = 'historical'
 print('-------Creating observational data '+experiment_id+' file-----------')
 activity_id = 'CMIP'
 DS = initializeDataSet(activity_id, experiment_id, modelname='CAMS-CSM1-0')
-DS['mean'] = ds['mean'] - 0.5
+DS['mean'] = DS['mean'] - 0.5
 
 #save ds to pickle
 with open(output_path+'dummyData_observationData'+'.pickle', 'wb') as handle:
