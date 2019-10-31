@@ -11,6 +11,7 @@ this format makes it not work to overwrite existing files.
 ####################### Load Packages ########################################
 
 import time
+import cftime
 import xarray as xr
 import xesmf as xe
 
@@ -52,6 +53,16 @@ def create_reference_grid(modelname, experiment_id, activity_id):
                          'lon': thisdata['lon']})
     return ds_out
 
+def reindex_time(startingtimes):
+    """Reindexes time series to proleptic Gregorian calendar type"""
+    newtimes = startingtimes.values
+    for i in range(0, len(startingtimes)):
+        yr = int(str(startingtimes.values[i])[0:4])
+        mon = int(str(startingtimes.values[i])[5:7])
+        newdate = cftime.DatetimeProlepticGregorian(yr, mon, 15)
+        newtimes[i] = newdate
+    return newtimes
+
 def regrid_model(ds, reference_grid, latvariable='lat', lonvariable='lon'):
     """Regrids model output to a reference grid"""
     data_series = ds[THIS_VARIABLE_ID]
@@ -77,6 +88,11 @@ def process_dataset(this_key):
     # Average over all ensemble members
     ds = ds_original.mean(dim=['member_id'])
 
+    # Reindex time to consistent time datatype
+    ds = xr.decode_cf(ds)
+    newtimes = reindex_time(startingtimes=ds['time'])
+    ds['time'] = xr.DataArray(newtimes, coords=[newtimes], dims=['time'])
+
     # Rename latitude and longitude coordinate names if necessary
     if 'latitude' in ds.dims:
         ds = ds.rename({'longitude': 'lon', 'latitude': 'lat'})
@@ -85,9 +101,6 @@ def process_dataset(this_key):
 
     # Regrid dataset to reference grid
     dataset_regridded = regrid_model(ds, FINAL_GRID)
-
-    # Reindex time to consistent time datatype
-    # NEED TO DO!
 
     return dataset_regridded
 
