@@ -45,8 +45,7 @@ def create_reference_grid(modelname, experiment_id, activity_id):
     """Creates reference grid to which all model output will be regridded"""
     dataset_info_subset = DATASET_INFO[DATASET_INFO['source_id'] == modelname]
     institution_id = list(set(dataset_info_subset['institution_id']))[0]
-    nametag = activity_id+'.'+institution_id+\
-              '.'+modelname+'.'+experiment_id+\
+    nametag = activity_id+'.'+institution_id+'.'+modelname+'.'+experiment_id+\
               '.'+THIS_TABLE_ID+'.'+THIS_GRID_LABEL
     thisdata = DSET_DICT[nametag]
     ds_out = xr.Dataset({'lat': thisdata['lat'],
@@ -76,11 +75,12 @@ def regrid_model(ds, reference_grid, latvariable='lat', lonvariable='lon'):
     return data_series_regridded
 
 def process_dataset(this_key):
-    """Processes each dataset in dictionary
+    """ Processes each dataset in dictionary
     This processing involves:
         (1) Averaging over all ensemble members (member ids)
-        (2) Regridding to reference dataset
-        (3) Getting into consistent time format (NOT IMPLEMENTED YET)
+        (2) Getting into consistent time format
+        (3) Renaming coordinates if necessary
+        (4) Regridding to reference dataset
     """
     # Get original dataset from dictionary
     ds_original = DSET_DICT[this_key]
@@ -124,11 +124,9 @@ FINAL_GRID = create_reference_grid(modelname='CAMS-CSM1-0',
                                    activity_id='CMIP',
                                    experiment_id='historical')
 
-START_TIME = time.time()
 for key in DSET_DICT.keys():
     # Generate new filename for intermediate processed data
     fname = generate_new_filename(key)
-    print(fname)
 
     # Check if one of cases that throws exceptions (to investigate later)
     if fname in ('tas_historical_CESM2',
@@ -147,6 +145,3 @@ for key in DSET_DICT.keys():
 
         # Save processed data
         save_dataset(ds_processed, fname)
-
-# Print how much time has passed in going through all the files
-print(time.time() - START_TIME)
