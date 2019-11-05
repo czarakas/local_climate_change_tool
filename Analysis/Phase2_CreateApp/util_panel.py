@@ -3,7 +3,7 @@ util_panel.py
 Sami Turbeville
 CSE 583 Project: CMIP 6 Local Climate Tool
 
-Module of useful functions for creating panel
+Module of useful functions for creating panel.
 '''
 
 import pandas as pd
