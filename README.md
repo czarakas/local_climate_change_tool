@@ -5,7 +5,7 @@ described below. The motivation for this tool is to make climate data more
 accessible to people with little to no computing knowledge or background in 
 atmospheric science or climate studies. 
 
-## SSPs
+### SSPs
 Used the Tier 1 - 21st century scenarios listed below ranging from highest to lowest
 emission scenarios.
 
@@ -16,9 +16,9 @@ emission scenarios.
 1. SSP126: low emissions, future goals
 
 *See [here](https://doi.org/10.5194/gmd-9-1937-2016) for a more detailed explanation.*
-## Historical
+### Historical
 1. CMIP6 historical simulation
-1. historical data from Berkeley Earth Surface Temperatures (BEST)
+1. historical data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
 
 ## User Guide
 TODO: how to install software and use it. 
@@ -31,18 +31,21 @@ This section describes the set up of the directories in this repository.
 - **Analysis**: comprises all of the python scripts and notebooks to analyze and
             generate the panel application for interactive visualization of 
             the data.
-            - Examples: 
-            - Phase1_ProcessData: files to process the data into a format that
-                        readable for input into the panel application
-            - Phase2_CreateApp: files to generate the panel application that 
+
+> Examples: TODO
+  
+> Phase1_ProcessData: files to process the data into a format that
+  readable for input into the panel application
+  
+> Phase2_CreateApp: files to generate the panel application that 
                         displays the interactive dash board for user interaction.
+                        
 - **Data**: holds the files containing the data from CMIP6 and BEST. 
 - **environments**: contains .yml files for you to install the environment used for
             this project.
             
-            ```
-            conda env create -f OceanPangeoEnvironment.yml
-            ```
+    conda env create -f OceanPangeoEnvironment.yml
+           
 
 ## Acknowledgements
 Cities and country lists corresponding to latitude and longitude are 
