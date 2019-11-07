@@ -32,12 +32,10 @@ This section describes the set up of the directories in this repository.
             generate the panel application for interactive visualization of 
             the data.
 
-> Examples: TODO
-  
-> Phase1_ProcessData: files to process the data into a format that
-  readable for input into the panel application
-  
-> Phase2_CreateApp: files to generate the panel application that 
+1. Examples: TODO
+1. Phase1_ProcessData: files to process the data into a format that
+    readable for input into the panel application
+1. Phase2_CreateApp: files to generate the panel application that 
                         displays the interactive dash board for user interaction.
                         
 - **Data**: holds the files containing the data from CMIP6 and BEST. 
@@ -45,6 +43,9 @@ This section describes the set up of the directories in this repository.
             this project.
             
     conda env create -f OceanPangeoEnvironment.yml
+    
+- **docs**: contains documentation such as functional and component specification
+            and documents required for cse583 class project. 
            
 
 ## Acknowledgements
