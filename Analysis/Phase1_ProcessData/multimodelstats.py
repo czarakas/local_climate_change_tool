@@ -6,10 +6,9 @@ This version selects a location first (tested) or takes the global mean (not yet
 tested!) before computing multimodel stats... it took WAY too much memory to
 do multimodel mean of all individual points and kept crashing kernel after 4...
 
-*** NOT YET TESTED FOR GLOBAL MEANS *** 
+*** STILL IN PROGRESS: see TODOs below *** 
 
 Functions:
-    compute_global_mean, average data over the globe
     multi_model_mean, compute multimodel mean
     multi_model_min, compute multimodel minimum
     multi_model_max, compute multimodel maximum
@@ -20,6 +19,8 @@ Author: Jacqueline Nugent
 Last Modified: November 14, 2019
 """
 
+### TODO: fix check for consistent times! The first time is bad for one of the 
+### global models, so that won't work... have to do something different
 ### TODO: drop print statements after testing is complete?
 
 import warnings
@@ -27,16 +28,7 @@ import xarray as xr
 import numpy as np
 
 
-def compute_global_mean(model, varname):
-    """ Average the data globally. """
-    ntime = len(model.time)
-    arr_mean = np.empty(ntime)
-    arr_mean[:] = model[varname].mean(dim=['lat', 'lon'], skipna=True)
-
-    return arr_mean
-
-
-def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
+def multi_model_mean(datasets, file_names, is_global_mean=False, coords=None):
     """
     Compute the mean value of one variable, averaged over the globe or
     at each point, across the given models for one scenario. Prints to the
@@ -50,7 +42,7 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
         file_names (list of strings), list of the names of the zarr files
                         containing the Datasets in the form
                         "VARIABLE_SCENARIO_MODEL.zarr"
-        global_mean (Boolean), True to return the global multimodel mean;
+        is_global_mean (Boolean), True to return the global multimodel mean;
                         False (Default) to compute the multimodel mean at each
                         lat-lon point
         coords (list of floats), the coordinates in the order [lat, lon] for
@@ -64,7 +56,7 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
     Warnings:
         Warns user if data for a model will be left out of the calculation
         because it does not have the correct number of time steps for this
-        scenario.
+        scenario (compared to the first model).
     """
     nmodels = len(datasets)
     times = datasets[0].time
@@ -88,11 +80,11 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
             nskip += 1
             continue
         
-        # compute global mean at each time step:
-        if global_mean:
-            print('Computing global mean of {var} for {name}...'.format(
+        # select global mean at each time step:
+        if is_global_mean:
+            print('Selecting global mean of {var} for {name}...'.format(
                 var=varname, name=model_name))
-            model_means[i, :] = compute_global_mean(model, varname)
+            model_means[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
@@ -117,7 +109,7 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
     return multi_mean
 
 
-def multi_model_min(datasets, file_names, global_mean=False, coords=None):
+def multi_model_min(datasets, file_names, is_global_mean=False, coords=None):
     """
     Compute the minimum value of one variable, averaged over the globe or
     at each point, across the given models for one scenario. Prints to the
@@ -131,7 +123,7 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
         file_names (list of strings), list of the names of the zarr files
                         containing the Datasets in the form
                         "VARIABLE_SCENARIO_MODEL.zarr"
-        global_mean (Boolean), True to return the global multimodel minimum;
+        is_global_mean (Boolean), True to return the global multimodel minimum;
                         False (Default) to compute the multimodel minimum at
                         each lat-lon point
         coords (list of floats), the coordinates in the order [lat, lon] for
@@ -145,7 +137,7 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
     Warnings:
         Warns user if data for a model will be left out of the calculation
         because it does not have the correct number of time steps for this
-        scenario.
+        scenario (compared to the first model).
     """
     nmodels = len(datasets)
     times = datasets[0].time
@@ -169,11 +161,11 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
             nskip += 1
             continue
         
-        # compute global mean at each time step:
-        if global_mean:
-            print('Computing global mean of {var} for {name}...'.format(
+        # select global mean at each time step:
+        if is_global_mean:
+            print('Selecting global mean of {var} for {name}...'.format(
                 var=varname, name=model_name))
-            model_mins[i, :] = compute_global_mean(model, varname)
+            model_mins[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
@@ -198,7 +190,7 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
     return multi_min
 
 
-def multi_model_max(datasets, file_names, global_mean=False, coords=None):
+def multi_model_max(datasets, file_names, is_global_mean=False, coords=None):
     """
     Compute the maximum value of one variable, averaged over the globe or
     at each point, of one variable across the given models for one
@@ -212,7 +204,7 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
         file_names (list of strings), list of the names of the zarr files
                         containing the Datasets in the form
                         "VARIABLE_SCENARIO_MODEL.zarr"
-        global_mean (Boolean), True to return the global multimodel maximum;
+        is_global_mean (Boolean), True to return the global multimodel maximum;
                         False (Default) to compute the multimodel maximum at
                         each lat-lon point
         coords (list of floats), the coordinates in the order [lat, lon] for
@@ -226,7 +218,7 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
     Warnings:
         Warns user if data for a model will be left out of the calculation
         because it does not have the correct number of time steps for this
-        scenario.
+        scenario (compared to the first model).
     """
     nmodels = len(datasets)
     times = datasets[0].time
@@ -250,11 +242,11 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
             nskip += 1
             continue
         
-        # compute global mean at each time step:
-        if global_mean:
-            print('Computing global mean of {var} for {name}...'.format(
+        # select global mean at each time step:
+        if is_global_mean:
+            print('Selecting global mean of {var} for {name}...'.format(
                 var=varname, name=model_name))
-            model_maxes[i, :] = compute_global_mean(model, varname)
+            model_maxes[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
@@ -279,7 +271,7 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
     return multi_max
 
 
-def multi_model_std(datasets, file_names, global_mean=False, coords=None):
+def multi_model_std(datasets, file_names, is_global_mean=False, coords=None):
     """
     Compute the standard deviation of one variable, averaged over the globe or
     at each point, across the given models for one scenario. Prints to the
@@ -293,7 +285,7 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
         file_names (list of strings), list of the names of the zarr files
                         containing the Datasets in the form
                         "VARIABLE_SCENARIO_MODEL.zarr"
-        global_mean (Boolean), True to return the global multimodel standard
+        is_global_mean (Boolean), True to return the global multimodel standard
                         deviation; False (Default) to compute the multimodel
                         standard deviation at each lat-lon point
         coords (list of floats), the coordinates in the order [lat, lon] for
@@ -307,7 +299,7 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
     Warnings:
         Warns user if data for a model will be left out of the calculation
         because it does not have the correct number of time steps for this
-        scenario.
+        scenario (compared to the first model).
     """
     nmodels = len(datasets)
     times = datasets[0].time
@@ -331,11 +323,11 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
             nskip += 1
             continue
         
-        # compute global mean at each time step:
-        if global_mean:
-            print('Computing global mean of {var} for {name}...'.format(
+        # select global mean at each time step:
+        if is_global_mean:
+            print('Selecting global mean of {var} for {name}...'.format(
                 var=varname, name=model_name))
-            model_stdevs[i, :] = compute_global_mean(model, varname)
+            model_stdevs[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
@@ -360,7 +352,7 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
     return multi_std
 
 
-def export_stats(datasets, file_names, global_mean=False, coords=None):
+def export_stats(datasets, file_names, is_global_mean=False, coords=None):
     """
     Main function to run for module. Exports the multimodel statistics as a
     Dataset with dimension time and variables multi_mean, multi_min, multi_max,
@@ -374,7 +366,7 @@ def export_stats(datasets, file_names, global_mean=False, coords=None):
         file_names (list of strings), list of the names of the zarr files
                         containing the Datasets in the form
                         "VARIABLE_SCENARIO_MODEL.zarr"
-        global_mean (Boolean), True to return the global multimodel standard
+        is_global_mean (Boolean), True to return the global multimodel standard
                         deviation; False (Default) to compute the multimodel
                         standard deviation at each lat-lon point
         coords (list of floats), the coordinates in the order [lat, lon] for
@@ -386,16 +378,16 @@ def export_stats(datasets, file_names, global_mean=False, coords=None):
                         of this variable for this scenario
 
     Exceptions:
-        Raises exceptions if global_mean=False and coords=None,
-        or global_mean=False and coords does not have length 2
+        Raises exceptions if is_global_mean=False and coords=None,
+        or is_global_mean=False and coords does not have length 2
         
     Warnings:
-        Warns user if argument coords is provided when global_mean=True
+        Warns user if argument coords is provided when is_global_mean=True
     """
-    ### check that arguments for global_mean and coords are compatible
-    if global_mean and coords is not None:
+    ### check that arguments for is_global_mean and coords are compatible
+    if is_global_mean and coords is not None:
         warnings.warn('Argument coords will be ignored for global mean.')
-    if not global_mean:
+    if not is_global_mean:
         if coords is None:
             raise Exception('Missing argument coords for a single location.')
         elif len(coords) != 2:
@@ -406,10 +398,10 @@ def export_stats(datasets, file_names, global_mean=False, coords=None):
     this_scenario = file_names[0].split('_')[1]
     
     ### calculate statistics
-    mm_mean = multi_model_mean(datasets, file_names, global_mean, coords)
-    mm_min = multi_model_min(datasets, file_names, global_mean, coords)
-    mm_max = multi_model_max(datasets, file_names, global_mean, coords)
-    mm_std = multi_model_std(datasets, file_names, global_mean, coords)
+    mm_mean = multi_model_mean(datasets, file_names, is_global_mean, coords)
+    mm_min = multi_model_min(datasets, file_names, is_global_mean, coords)
+    mm_max = multi_model_max(datasets, file_names, is_global_mean, coords)
+    mm_std = multi_model_std(datasets, file_names, is_global_mean, coords)
     
     ### make dictionary for the data
     varnames = ['multi_mean', 'multi_min', 'multi_max', 'multi_std']
