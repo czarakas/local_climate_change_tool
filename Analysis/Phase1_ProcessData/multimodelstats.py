@@ -1,336 +1,416 @@
 """
-Module to compute multimodel statistics. Assumes all models have the same
-time coordinates (length and value).
+Module to compute multimodel statistics (ignoring NaN values) and generate an xarray containing the statistics as variables.
 
-***CURRENTLY UNDERGOING TESTING***
+*** IN PROGRESS: see TODOs below *** 
 
 Functions:
-    area_mean, average model data over some location
-    to_xarray, export the returned numpy arrays of stats to an xarray
-    mm_mean, compute multimodel mean
-    mm_min, compute multimodel minimum
-    mm_max, compute multimodel maximum
-    mm_stdev, compute multimodel standard deviation
+    compute_global_mean, average data over the globe
+    multi_model_mean, compute multimodel mean
+    multi_model_min, compute multimodel minimum
+    multi_model_max, compute multimodel maximum
+    multi_model_stdev, compute multimodel standard deviation
+    export_stats, export dataset statistics into single Dataset
 
 Author: Jacqueline Nugent
-Last Modified: November 12, 2019
+Last Modified: November 14, 2019
 """
 
-### TODO: need to fix how variable & model names are read in...
+### TODO: drop print statements after testing is complete?
+### TODO: best place to put the check for consistent time steps? and the warning?
+### TODO: ^^once you figure that out, count how many models you skip and adjust that in the multimodel statements (e.g. 'Computing multimodel xxx...')
 
 import warnings
 import xarray as xr
 import numpy as np
 
 
-def area_mean(dataset, is_global=True, loc=None):
-    """
-    Average the data globally or across a given location for one variable,
-    in some model for some scenario. Prints to the user what is being done.
-
-    Args:
-        datasets (DataSet), the preprocessed CMIP6 model data for one
-                        model in some scenario for some variable; assumes
-                        dimensions of latitude, longitude, and time (monthly)
-        is_global (Boolean), True (default) to return the global mean;
-                        False to compute the mean for a given location
-        loc (list of floats), a list of the coordinate bounds of the location
-                        over which the area mean will be computed; must
-                        be in the form [minlon, maxlon, minlat, maxlat];
-                        None (default) if global mean is requested
-
-    Returns:
-        ar_mean (1D array), the time series of global or location means for
-                        the dataset
-
-    Exceptions:
-        MissingLocation, raised if is_global=False but loc=None or loc is not
-                        a list of length 4
-
-    Warnings:
-        LocationIgnored, given if is_global=True but loc is not None
-    """
-    #### compute the mean across the location or globe for each model
-    model = dataset
-    model_name = str(model.modelname.values)
+def compute_global_mean(model, varname):
+    """ Average the data globally. """
     ntime = len(model.time)
-    ar_mean = np.empty(ntime)
+    arr_mean = np.empty(ntime)
+    arr_mean[:] = model[varname].mean(dim=['lat', 'lon'], skipna=True)
 
-    ### TODO: get variable name
-    #varname = model.
-    varname = 'TODO'
-    print('Computing area average for {var}'.format(var=varname))
-
-    ### average the data over the lat-lon range you need:###
-    # global mean, no location given:
-    if is_global:
-
-        # warn user if a location was provided anyway
-        if loc is not None:
-            print('\n')
-            warnings.warn("Argument loc provided for global mean."
-                          " Location input will be ignored and global mean"
-                          " will be computed.")
-        print('Averaging {var} over the globe for {name}\n'.format(
-            var=varname, name=model_name))
-        ar_mean[:] = model.mean(dim=['lat', 'lon'])
-
-    # specific location:
-    else:
-        # raise an exception if location information was not provided
-        # or is in the incorrect format
-        if loc is None or len(loc) != 4:
-            raise Exception('Must enter location in the form [minlon, maxlon,'
-                            'minlat, maxlat]!')
-
-        lonmin = loc[0]
-        lonmax = loc[1]
-        latmin = loc[2]
-        latmax = loc[3]
-
-        print(('Averaging {var} over lat {ltmn}-{ltmx}, lon {lnmn}-{lnmx} for'
-               ' {name}').format(var=varname, ltmn=latmin, ltmx=latmax,
-                                 lnmn=lonmin, lnmx=lonmax, name=model_name))
-        ar_mean[:] = model.sel(lat=slice(latmin, latmax),
-                               lon=slice(lonmin,
-                                         lonmax)).mean(dim=['lat', 'lon'])
-
-    return ar_mean
+    return arr_mean
 
 
-def to_xarray(stats, times):
-    """
-    Converts the numpy array output from one of the stats functions in this
-    module to an xarray with dimension time.
-
-    Args:
-        stats (1D array), time series of the multimodel statistic
-        times (1D array), array of the values for the time coordinates
-
-    Returns:
-        data (1D xarray), time series of the multimodel statistics as
-                        an xarray with dimension time
-    """
-    data = xr.DataArray(stats, coords={'time': times}, dims=['time'])
-
-    return data
-
-
-def mm_mean(datasets, is_global=True, loc=None, xarray_out=False):
+def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
     """
     Compute the mean value of one variable, averaged over the globe or
-    a given location, across the given models for one scenario. Prints to the
+    at each point, across the given models for one scenario. Prints to the
     user what is being done.
 
     Args:
-        datasets (list of DataSets), the preprocessed CMIP6 model data with
-                        separate DataSets for each model in some scenario for
-                        some variable; assumes dimensions of latitude,
+        datasets (list of Datasets), the preprocessed CMIP6 model data with
+                        separate Datasets for each model in this scenario for
+                        this variable; assumes dimensions of latitude,
                         longitude, and time (monthly)
-        is_global (Boolean), True (default) to return the global multimodel
-                        mean; False to compute the multimodel mean for a given
-                        location
-        loc (list of floats), a list of the coordinate bounds of the location
-                        over which the multimodel mean will be computed; must
-                        be in the form [minlon, maxlon, minlat, maxlat];
-                        None (default) if global mean is requested
-        xarray_out (Boolean), True to return the multimean statistic time
-                        series as an xarray with dimension time;
-                        False (default) to return it as a 1D numpy array
+        file_names (list of strings), list of the names of the zarr files
+                        containing the Datasets in the form
+                        "VARIABLE_SCENARIO_MODEL.zarr"
+        global_mean (Boolean), True to return the global multimodel mean;
+                        False (Default) to compute the multimodel mean at each
+                        lat-lon point
+        coords (list of floats), the coordinates in the order [lat, lon] for
+                        the location to select if not computing the multimodel
+                        global mean; must have length 2
 
     Returns:
-        multi_mean (1D array), the time series of multi-model mean of some
-                        variable for some scenario; numpy array if
-                        xarray_out=False; xarray if xarray_out=True
+        multi_mean (DataArray), array of multi-model mean of this variable for
+                        this scenario with dimension time
+
+    Warnings:
+        Warns user if data for a model will be left out of the calculation
+        because it does not have the correct number of time steps for this
+        scenario.
     """
     nmodels = len(datasets)
-    ntime = len(datasets[0].time)
-    ### TODO: get variable name
-    #varname = model.
-    varname = 'TODO'
-    print('Computing model area means for {var}\n'.format(var=varname))
+    nlat = len(datasets[0].lat)
+    nlon = len(datasets[0].lon)
+    times = datasets[0].time
+    ntime = len(times)
+    varname = file_names[0].split("_")[0]
+    
     model_means = np.empty((nmodels, ntime))
 
-    #### compute the mean across the location or globe for each model
+    ### loop through models and either calculate global mean or select coords
     for i in range(nmodels):
         model = datasets[i]
-        model_name = str(model.modelname.values)
-        print('Model {num}: {name}'.format(num=int(i+1), name=model_name))
-        model_means[i, :] = area_mean(model, is_global, loc)
+        model_name = file_names[i].split("_")[2]
+        
+        # check that it has the same number of time steps as other models
+        # in this scenario; skip model if not and warn the user
+        if len(model.time) != ntime:
+            warnings.warn(('Skipping model {name}: inconsistent number of' +
+                           ' time steps for this ' +
+                           'scenario').format(name=model_name))
+            continue
+        
+        # compute global mean at each time step:
+        if global_mean:
+            print('Computing global mean of {var} for {name}...'.format(
+                var=varname, name=model_name))
+            model_means[i, :] = compute_global_mean(model, varname)
+        
+        # select lat/lon point at each time step:
+        else:
+            city_lat = coords[0]
+            city_lon = coords[1]
+            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            model_means[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
+                                          method='nearest')
 
-    ### multimodel mean:###
-    print('Computing multimodel mean for {num} models\n'.format(num=nmodels))
-    multi_mean = np.nanmean(model_means, axis=0)
-
-    ### convert to an xarray if requested
-    if xarray_out:
-        multi_mean = to_xarray(multi_mean, datasets[0].time.values)
-
+    ### compute multimodel mean
+    print('Computing multimodel mean of {var} for {num} models...'.format(
+        var=varname, num=nmodels))
+    multi_mean_calc = np.nanmean(model_means, axis=0)
+    
+    ### create the DataArray
+    multi_mean = xr.DataArray(data=multi_mean_calc, coords={'time': times}, dims='time')
+    
+    print('Returned multimodel mean.\n')
+    
     return multi_mean
 
 
-def mm_min(datasets, is_global=True, loc=None, xarray_out=False):
+def multi_model_min(datasets, file_names, global_mean=False, coords=None):
     """
-    Compute the minimum value of one variable, globally or over
-    a given location, across the given models for one scenario. Prints to the
+    Compute the minimum value of one variable, averaged over the globe or
+    at each point, across the given models for one scenario. Prints to the
     user what is being done.
 
     Args:
-        datasets (list of DataSets), the preprocessed CMIP6 model data with
-                        separate DataSets for each model in some scenario for
-                        some variable; assumes dimensions of latitude,
+        datasets (list of Datasets), the preprocessed CMIP6 model data with
+                        separate Datasets for each model in this scenario for
+                        this variable; assumes dimensions of latitude,
                         longitude, and time (monthly)
-        is_global (Boolean), True (default) to return the global multimodel
-                        minimum; False to compute the multimodel minimum for a
-                        given location
-        loc (list of floats), a list of the coordinate bounds of the location
-                        over which the multimodel minimum will be computed;
-                        must be in the form [minlon, maxlon, minlat, maxlat];
-                        None (default) if global minimum is requested
-        xarray_out (Boolean), True to return the multimean statistic time
-                        series as an xarray with dimension time;
-                        False (default) to return it as a 1D numpy array
+        file_names (list of strings), list of the names of the zarr files
+                        containing the Datasets in the form
+                        "VARIABLE_SCENARIO_MODEL.zarr"
+        global_mean (Boolean), True to return the global multimodel minimum;
+                        False (Default) to compute the multimodel minimum at
+                        each lat-lon point
+        coords (list of floats), the coordinates in the order [lat, lon] for
+                        the location to select if not computing the multimodel
+                        global mean; must have length 2
 
     Returns:
-        multi_min (1D array), the time series of multi-model minimum of some
-                        variable for some scenario; numpy array if
-                        xarray_out=False; xarray if xarray_out=True
-    """
-    multi_min = 0.0
-    nmodels = len(datasets)
-    ntime = len(datasets[0].time)
-    ### TODO: get variable name
-    #varname = model.
-    varname = 'TODO'
-    print('Computing model area means for {var}\n'.format(var=varname))
-    model_means = np.empty((nmodels, ntime))
+        multi_min (DataArray), array of multi-model minimum of this variable
+                        for this scenario with dimension time
 
-    #### compute the mean across the location or globe for each model
+    Warnings:
+        Warns user if data for a model will be left out of the calculation
+        because it does not have the correct number of time steps for this
+        scenario.
+    """
+    nmodels = len(datasets)
+    nlat = len(datasets[0].lat)
+    nlon = len(datasets[0].lon)
+    times = datasets[0].time
+    ntime = len(times)
+    varname = file_names[0].split("_")[0]
+    
+    model_mins = np.empty((nmodels, ntime))
+    
+    ### loop through models and either calculate global mean or select coords
     for i in range(nmodels):
         model = datasets[i]
-        model_name = str(model.modelname.values)
-        print('Model {num}: {name}'.format(num=int(i+1), name=model_name))
-        model_means[i, :] = area_mean(model, is_global, loc)
+        model_name = file_names[i].split("_")[2]
+        
+        # check that it has the same number of time steps as other models
+        # in this scenario; skip model if not and warn the user
+        if len(model.time) != ntime:
+            warnings.warn(('Skipping model {name}: inconsistent number of' +
+                           ' time steps for this ' +
+                           'scenario').format(name=model_name))
+            continue
+        
+        # compute global mean at each time step:
+        if global_mean:
+            print('Computing global mean of {var} for {name}...'.format(
+                var=varname, name=model_name))
+            model_mins[i, :] = compute_global_mean(model, varname)
+        
+        # select lat/lon point at each time step:
+        else:
+            city_lat = coords[0]
+            city_lon = coords[1]
+            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            model_mins[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
+                                          method='nearest')
 
-    ### multimodel minimum:###
-    print('Computing multimodel minimum for {num} models\n'.format(
-        num=nmodels))
-    multi_min = np.min(model_means, axis=0)
+    ### compute multimodel minimum
+    print('Computing multimodel minimum of {var} for {num} models...'.format(
+        var=varname, num=nmodels))
+    multi_min_calc = np.nanmin(model_mins, axis=0)
+    
+    ### create the DataArray
+    multi_min = xr.DataArray(data=multi_min_calc, coords={'time': times}, dims='time')
 
-    ### convert to an xarray if requested
-    if xarray_out:
-        multi_min = to_xarray(multi_min, datasets[0].time.values)
-
+    print('Returned multimodel minimum.\n')
+    
     return multi_min
 
 
-def mm_max(datasets, is_global=True, loc=None, xarray_out=False):
+def multi_model_max(datasets, file_names, global_mean=False, coords=None):
     """
-    Compute the maximum value of one variable, globally or over
-    a given location, of one variable across the given models for one
+    Compute the maximum value of one variable, averaged over the globe or
+    at each point, of one variable across the given models for one
     scenario. Prints to the user what is being done.
 
     Args:
-        datasets (list of DataSets), the preprocessed CMIP6 model data with
-                        separate DataSets for each model in some scenario for
-                        some variable; assumes dimensions of latitude,
+        datasets (list of Datasets), the preprocessed CMIP6 model data with
+                        separate Datasets for each model in this scenario for
+                        this variable; assumes dimensions of latitude,
                         longitude, and time (monthly)
-        is_global (Boolean), True (default) to return the global multimodel
-                        minimum; False to compute the multimodel maximum for a
-                        given location
-        loc (list of floats), a list of the coordinate bounds of the location
-                        over which the multimodel maximum will be computed;
-                        must be in the form [minlon, maxlon, minlat, maxlat];
-                        None (default) if global maximum is requested
-        xarray_out (Boolean), True to return the multimean statistic time
-                        series as an xarray with dimension time;
-                        False (default) to return it as a 1D numpy array
+        file_names (list of strings), list of the names of the zarr files
+                        containing the Datasets in the form
+                        "VARIABLE_SCENARIO_MODEL.zarr"
+        global_mean (Boolean), True to return the global multimodel maximum;
+                        False (Default) to compute the multimodel maximum at
+                        each lat-lon point
+        coords (list of floats), the coordinates in the order [lat, lon] for
+                        the location to select if not computing the multimodel
+                        global mean; must have length 2
 
     Returns:
-        multi_max (1D array), the time series of multi-model maximum of some
-                        variable for some scenario; numpy array if
-                        xarray_out=False; xarray if xarray_out=True
+        multi_max (DataArray), array of multi-model maximum of this variable
+                        for this scenario with dimension time
+                        
+    Warnings:
+        Warns user if data for a model will be left out of the calculation
+        because it does not have the correct number of time steps for this
+        scenario.
     """
-    multi_max = 0.0
     nmodels = len(datasets)
-    ntime = len(datasets[0].time)
-    ### TODO: get variable name
-    #varname = model.
-    varname = 'TODO'
-    print('Computing model area means for {var}\n'.format(var=varname))
-    model_means = np.empty((nmodels, ntime))
-
-    #### compute the mean across the location or globe for each model
+    nlat = len(datasets[0].lat)
+    nlon = len(datasets[0].lon)
+    times = datasets[0].time
+    ntime = len(times)
+    varname = file_names[0].split("_")[0]
+    
+    model_maxes = np.empty((nmodels, ntime))
+    
+    ### loop through models and either calculate global mean or select coords
     for i in range(nmodels):
         model = datasets[i]
-        model_name = str(model.modelname.values)
-        print('Model {num}: {name}'.format(num=int(i+1), name=model_name))
-        model_means[i, :] = area_mean(model, is_global, loc)
+        model_name = file_names[i].split("_")[2]
+        
+        # check that it has the same number of time steps as other models
+        # in this scenario; skip model if not and warn the user
+        if len(model.time) != ntime:
+            warnings.warn(('Skipping model {name}: inconsistent number of' +
+                           ' time steps for this ' +
+                           'scenario').format(name=model_name))
+            continue
+        
+        # compute global mean at each time step:
+        if global_mean:
+            print('Computing global mean of {var} for {name}...'.format(
+                var=varname, name=model_name))
+            model_maxes[i, :] = compute_global_mean(model, varname)
+        
+        # select lat/lon point at each time step:
+        else:
+            city_lat = coords[0]
+            city_lon = coords[1]
+            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            model_maxes[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
+                                          method='nearest')
 
-    ### multimodel maximum:###
-    print('Computing multimodel maximum for {num} models\n'.format(
-        num=nmodels))
-    multi_max = np.max(model_means, axis=0)
-
-    ### convert to an xarray if requested
-    if xarray_out:
-        multi_max = to_xarray(multi_max, datasets[0].time.values)
-
+    ### compute multimodel maximum
+    print('Computing multimodel maximum of {var} for {num} models...'.format(
+        var=varname, num=nmodels))
+    multi_max_calc = np.nanmax(model_maxes, axis=0)
+    
+    ### create the DataArray
+    multi_max = xr.DataArray(data=multi_max_calc, coords={'time': times}, dims='time')
+    
+    print('Returned multimodel maximum.\n')
+    
     return multi_max
 
 
-def mm_stdev(datasets, is_global=True, loc=None, xarray_out=False):
+def multi_model_std(datasets, file_names, global_mean=False, coords=None):
     """
     Compute the standard deviation of one variable, averaged over the globe or
-    a given location, across the given models for one scenario. Prints to the
+    at each point, across the given models for one scenario. Prints to the
     user what is being done.
 
     Args:
-        datasets (list of DataSets), the preprocessed CMIP6 model data with
-                        separate DataSets for each model in some scenario for
-                        some variable; assumes dimensions of latitude,
+        datasets (list of Datasets), the preprocessed CMIP6 model data with
+                        separate Datasets for each model in this scenario for
+                        this variable; assumes dimensions of latitude,
                         longitude, and time (monthly)
-        is_global (Boolean), True (default) to return the global multimodel
-                        minimum; False to compute the multimodel minimum for a
-                        given location
-        loc (list of floats), a list of the coordinate bounds of the location
-                        over which the multimodel standard deviation will be
-                        computed; must be in the form
-                        [minlon, maxlon, minlat, maxlat]; None (default) if
-                        global standard deviation is requested
-        xarray_out (Boolean), True to return the multimean statistic time
-                        series as an xarray with dimension time;
-                        False (default) to return it as a 1D numpy array
+        file_names (list of strings), list of the names of the zarr files
+                        containing the Datasets in the form
+                        "VARIABLE_SCENARIO_MODEL.zarr"
+        global_mean (Boolean), True to return the global multimodel standard
+                        deviation; False (Default) to compute the multimodel
+                        standard deviation at each lat-lon point
+        coords (list of floats), the coordinates in the order [lat, lon] for
+                        the location to select if not computing the multimodel
+                        global mean; must have length 2
 
     Returns:
-        multi_std (1D array), the time series of multi-model standard
-                        deviation of some variable for some scenario;
-                        numpy array if xarray_out=False;
-                        xarray if xarray_out=True
-    """
-    multi_stdev = 0.0
-    nmodels = len(datasets)
-    ntime = len(datasets[0].time)
-    ### TODO: get variable name
-    #varname = model.
-    varname = 'TODO'
-    print('Computing model area means for {var}\n'.format(var=varname))
-    model_means = np.empty((nmodels, ntime))
+        multi_std (DataArray), array of multi-model standard deviation of this
+                        variable for this scenario with dimension time
 
-    #### compute the mean across the location or globe for each model
+    Warnings:
+        Warns user if data for a model will be left out of the calculation
+        because it does not have the correct number of time steps for this
+        scenario.
+    """
+    nmodels = len(datasets)
+    nlat = len(datasets[0].lat)
+    nlon = len(datasets[0].lon)
+    times = datasets[0].time
+    ntime = len(times)
+    varname = file_names[0].split("_")[0]
+    
+    model_stdevs = np.empty((nmodels, ntime))
+
+    ### loop through models and either calculate global mean or select coords
     for i in range(nmodels):
         model = datasets[i]
-        model_name = str(model.modelname.values)
-        print('Model {num}: {name}'.format(num=int(i+1), name=model_name))
-        model_means[i, :] = area_mean(model, is_global, loc)
+        model_name = file_names[i].split("_")[2]
+        
+        # check that it has the same number of time steps as other models
+        # in this scenario; skip model if not and warn the user
+        if len(model.time) != ntime:
+            warnings.warn(('Skipping model {name}: inconsistent number of' +
+                           ' time steps for this ' +
+                           'scenario').format(name=model_name))
+            continue
+        
+        # compute global mean at each time step:
+        if global_mean:
+            print('Computing global mean of {var} for {name}...'.format(
+                var=varname, name=model_name))
+            model_stdevs[i, :] = compute_global_mean(model, varname)
+        
+        # select lat/lon point at each time step:
+        else:
+            city_lat = coords[0]
+            city_lon = coords[1]
+            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            model_stdevs[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
+                                          method='nearest')
 
-    ### compute standard deviation of the model area means
-    print('Computing multimodel standard deviation for {num} models\n'.format(
-        num=nmodels))
-    multi_stdev = np.std(model_means, axis=0)
+    ### compute multimodel standard deviation
+    print(('Computing multimodel standard deviation of {var} for {num}' +
+          ' models...').format(var=varname, num=nmodels))
+    multi_std_calc = np.nanstd(model_stdevs, axis=0)
+    
+    ### create the DataArray
+    multi_std = xr.DataArray(data=multi_std_calc, coords={'time': times}, dims='time')
+    
+    print('Returned multimodel standard deviation.\n')
+    
+    return multi_std
 
-    ### convert to an xarray if requested
-    if xarray_out:
-        multi_stdev = to_xarray(multi_stdev, datasets[0].time.values)
 
-    return multi_stdev
+def export_stats(datasets, file_names, global_mean=False, coords=None):
+    """
+    Main function to run for module. Exports the multimodel statistics as a
+    Dataset with dimension time and variables multi_mean, multi_min, multi_max,
+    and multi_std. Scenario name is an attribute of the dataset.
+    
+    Args:
+        datasets (list of Datasets), the preprocessed CMIP6 model data with
+                        separate Datasets for each model in this scenario for
+                        this variable; assumes dimensions of latitude,
+                        longitude, and time (monthly)
+        file_names (list of strings), list of the names of the zarr files
+                        containing the Datasets in the form
+                        "VARIABLE_SCENARIO_MODEL.zarr"
+        global_mean (Boolean), True to return the global multimodel standard
+                        deviation; False (Default) to compute the multimodel
+                        standard deviation at each lat-lon point
+        coords (list of floats), the coordinates in the order [lat, lon] for
+                        the location to select if not computing the multimodel
+                        global mean; must have length 2
+
+    Returns:
+        multi_stats (Dataset), the time series of multi-model statistics
+                        of this variable for this scenario
+
+    Exceptions:
+        Raises exceptions if global_mean=False and coords=None,
+        or global_mean=False and coords does not have length 2
+        
+    Warnings:
+        Warns user if argument coords is provided when global_mean=True
+    """
+    ### check that arguments for global_mean and coords are compatible
+    if global_mean and coords is not None:
+        warnings.warn('Argument coords will be ignored for global mean.')
+    if not global_mean:
+        if coords is None:
+            raise Exception('Missing argument coords for a single location.')
+        elif len(coords) != 2:
+            raise Exception('Must enter coords in the form '
+                            '[latitude, longitude].')
+    
+    ### get the name of the scenario
+    this_scenario = file_names[0].split('_')[1]
+    
+    ### calculate statistics
+    mm_mean = multi_model_mean(datasets, file_names, global_mean, coords)
+    mm_min = multi_model_min(datasets, file_names, global_mean, coords)
+    mm_max = multi_model_max(datasets, file_names, global_mean, coords)
+    mm_std = multi_model_std(datasets, file_names, global_mean, coords)
+    
+    ### make dictionary for the data
+    varnames = ['multi_mean', 'multi_min', 'multi_max', 'multi_std']
+    stats = [mm_mean, mm_min, mm_max, mm_std]
+    stats_dict = dict(zip(varnames, stats))
+    
+    ### export it into a single Dataset
+    multi_stats = xr.Dataset(data_vars=stats_dict,
+                             attrs={'scenario': this_scenario})
+    
+    return multi_stats
