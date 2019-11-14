@@ -1,5 +1,10 @@
 """
-Module to compute multimodel statistics (ignoring NaN values) and generate an xarray containing the statistics as variables.
+Module to compute multimodel statistics (ignoring NaN values) and generate an
+xarray containing the statistics as variables.
+
+This version selects a location first (tested) or takes the global mean (not yet 
+tested!) before computing multimodel stats... it took WAY too much memory to
+do multimodel mean of all individual points and kept crashing kernel after 4...
 
 *** IN PROGRESS: see TODOs below *** 
 
@@ -17,7 +22,8 @@ Last Modified: November 14, 2019
 
 ### TODO: drop print statements after testing is complete?
 ### TODO: best place to put the check for consistent time steps? and the warning?
-### TODO: ^^once you figure that out, count how many models you skip and adjust that in the multimodel statements (e.g. 'Computing multimodel xxx...')
+### TODO: ^^once you figure that out, count how many models you skip and adjust that
+###  in the multimodel statements (e.g. 'Computing multimodel xxx...')
 
 import warnings
 import xarray as xr
