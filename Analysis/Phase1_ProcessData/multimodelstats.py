@@ -6,7 +6,7 @@ This version selects a location first (tested) or takes the global mean (not yet
 tested!) before computing multimodel stats... it took WAY too much memory to
 do multimodel mean of all individual points and kept crashing kernel after 4...
 
-*** IN PROGRESS: see TODOs below *** 
+*** NOT YET TESTED FOR GLOBAL MEANS *** 
 
 Functions:
     compute_global_mean, average data over the globe
@@ -21,9 +21,6 @@ Last Modified: November 14, 2019
 """
 
 ### TODO: drop print statements after testing is complete?
-### TODO: best place to put the check for consistent time steps? and the warning?
-### TODO: ^^once you figure that out, count how many models you skip and adjust that
-###  in the multimodel statements (e.g. 'Computing multimodel xxx...')
 
 import warnings
 import xarray as xr
@@ -70,12 +67,10 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
         scenario.
     """
     nmodels = len(datasets)
-    nlat = len(datasets[0].lat)
-    nlon = len(datasets[0].lon)
     times = datasets[0].time
     ntime = len(times)
     varname = file_names[0].split("_")[0]
-    
+    nskip = 0 
     model_means = np.empty((nmodels, ntime))
 
     ### loop through models and either calculate global mean or select coords
@@ -89,6 +84,8 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
             warnings.warn(('Skipping model {name}: inconsistent number of' +
                            ' time steps for this ' +
                            'scenario').format(name=model_name))
+            model_means[i, :] = np.nan
+            nskip += 1
             continue
         
         # compute global mean at each time step:
@@ -108,13 +105,14 @@ def multi_model_mean(datasets, file_names, global_mean=False, coords=None):
 
     ### compute multimodel mean
     print('Computing multimodel mean of {var} for {num} models...'.format(
-        var=varname, num=nmodels))
+        var=varname, num=nmodels-nskip))
     multi_mean_calc = np.nanmean(model_means, axis=0)
     
     ### create the DataArray
     multi_mean = xr.DataArray(data=multi_mean_calc, coords={'time': times}, dims='time')
     
-    print('Returned multimodel mean.\n')
+    print(('Returned multimodel man. {num} models skipped.'
+           '\n').format(num=nskip))
     
     return multi_mean
 
@@ -150,12 +148,10 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
         scenario.
     """
     nmodels = len(datasets)
-    nlat = len(datasets[0].lat)
-    nlon = len(datasets[0].lon)
     times = datasets[0].time
     ntime = len(times)
     varname = file_names[0].split("_")[0]
-    
+    nskip = 0
     model_mins = np.empty((nmodels, ntime))
     
     ### loop through models and either calculate global mean or select coords
@@ -169,6 +165,8 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
             warnings.warn(('Skipping model {name}: inconsistent number of' +
                            ' time steps for this ' +
                            'scenario').format(name=model_name))
+            model_mins[i, :] = np.nan
+            nskip += 1
             continue
         
         # compute global mean at each time step:
@@ -188,13 +186,14 @@ def multi_model_min(datasets, file_names, global_mean=False, coords=None):
 
     ### compute multimodel minimum
     print('Computing multimodel minimum of {var} for {num} models...'.format(
-        var=varname, num=nmodels))
+        var=varname, num=nmodels-nskip))
     multi_min_calc = np.nanmin(model_mins, axis=0)
     
     ### create the DataArray
     multi_min = xr.DataArray(data=multi_min_calc, coords={'time': times}, dims='time')
 
-    print('Returned multimodel minimum.\n')
+    print(('Returned multimodel minimum. {num} models skipped.'
+           '\n').format(num=nskip))
     
     return multi_min
 
@@ -230,12 +229,10 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
         scenario.
     """
     nmodels = len(datasets)
-    nlat = len(datasets[0].lat)
-    nlon = len(datasets[0].lon)
     times = datasets[0].time
     ntime = len(times)
     varname = file_names[0].split("_")[0]
-    
+    nskip = 0
     model_maxes = np.empty((nmodels, ntime))
     
     ### loop through models and either calculate global mean or select coords
@@ -249,6 +246,8 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
             warnings.warn(('Skipping model {name}: inconsistent number of' +
                            ' time steps for this ' +
                            'scenario').format(name=model_name))
+            model_maxes[i, :] = np.nan
+            nskip += 1
             continue
         
         # compute global mean at each time step:
@@ -268,13 +267,14 @@ def multi_model_max(datasets, file_names, global_mean=False, coords=None):
 
     ### compute multimodel maximum
     print('Computing multimodel maximum of {var} for {num} models...'.format(
-        var=varname, num=nmodels))
+        var=varname, num=nmodels-nskip))
     multi_max_calc = np.nanmax(model_maxes, axis=0)
     
     ### create the DataArray
     multi_max = xr.DataArray(data=multi_max_calc, coords={'time': times}, dims='time')
     
-    print('Returned multimodel maximum.\n')
+    print(('Returned multimodel maximum. {num} models skipped.'
+           '\n').format(num=nskip))    
     
     return multi_max
 
@@ -310,12 +310,10 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
         scenario.
     """
     nmodels = len(datasets)
-    nlat = len(datasets[0].lat)
-    nlon = len(datasets[0].lon)
     times = datasets[0].time
     ntime = len(times)
     varname = file_names[0].split("_")[0]
-    
+    nskip = 0
     model_stdevs = np.empty((nmodels, ntime))
 
     ### loop through models and either calculate global mean or select coords
@@ -329,6 +327,8 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
             warnings.warn(('Skipping model {name}: inconsistent number of' +
                            ' time steps for this ' +
                            'scenario').format(name=model_name))
+            model_stdevs[i, :] = np.nan
+            nskip += 1
             continue
         
         # compute global mean at each time step:
@@ -348,13 +348,14 @@ def multi_model_std(datasets, file_names, global_mean=False, coords=None):
 
     ### compute multimodel standard deviation
     print(('Computing multimodel standard deviation of {var} for {num}' +
-          ' models...').format(var=varname, num=nmodels))
+          ' models...').format(var=varname, num=nmodels-nskip))
     multi_std_calc = np.nanstd(model_stdevs, axis=0)
     
     ### create the DataArray
     multi_std = xr.DataArray(data=multi_std_calc, coords={'time': times}, dims='time')
     
-    print('Returned multimodel standard deviation.\n')
+    print(('Returned multimodel standard deviation. {num} models skipped.'
+           '\n').format(num=nskip)) 
     
     return multi_std
 
