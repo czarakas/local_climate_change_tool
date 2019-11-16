@@ -1,0 +1,1 @@
+This file contains processed historical observations from the BEST monthly land temperature datasets for average, minimum, and maximum temperature. It will be populated when step1_process_historical_obs.py is run.
