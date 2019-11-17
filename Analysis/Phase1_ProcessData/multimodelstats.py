@@ -82,29 +82,29 @@ def multi_model_mean(datasets, file_names, is_global_mean=False, coords=None):
         
         # select global mean at each time step:
         if is_global_mean:
-            print('Selecting global mean of {var} for {name}...'.format(
-                var=varname, name=model_name))
+            #print('Selecting global mean of {var} for {name}...'.format(
+            #    var=varname, name=model_name))
             model_means[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
             city_lat = coords[0]
             city_lon = coords[1]
-            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
-                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            #print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+            #    var=varname, name=model_name, lat=city_lat, lon=city_lon))
             model_means[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
                                           method='nearest')
 
     ### compute multimodel mean
-    print('Computing multimodel mean of {var} for {num} models...'.format(
-        var=varname, num=nmodels-nskip))
+    #print('Computing multimodel mean of {var} for {num} models...'.format(
+    #    var=varname, num=nmodels-nskip))
     multi_mean_calc = np.nanmean(model_means, axis=0)
     
     ### create the DataArray
     multi_mean = xr.DataArray(data=multi_mean_calc, coords={'time': times}, dims='time')
     
-    print(('Returned multimodel man. {num} models skipped.'
-           '\n').format(num=nskip))
+    #print(('Returned multimodel man. {num} models skipped.'
+    #       '\n').format(num=nskip))
     
     return multi_mean
 
@@ -163,29 +163,29 @@ def multi_model_min(datasets, file_names, is_global_mean=False, coords=None):
         
         # select global mean at each time step:
         if is_global_mean:
-            print('Selecting global mean of {var} for {name}...'.format(
-                var=varname, name=model_name))
+            #print('Selecting global mean of {var} for {name}...'.format(
+            #    var=varname, name=model_name))
             model_mins[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
             city_lat = coords[0]
             city_lon = coords[1]
-            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
-                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            #print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+            #    var=varname, name=model_name, lat=city_lat, lon=city_lon))
             model_mins[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
                                           method='nearest')
 
     ### compute multimodel minimum
-    print('Computing multimodel minimum of {var} for {num} models...'.format(
-        var=varname, num=nmodels-nskip))
+    #print('Computing multimodel minimum of {var} for {num} models...'.format(
+    #    var=varname, num=nmodels-nskip))
     multi_min_calc = np.nanmin(model_mins, axis=0)
     
     ### create the DataArray
     multi_min = xr.DataArray(data=multi_min_calc, coords={'time': times}, dims='time')
 
-    print(('Returned multimodel minimum. {num} models skipped.'
-           '\n').format(num=nskip))
+    #print(('Returned multimodel minimum. {num} models skipped.'
+    #       '\n').format(num=nskip))
     
     return multi_min
 
@@ -244,29 +244,29 @@ def multi_model_max(datasets, file_names, is_global_mean=False, coords=None):
         
         # select global mean at each time step:
         if is_global_mean:
-            print('Selecting global mean of {var} for {name}...'.format(
-                var=varname, name=model_name))
+            #print('Selecting global mean of {var} for {name}...'.format(
+            #    var=varname, name=model_name))
             model_maxes[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
             city_lat = coords[0]
             city_lon = coords[1]
-            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
-                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            #print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+            #    var=varname, name=model_name, lat=city_lat, lon=city_lon))
             model_maxes[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
                                           method='nearest')
 
     ### compute multimodel maximum
-    print('Computing multimodel maximum of {var} for {num} models...'.format(
-        var=varname, num=nmodels-nskip))
+    #print('Computing multimodel maximum of {var} for {num} models...'.format(
+    #    var=varname, num=nmodels-nskip))
     multi_max_calc = np.nanmax(model_maxes, axis=0)
     
     ### create the DataArray
     multi_max = xr.DataArray(data=multi_max_calc, coords={'time': times}, dims='time')
     
-    print(('Returned multimodel maximum. {num} models skipped.'
-           '\n').format(num=nskip))    
+    #print(('Returned multimodel maximum. {num} models skipped.'
+    #       '\n').format(num=nskip))    
     
     return multi_max
 
@@ -325,29 +325,29 @@ def multi_model_std(datasets, file_names, is_global_mean=False, coords=None):
         
         # select global mean at each time step:
         if is_global_mean:
-            print('Selecting global mean of {var} for {name}...'.format(
-                var=varname, name=model_name))
+            #print('Selecting global mean of {var} for {name}...'.format(
+            #    var=varname, name=model_name))
             model_stdevs[i, :] = model[varname]
         
         # select lat/lon point at each time step:
         else:
             city_lat = coords[0]
             city_lon = coords[1]
-            print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
-                var=varname, name=model_name, lat=city_lat, lon=city_lon))
+            #print('Selecting {var} for {name} at ({lat}, {lon})...'.format(
+            #    var=varname, name=model_name, lat=city_lat, lon=city_lon))
             model_stdevs[i, :] = model[varname].sel(lat=city_lat, lon=city_lon,
                                           method='nearest')
 
     ### compute multimodel standard deviation
-    print(('Computing multimodel standard deviation of {var} for {num}' +
-          ' models...').format(var=varname, num=nmodels-nskip))
+    #print(('Computing multimodel standard deviation of {var} for {num}' +
+    #      ' models...').format(var=varname, num=nmodels-nskip))
     multi_std_calc = np.nanstd(model_stdevs, axis=0)
     
     ### create the DataArray
     multi_std = xr.DataArray(data=multi_std_calc, coords={'time': times}, dims='time')
     
-    print(('Returned multimodel standard deviation. {num} models skipped.'
-           '\n').format(num=nskip)) 
+    #print(('Returned multimodel standard deviation. {num} models skipped.'
+    #       '\n').format(num=nskip)) 
     
     return multi_std
 
