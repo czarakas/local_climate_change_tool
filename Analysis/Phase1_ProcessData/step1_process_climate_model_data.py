@@ -1,8 +1,7 @@
 """
 This module processes raw CMIP6 output to create files with consistent dimensions for all models.
 
-Running this script for all models with just averaging over ensembles, regridding, and saving takes
-about 15-20 mins.
+Running this script for all models with just averaging over ensembles, regridding, and saving takes about 15-20 mins.
 
 Make sure to clear the directory you would like the zarr files to be saved in - something about
 this format makes it not work to overwrite existing files.
@@ -131,10 +130,16 @@ for key in DSET_DICT.keys():
     # Check if one of cases that throws exceptions (to investigate later)
     if fname in ('tas_historical_CESM2',
                  'tas_ssp126_CanESM5',
+                 'tas_ssp126_CAMS-CSM1-0',
+                 
                  'tas_ssp245_CAMS-CSM1-0',
                  'tas_ssp245_HadGEM3-GC31-LL',
+                 
                  'tas_ssp370_CESM2-WACCM',
                  'tas_ssp370_MPI-ESM1-2-HR',
+                 'tas_ssp370_CAMS-CSM1-0',
+                 'tas_ssp370_BCC-ESM1',
+                 
                  'tas_ssp585_CAMS-CSM1-0',
                  'tas_ssp585_CanESM5'
                 ):
