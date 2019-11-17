@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multimodelstats as mms
 
-DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_DATA
+DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_DATA+'Processed_Model_Data/'
 SCENARIO_LIST = analysis_parameters.EXPERIMENT_LIST
 VARIABLE_NAME = analysis_parameters.VARIABLE_ID
 OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/Data/ProcessedData/'
