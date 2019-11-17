@@ -15,7 +15,7 @@ import xarray as xr
 import xesmf as xe
 
 import analysis_parameters
-import create_data_dict
+import subcomp_a_create_data_dict
 
 ############ Read in Settings for Data Dictionary#############################
 
@@ -33,7 +33,7 @@ DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_DATA
 
 [DATASET_INFO,
  DSET_DICT,
- MODELNAMES] = create_data_dict.create_data_dict(THIS_EXPERIMENT_ID,
+ MODELNAMES] = subcomp_a_create_data_dict.create_data_dict(THIS_EXPERIMENT_ID,
                                                  THIS_VARIABLE_ID,
                                                  THIS_TABLE_ID,
                                                  THIS_GRID_LABEL)
