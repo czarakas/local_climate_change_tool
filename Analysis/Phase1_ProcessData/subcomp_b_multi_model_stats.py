@@ -8,7 +8,7 @@ import xarray as xr
 import numpy as np
 import analysis_parameters
 
-DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_DATA+'Processed_Model_Data/'
+DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 SCENARIO_LIST = analysis_parameters.EXPERIMENT_LIST
 VARIABLE_NAME = analysis_parameters.VARIABLE_ID
 OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/Data/ProcessedData/'
@@ -132,7 +132,7 @@ def export_dataset(ds, output_path, variable_name, scenario_name, normalized=Fal
 def create_scenario_mms_datasets(variable_name,
                                  scenario_name,
                                  num_chunks,
-                                 data_path=DATA_PATH,
+                                 data_path,
                                  normalized=False):
     """Add docstring"""
 
@@ -172,19 +172,21 @@ def create_scenario_mms_datasets(variable_name,
 
 
 #------------------MAIN WORKFLOW----------------------------------------
-for scenario_name in SCENARIO_LIST:
-    print('-----------'+scenario_name+'-----------')
-    start_time = time.time()
-    [lats,
-     lons,
-     times,
-     mean_vals,
-     max_vals,
-     min_vals,
-     std_vals] = create_scenario_mms_datasets(data_path=DATA_PATH,
-                                              variable_name=VARIABLE_NAME,
-                                              scenario_name=scenario_name,
-                                              num_chunks=20,
-                                              normalized=True)
-    end_time = time.time()
-    print(end_time - start_time)
+def process_all_scenarios(data_path, variable_name, scenario_list,
+                          num_chunks=20, normalized=False):
+    for scenario_name in scenario_list:
+        print('-----------'+scenario_name+'-----------')
+        start_time = time.time()
+        [lats,
+         lons,
+         times,
+         mean_vals,
+         max_vals,
+         min_vals,
+         std_vals] = create_scenario_mms_datasets(data_path=data_path,
+                                                  variable_name=variable_name,
+                                                  scenario_name=scenario_name,
+                                                  num_chunks=num_chunks,
+                                                  normalized=normalized)
+        end_time = time.time()
+        print(end_time - start_time)

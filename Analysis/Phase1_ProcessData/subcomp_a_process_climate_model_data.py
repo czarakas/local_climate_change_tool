@@ -21,7 +21,7 @@ import analysis_parameters
 THIS_EXPERIMENT_ID = analysis_parameters.EXPERIMENT_LIST
 THIS_VARIABLE_ID = analysis_parameters.VARIABLE_ID
 OUTPUT_PATH = analysis_parameters.DIR_PROCESSED_DATA
-DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_DATA
+DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 
 ########### Create functions for analysis ####################################
 
