@@ -13,7 +13,7 @@ this format makes it not work to overwrite existing files.
 import cftime
 import xarray as xr
 import xesmf as xe
-
+import numpy as np
 import analysis_parameters
 
 ############ Read in Settings for Data Dictionary#############################
@@ -34,7 +34,7 @@ def create_reference_grid(reference_key, dset_dict):
 
 def reindex_time(startingtimes):
     """Reindexes time series to proleptic Gregorian calendar type"""
-    newtimes = startingtimes.values
+    newtimes = np.empty(np.shape(startingtimes.values),dtype=cftime.DatetimeProlepticGregorian)
     for i in range(0, len(startingtimes)):
         yr = int(str(startingtimes.values[i])[0:4])
         mon = int(str(startingtimes.values[i])[5:7])

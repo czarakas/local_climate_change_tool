@@ -31,6 +31,8 @@ DSET_DICT[TEST_KEY2] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY2+'.nc')
 def test_reindex_time():
     """Tests whether the reindex_time function works as expected"""
     [yr, month, day] = [1850, 1, 15]
+    expected_times =xr.DataArray(np.array([cftime.DatetimeProlepticGregorian(yr, month, day, 0, 0),
+                                           cftime.DatetimeProlepticGregorian(yr, month+1, day, 0, 0)]))
     testdates1 = xr.DataArray(np.array([np.datetime64(datetime.datetime(yr, month, day, 0, 0)),
                                         np.datetime64(datetime.datetime(yr, month+1, day, 0, 0))]))
     testdates2 = xr.DataArray(np.array([cftime.DatetimeNoLeap(yr, month, day, 0, 0),
@@ -40,11 +42,14 @@ def test_reindex_time():
     dates_to_test = [testdates1, testdates2, testdates3]
 
     # Run test
+    dates_converted = True
     for date_to_test in dates_to_test:
         newtimes = process_data.reindex_time(date_to_test)
-       # print(newtimes)
-
-    assert True
+        if not np.all((newtimes==expected_times).values):
+            dates_converted = False
+        else:
+            continue
+    assert dates_converted
 
 def test_generate_new_filename(test_key=TEST_KEY1):
     """Test that the generate_new_filename function generates a string"""
@@ -79,31 +84,38 @@ def test_create_reference_grid(dset_dict=DSET_DICT, test_key=TEST_KEY2):
 
     assert (correct_dim_size and no_extra_vars and no_nans and one_dim and big_enough)
 
-
-def test_regrid_model(dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
-                      key_for_grid=TEST_KEY2, varname=VARNAME):
-    """Tests that the regrid function works"""
+def test_regrid_model_dims(dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
+                           key_for_grid=TEST_KEY2):
+    """Tests that the regrid function results in an array of the right dimensions"""
+    
+    # Regrid model output
     ds_to_regrid = dset_dict[key_to_regrid]
     reference_grid = process_data.create_reference_grid(dset_dict=dset_dict,
                                                         reference_key=key_for_grid)
+    ds_regridded = process_data.regrid_model(ds_to_regrid,
+                                             reference_grid)
+    
+    # Check that lat/lonregridded data actually aligns with reference grid
+    correct_lat_dim = np.size(ds_regridded['lat'].values) == np.size(reference_grid['lat'].values)
+    correct_lon_dim = np.size(ds_regridded['lon'].values) == np.size(reference_grid['lon'].values)
+    # Check that time dimensions have not changed
+    correct_time_dim = np.equal(ds_regridded['time'].values,ds_to_regrid['time'].values).all()
+    assert (correct_lat_dim and correct_lon_dim and correct_time_dim)
 
-    ########### REGRID
+def test_regrid_model_nans(dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
+                           key_for_grid=TEST_KEY2, varname=VARNAME):
+    """Tests that the regrid function doesn't create any nans"""
+    ds_to_regrid = dset_dict[key_to_regrid]
+    reference_grid = process_data.create_reference_grid(dset_dict=dset_dict,
+                                                        reference_key=key_for_grid)
     ds_regridded = process_data.regrid_model(ds_to_regrid,
                                              reference_grid)
 
-    # Check that regridded data actually aligns with reference grid
-    print(np.size(ds_regridded['lat'].values) == np.size(reference_grid['lat'].values))
-    print(np.size(ds_regridded['lon'].values) == np.size(reference_grid['lon'].values))
-
-    # Check that time dimensions have not changed
-    print(ds_regridded['time'].values == ds_to_regrid['time'].values)
-
     # Check that there aren't nans if there weren't in original array
-    if not np.isnan(ds_to_regrid[varname].values).any():
+    if np.isnan(ds_to_regrid[varname].values).any():
+        raise ValueError('NANs were in original array')
+    else: 
         assert not np.isnan(ds_regridded[varname].values).any()
-    else:
-        assert True
-        print('NANs were in original array')
 
 def test_process_dataset(dset_dict=DSET_DICT,
                          key_to_process=TEST_KEY1,
@@ -133,11 +145,8 @@ def test_process_dataset(dset_dict=DSET_DICT,
     # Check that coordinate types are right
     coord_types_pass = check_coord_types(ds_processed, expected_types)
 
-    # !!!!!!!!!!!!! NEED TO DO Check that it actually averaged over all ensemble members
-
     assert coord_names_pass and years_pass and dims_pass and coord_types_pass
 
-    
 def check_coord_names(ds_processed, ds_coords_expected):
     """Checks whether coordinate names of ds are expected names"""
     coords_list = []
