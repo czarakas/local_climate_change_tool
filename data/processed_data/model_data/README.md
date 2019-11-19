@@ -1,0 +1,1 @@
+This folder contains files containing multi-model statistics summaries of model climate data.

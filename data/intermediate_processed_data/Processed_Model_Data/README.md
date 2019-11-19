@@ -1,0 +1,1 @@
+This file is populated with geospatial grids (dimensions: lat/lon/time) of intermediate processed data files.
