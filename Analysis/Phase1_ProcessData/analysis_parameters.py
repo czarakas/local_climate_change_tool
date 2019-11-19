@@ -8,9 +8,9 @@ VARIABLE_ID = 'tas'
 TABLE_ID = 'Amon'
 GRID_LABEL = 'gn'
 
-######### Directory Information
+######### Data Directory Information
 DIR_UTIL = '/home/jovyan/local-climate-data-tool/Analysis/'
-DIR_CATALOG = '/home/jovyan/local-climate-data-tool/Data/catalogs/'
-DIR_PROCESSED_DATA = '/home/jovyan/local-climate-data-tool/Data/ProcessedData/'
-DIR_INTERMEDIATE_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/Data/IntermediateData/Processed_Model_Data/'
-DIR_DUMMY_DATA = '/home/jovyan/local-climate-data-tool/Data/DummyData/'
+DIR_CATALOG = '/home/jovyan/local-climate-data-tool/data/catalogs/'
+DIR_DUMMY_DATA = '/home/jovyan/local-climate-data-tool/data/dummy_data_temporary/'
+DIR_INTERMEDIATE_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/intermediate_processed_data/Processed_Model_Data/'
+DIR_PROCESSED_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/'
