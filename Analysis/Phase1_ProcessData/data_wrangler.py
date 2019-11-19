@@ -18,6 +18,7 @@ VARIABLE_NAME = analysis_parameters.VARIABLE_ID
 TABLE_ID = analysis_parameters.TABLE_ID
 GRID_LABEL = analysis_parameters.GRID_LABEL
 OUTPUT_PATH = analysis_parameters.DIR_PROCESSED_DATA
+CURRENT_PATH = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
 DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 
 EXCEPTIONS_LIST = ('tas_historical_CESM2',
@@ -27,6 +28,8 @@ EXCEPTIONS_LIST = ('tas_historical_CESM2',
                    'tas_ssp370_CAMS-CSM1-0', 'tas_ssp370_BCC-ESM1',
                    'tas_ssp585_CAMS-CSM1-0', 'tas_ssp585_CanESM5'
                   )
+
+REFERENCE_GRID_KEY = 'CMIP.BCC.BCC-CSM2-MR.historical.Amon.gn'
 
 #----------------------------------------------------------------------
 # FUNCTION DEFINITIONS
@@ -48,7 +51,7 @@ def subcomponent_a(ref_grid_key, print_statements_on=False):
         print('---> Deleting existing intermediate model data files')
     delete_zarr_files(data_dir='/home/jovyan/local-climate-data-tool/Data/'+
                       'IntermediateData/Processed_Model_Data/',
-                      regex='tas_*')
+                      regex=VARIABLE_NAME+'_*')
 
     if print_statements_on:
         print('---> Creating data dictionary of available model data')
@@ -74,7 +77,7 @@ def subcomponent_b(num_chunks, normalized, print_statements_on=False):
     if print_statements_on:
         print('---> Deleting existing processed data files')
     delete_zarr_files(data_dir='/home/jovyan/local-climate-data-tool/Data/ProcessedData/',
-                      regex='modelData_tas_*')
+                      regex='modelData_'+VARIABLE_NAME+'_*')
 
     if print_statements_on:
         print('---> Generating multimodel statistics')
@@ -88,8 +91,15 @@ def main(print_statements_on=PRINT_STATEMENTS_ON):
     """Main module runs both subcomponent a and b"""
     if print_statements_on:
         print('---------------Running subcomponent A---------------')
-    subcomponent_a(ref_grid_key='CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn',
+    subcomponent_a(ref_grid_key=REFERENCE_GRID_KEY,
                    print_statements_on=print_statements_on)
+    
+    if print_statements_on:
+        print('---> Deleting regridding intermediate files')
+    delete_zarr_files(data_dir=CURRENT_PATH,
+                      regex='nearest_s2d_*')
+    
+    
     if print_statements_on:
         print('---------------Running subcomponent B---------------')
     subcomponent_b(num_chunks=20, normalized=False, print_statements_on=print_statements_on)

@@ -42,14 +42,15 @@ def reindex_time(startingtimes):
         newtimes[i] = newdate
     return newtimes
 
-def regrid_model(ds, reference_grid, latvariable='lat', lonvariable='lon'):
+def regrid_model(ds, reference_grid, latvariable='lat',
+                 lonvariable='lon', regrid_method='nearest_s2d'):
     """Regrids model output to a reference grid"""
     data_series = ds[THIS_VARIABLE_ID]
     ds_in = xr.Dataset({'lat': data_series[latvariable],
                         'lon': data_series[lonvariable],
                         'time': data_series['time'],
                         THIS_VARIABLE_ID: data_series})
-    regridder = xe.Regridder(ds_in, reference_grid, 'nearest_s2d')
+    regridder = xe.Regridder(ds_in, reference_grid, regrid_method, periodic=True)
     data_series_regridded = regridder(ds_in)
     data_series_regridded.attrs.update(data_series.attrs)
     return data_series_regridded
@@ -72,6 +73,7 @@ def process_dataset(this_key, dset_dict, final_grid):
     ds = xr.decode_cf(ds)
     newtimes = reindex_time(startingtimes=ds['time'])
     ds['time'] = xr.DataArray(newtimes, coords=[newtimes], dims=['time'])
+    ds = ds.copy()
 
     # Rename latitude and longitude coordinate names if necessary
     if 'latitude' in ds.dims:
@@ -90,17 +92,18 @@ def generate_new_filename(this_key):
     this_fname = THIS_VARIABLE_ID+'_'+experiment_id+'_'+source_id
     return this_fname
 
-def save_dataset(ds, this_fname):
+def save_dataset(ds, this_fname, data_path):
     """Saves processed dataset as zarr file"""
     ds.load()
     # Export intermediate processed dataset as zarr file
     ds.chunk({'lon':10, 'lat':10, 'time':-1})
-    ds.to_zarr(DIR_INTERMEDIATE+this_fname+'.zarr')
+    ds.to_zarr(data_path+this_fname+'.zarr')
 
 
 ##################### Main Workflow ##########################################
 
-def process_all_files_in_dictionary(dset_dict, exceptions_list, final_grid):
+def process_all_files_in_dictionary(dset_dict, exceptions_list,
+                                    final_grid, data_path_out=DIR_INTERMEDIATE):
     """Add docstring"""
     for key in dset_dict.keys():
         # Generate new filename for intermediate processed data
@@ -114,4 +117,4 @@ def process_all_files_in_dictionary(dset_dict, exceptions_list, final_grid):
             ds_processed = process_dataset(key, dset_dict, final_grid)
 
             # Save processed data
-            save_dataset(ds_processed, fname)
+            save_dataset(ds_processed, fname, data_path_out)

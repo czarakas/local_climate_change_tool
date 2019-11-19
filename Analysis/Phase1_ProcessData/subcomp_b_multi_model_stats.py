@@ -26,7 +26,7 @@ def get_scenario_fnames(data_path, scenario, normalized=False):
                                                      'Normalized*_' + scenario + '_*.zarr')]
     else:
         names = [f[begcut:endcut] for f in glob.glob(data_path +
-                                                     '*_' + scenario + '_*.zarr')]
+                                                     VARIABLE_NAME+'*_' + scenario + '_*.zarr')]
     return names
 
 def read_in_fname(data_path, fname):
@@ -190,3 +190,5 @@ def process_all_scenarios(data_path, variable_name, scenario_list,
                                                   normalized=normalized)
         end_time = time.time()
         print(end_time - start_time)
+        
+

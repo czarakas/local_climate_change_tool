@@ -1,12 +1,18 @@
 """
-Add docstring
+Tests for subcomponent a
 """
 
 # Import modules
 import datetime
 import cftime
+import os
+import glob
+import sys
 import xarray as xr
 import numpy as np
+
+WORKING_DIR = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
+sys.path.insert(0, WORKING_DIR)
 
 #import analysis_parameters
 #import subcomp_a_create_data_dict
@@ -15,7 +21,9 @@ import subcomp_a_process_climate_model_data as process_data
 # Define directory and file names
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
 TEST_KEY2 = 'CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn'
-TESTING_DATA_DIR = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/'
+
+TESTING_DATA_DIR = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/raw_data/'
+TESTING_OUTPUT_DIR = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/processed_model_data/'
 VARNAME = 'tas'
 TEST_INDS = [44, 120, 0]
 EXP_TYPES = np.array([xr.core.dataarray.DataArray,
@@ -28,6 +36,8 @@ DSET_DICT = dict()
 DSET_DICT[TEST_KEY1] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY1+'.nc')
 DSET_DICT[TEST_KEY2] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY2+'.nc')
 
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
 def test_reindex_time():
     """Tests whether the reindex_time function works as expected"""
     [yr, month, day] = [1850, 1, 15]
@@ -82,7 +92,11 @@ def test_create_reference_grid(dset_dict=DSET_DICT, test_key=TEST_KEY2):
     big_enough = ((np.size(ds_ref_grid['lat'].values) > min_coord_size) and
                   (np.size(ds_ref_grid['lon'].values) > min_coord_size))
 
-    assert (correct_dim_size and no_extra_vars and no_nans and one_dim and big_enough)
+    assert correct_dim_size
+    assert no_extra_vars
+    assert no_nans
+    assert one_dim
+    assert big_enough
 
 def test_regrid_model_dims(dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
                            key_for_grid=TEST_KEY2):
@@ -145,7 +159,45 @@ def test_process_dataset(dset_dict=DSET_DICT,
     # Check that coordinate types are right
     coord_types_pass = check_coord_types(ds_processed, expected_types)
 
-    assert coord_names_pass and years_pass and dims_pass and coord_types_pass
+    assert coord_names_pass
+    assert years_pass
+    assert dims_pass
+    assert coord_types_pass
+
+def test_save_dataset(dset_dict=DSET_DICT,
+                      data_path_out=TESTING_OUTPUT_DIR,
+                      key_for_grid=TEST_KEY2,
+                      exceptions_list=(),
+                     expected_types=EXP_TYPES):
+    final_grid = process_data.create_reference_grid(dset_dict=dset_dict,
+                                                    reference_key=key_for_grid)
+    
+    delete_zarr_files(data_dir=data_path_out, regex='*')
+    
+    process_data.process_all_files_in_dictionary(dset_dict, exceptions_list,
+                                        final_grid, data_path_out)
+    endcut = -1*len('.zarr')
+    begcut = len(data_path_out)
+    names = [f[begcut:endcut] for f in glob.glob(data_path_out +'*.zarr')]
+    files_are_saved = bool(len(names) > 0)
+    
+    coord_names_pass = True
+    years_pass = True
+    coord_types_pass = True
+    for fname in names:
+        filename = data_path_out + fname + '.zarr'
+        ds = xr.open_zarr(filename)
+        ds = xr.decode_cf(ds)
+        
+        # Check that ds looks the same as the processed dataset
+        coord_names_pass = coord_names_pass and check_coord_names(ds, ds_coords_expected=['time', 'lon', 'lat'])
+        coord_types_pass = coord_types_pass and check_coord_types(ds, expected_types)
+        years_pass = years_pass and check_years(ds, min_year=1849, max_year=2200)
+    
+    assert files_are_saved
+    assert coord_names_pass
+    assert years_pass
+    assert coord_types_pass
 
 def check_coord_names(ds_processed, ds_coords_expected):
     """Checks whether coordinate names of ds are expected names"""
@@ -174,8 +226,13 @@ def check_dims(ds_processed, ds_original, ds_ref_grid):
 def check_years(ds_processed, min_year, max_year):
     """ Check that times are within range of plausible years for
     model output"""
-    if ds_processed['time'].values[0].year > min_year:
-        if ds_processed['time'].values[0].year < max_year:
+    first_date = ds_processed['time'].values[0]
+    if isinstance(first_date, np.datetime64):
+        first_yr = pd.to_datetime(first_date).year
+    else:
+        first_yr = first_date.year
+    if first_yr > min_year:
+        if first_yr < max_year:
             return True
         else:
             print('Start year is too big')
@@ -202,3 +259,12 @@ def check_coord_types(ds_processed, expected_types):
                       isinstance(ds_processed['lon'].values, exp_type_dim_value))
 
     return bool(time_types_pass and lat_types_pass and lon_types_pass)
+
+def delete_zarr_files(data_dir, regex):
+    """Deletes zarr files matching regular expression. This is a
+    necessary function because zarr files cannot be overwritten"""
+    i = 0
+    for file in glob.glob(data_dir+regex+'.zarr'):
+        os.system('rm -rf '+file)
+        i = i+1
+    print('deleted '+str(i)+' files in '+data_dir)
