@@ -9,26 +9,25 @@ atmospheric science or climate studies.
 Used the Tier 1 - 21st century scenarios listed below ranging from highest to lowest
 emission scenarios.
 
-1. SSP585: highest emission scenario 
-1. SSP370: medium to high forcing pathway, takes into account the land use 
-           changes and high emissions (esp. of SO2)
-1. SSP245: represents regional downscaling, medium forcing
-1. SSP126: low emissions, future goals
+1. SSP5: Fossil-Fueled Development 
+1. SSP3: Regional Rivalry
+1. SSP2: Middle of the Road
+1. SSP1: Sustainability
 
 *See [here](https://doi.org/10.5194/gmd-9-1937-2016) for a more detailed explanation.*
 ### Historical
-1. CMIP6 historical simulation
-1. historical data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
+1. Modeled Historical: CMIP6 historical simulation
+1. Observed Historical: data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
 
 ## User Guide
-TODO: how to install software and use it. 
+Install package by cloning this repository then running setup.py in this current directory. 
 
 Created by a team of researchers at the University of Washington. For bugs and
     issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
 
-## Folders
+## Directory Hierarchy
 This section describes the set up of the directories in this repository.
-- **Analysis**: comprises all of the python scripts and notebooks to analyze and
+**Analysis**: comprises all of the python scripts and notebooks to analyze and
             generate the panel application for interactive visualization of 
             the data.
 
@@ -38,19 +37,31 @@ This section describes the set up of the directories in this repository.
     1. Phase2_CreateApp: files to generate the panel application that 
        displays the interactive dash board for user interaction.
                         
-- **Data**: holds the files containing the data from CMIP6 and BEST. 
-- **environments**: contains .yml files for you to install the environment used for
+**Data**: holds the files containing the data from CMIP6 (scenario models and historical model) 
+    and BEST (historical reanalysis data). 
+**environments**: contains .yml files for you to install the environment used for
             this project.
 ```            
 conda env create -f OceanPangeoEnvironment.yml
 ``` 
-- **docs**: contains documentation such as functional and component specification
-            and documents required for cse583 class project. 
+**docs**: contains documentation and documents required for cse583 class project.
+    1. Functional_Specification.pdf
+    1. Component_Specification.pdf
+    1. TechnologyReview.pptx
            
+## Future Directions
+- Create display map of selected region and surroundings so that users can visualize the scale
+	from which this data is coming. Another step is to allow users to interact with the map
+	so that the plots update based on latitude and longitude of user's click. 
+- We would like to add more variables to this interactive panel as well such as precipitation.
+- Add options to visualize seasonal or monthly means
+- Incorporate an option to visualize a running mean, 5 year mean, or the like. 
+- Use all models that are a part of CMIP6. This package allows you to incorporate more models as
+	they are uploaded/added to CMIP6. 
 
 ## Acknowledgements
 Cities and country lists corresponding to latitude and longitude are 
-courtesy of https://simplemaps.com/data/world-cities. 
+    courtesy of https://simplemaps.com/data/world-cities. 
 
 Eyring, V., Bony, S., Meehl, G. A., Senior, C. A., Stevens, B., Stouffer, R. J., 
     and Taylor, K. E.: Overview of the Coupled Model Intercomparison Project 
