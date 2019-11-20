@@ -22,8 +22,8 @@ import subcomp_a_process_climate_model_data as process_data
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
 TEST_KEY2 = 'CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn'
 
-TESTING_DATA_DIR = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/raw_data/'
-TESTING_OUTPUT_DIR = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/processed_model_data/'
+TESTING_DATA_DIR = '/home/jovyan/local-climate-data-tool/data/files_for_testing/raw_data/'
+TESTING_OUTPUT_DIR = '/home/jovyan/local-climate-data-tool/data/files_for_testing/processed_model_data/'
 VARNAME = 'tas'
 TEST_INDS = [44, 120, 0]
 EXP_TYPES = np.array([xr.core.dataarray.DataArray,

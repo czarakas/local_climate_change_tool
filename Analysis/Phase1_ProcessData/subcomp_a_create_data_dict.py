@@ -3,7 +3,6 @@ Creates data dictionary based on analysis parameters
 """
 
 import intake
-import util
 import analysis_parameters
 
 DIR_CATALOG = analysis_parameters.DIR_CATALOG
@@ -13,10 +12,7 @@ def create_data_dict(this_experiment_id, this_variable_id, this_table_id, this_g
     Creates data dictionary
     """
 
-    if util.is_ncar_host():
-        col = intake.open_esm_datastore(DIR_CATALOG+"glade-cmip6.json")
-    else:
-        col = intake.open_esm_datastore(DIR_CATALOG+"pangeo-cmip6.json")
+    col = intake.open_esm_datastore(DIR_CATALOG+"pangeo-cmip6.json")
 
     cat = col.search(experiment_id=this_experiment_id, \
                      table_id=this_table_id, \

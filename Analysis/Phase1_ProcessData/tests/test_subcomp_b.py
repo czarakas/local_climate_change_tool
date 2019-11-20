@@ -15,7 +15,7 @@ sys.path.insert(0, WORKING_DIR)
 import analysis_parameters
 import subcomp_b_multi_model_stats as mms
 
-DATA_PATH = '/home/jovyan/local-climate-data-tool/Data/files_for_testing/processed_model_data/'
+DATA_PATH = '/home/jovyan/local-climate-data-tool/data/files_for_testing/processed_model_data/'
 SCENARIO = 'historical'
 FNAME_TEST = 'tas_historical_BCC-CSM2-MR'
 VARIABLE_NAME = analysis_parameters.VARIABLE_ID
