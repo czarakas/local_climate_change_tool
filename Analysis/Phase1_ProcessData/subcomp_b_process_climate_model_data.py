@@ -14,14 +14,14 @@ import cftime
 import xarray as xr
 import xesmf as xe
 import numpy as np
-import analysis_parameters
+import analysis_parameters as params
 
 ############ Read in Settings for Data Dictionary#############################
 
-THIS_EXPERIMENT_ID = analysis_parameters.EXPERIMENT_LIST
-THIS_VARIABLE_ID = analysis_parameters.VARIABLE_ID
-OUTPUT_PATH = analysis_parameters.DIR_PROCESSED_DATA
-DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+THIS_EXPERIMENT_ID = params.EXPERIMENT_LIST
+THIS_VARIABLE_ID = params.VARIABLE_ID
+OUTPUT_PATH = params.DIR_PROCESSED_DATA
+DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 
 ########### Create functions for analysis ####################################
 
@@ -34,7 +34,7 @@ def create_reference_grid(reference_key, dset_dict):
 
 def reindex_time(startingtimes):
     """Reindexes time series to proleptic Gregorian calendar type"""
-    newtimes = np.empty(np.shape(startingtimes.values),dtype=cftime.DatetimeProlepticGregorian)
+    newtimes = np.empty(np.shape(startingtimes.values), dtype=cftime.DatetimeProlepticGregorian)
     for i in range(0, len(startingtimes)):
         yr = int(str(startingtimes.values[i])[0:4])
         mon = int(str(startingtimes.values[i])[5:7])
@@ -83,9 +83,9 @@ def process_dataset(this_key, dset_dict, final_grid):
 
     # Regrid dataset to reference grid
     dataset_regridded = regrid_model(ds, final_grid)
-    
+
     # If using a temperature variable, convert from K to C
-    if THIS_VARIABLE_ID in ('tas','tasmin','tasmax'):
+    if THIS_VARIABLE_ID in ('tas', 'tasmin', 'tasmax'):
         dataset_regridded[THIS_VARIABLE_ID] = dataset_regridded[THIS_VARIABLE_ID] - 273.15
 
     return dataset_regridded

@@ -3,9 +3,9 @@ Creates data dictionary based on analysis parameters
 """
 
 import intake
-import analysis_parameters
+import analysis_parameters as params
 
-DIR_CATALOG = analysis_parameters.DIR_CATALOG
+DIR_CATALOG = params.DIR_CATALOG
 
 def create_data_dict(this_experiment_id, this_variable_id, this_table_id, this_grid_label):
     """

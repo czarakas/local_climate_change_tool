@@ -6,12 +6,12 @@ import time
 import glob
 import xarray as xr
 import numpy as np
-import analysis_parameters
+import analysis_parameters as params
 
-DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
-SCENARIO_LIST = analysis_parameters.EXPERIMENT_LIST
-VARIABLE_NAME = analysis_parameters.VARIABLE_ID
-OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
+DATA_PATH = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+SCENARIO_LIST = params.EXPERIMENT_LIST
+VARIABLE_NAME = params.VARIABLE_ID
+OUTPUT_PATH = params.DIR_PROCESSED_DATA+'model_data/'
 INTERMEDIATE_OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/data/intermediate_data/'
 
 def get_scenario_fnames(data_path, scenario, normalized=False):
@@ -174,6 +174,7 @@ def create_scenario_mms_datasets(variable_name,
 #------------------MAIN WORKFLOW----------------------------------------
 def process_all_scenarios(data_path, variable_name, scenario_list,
                           num_chunks=20, normalized=False):
+    """ Processes all scenarios """
     for scenario_name in scenario_list:
         print('-----------'+scenario_name+'-----------')
         start_time = time.time()
@@ -190,5 +191,3 @@ def process_all_scenarios(data_path, variable_name, scenario_list,
                                                   normalized=normalized)
         end_time = time.time()
         print(end_time - start_time)
-        
-
