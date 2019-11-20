@@ -18,8 +18,7 @@ import numpy as np
 import analysis_parameters
 
 INTERMEDIATE_MODEL_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
-INTERMEDIATE_GLOBAL_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
-OUT_DIR = INTERMEDIATE_GLOBAL_DIR + 'GlobalMeanData/'
+OUT_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
 
 
 def read_zarr_files(data_path):
