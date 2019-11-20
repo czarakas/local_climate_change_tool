@@ -1,26 +1,32 @@
 """
-Complete Module 1: Data Wrangler
+This script runs all subcomponents in the appropriate order to generate
+climate data for use in the Dashbboard Generator module.
+
+Approximate run time:
+A - Create data dictionary of available climate model data:         1   min
+B - Process climate model data files to be consistently formatted: 13   mins
+C - Calculate global mean for each model and scenario:              1   min
+D - Calculate summary statistics for each scenario:                 7.5 mins
+E - Calculate global mean statistics for each scenario:             1   min
+
 """
 
 import os
+import time
 import glob
-import analysis_parameters
+import analysis_parameters as params
 import subcomp_a_create_data_dict as data_dict
-import subcomp_a_process_climate_model_data as process_data
-import subcomp_b_multi_model_stats as generate_stats
+import subcomp_b_process_climate_model_data as process_data
+import subcomp_d_multi_model_stats as generate_stats
+
+START_TIME = time.time()
 
 #----------------------------------------------------------------------
 # GLOBAL PARAMETER SETTINGS
 #----------------------------------------------------------------------
-PRINT_STATEMENTS_ON = True
-SCENARIO_LIST = analysis_parameters.EXPERIMENT_LIST
-VARIABLE_NAME = analysis_parameters.VARIABLE_ID
-TABLE_ID = analysis_parameters.TABLE_ID
-GRID_LABEL = analysis_parameters.GRID_LABEL
-OUTPUT_PATH = analysis_parameters.DIR_PROCESSED_DATA
-CURRENT_PATH = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
-DIR_INTERMEDIATE = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+# Settings for this script
 
+PRINT_STATEMENTS_ON = True
 EXCEPTIONS_LIST = ('tas_historical_CESM2',
                    'tas_ssp126_CanESM5', 'tas_ssp126_CAMS-CSM1-0',
                    'tas_ssp245_CAMS-CSM1-0', 'tas_ssp245_HadGEM3-GC31-LL',
@@ -28,81 +34,173 @@ EXCEPTIONS_LIST = ('tas_historical_CESM2',
                    'tas_ssp370_CAMS-CSM1-0', 'tas_ssp370_BCC-ESM1',
                    'tas_ssp585_CAMS-CSM1-0', 'tas_ssp585_CanESM5'
                   )
-
 REFERENCE_GRID_KEY = 'CMIP.BCC.BCC-CSM2-MR.historical.Amon.gn'
+
+# Parameter names
+SCENARIO_LIST = params.EXPERIMENT_LIST
+VARIABLE_NAME = params.VARIABLE_ID
+TABLE_ID = params.TABLE_ID
+GRID_LABEL = params.GRID_LABEL
+
+# Directory information
+OUTPUT_PATH = params.DIR_PROCESSED_DATA
+CURRENT_PATH = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
+DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+DIR_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
+DIR_INTERMEDIATE_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/intermediate_processed_data/Processed_Model_Data/'
+DIR_INTER_GLOBAL_DATA = params.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
+DIR_PROCESSED_MODEL_DATA_GLOBAL_MEAN = DIR_PROCESSED_MODEL_DATA+'global_mean_data/'
 
 #----------------------------------------------------------------------
 # FUNCTION DEFINITIONS
 #----------------------------------------------------------------------
 
-def delete_zarr_files(data_dir, regex):
-    """Deletes zarr files matching regular expression. This is a
+def print_time(start_time=START_TIME):
+    """Prints the minutes elapsed since the start of running the script"""
+    current_time = time.time()
+    time_elapsed = current_time-start_time
+    mins_elapsed = round(time_elapsed, 2)
+    print('      Time elapsed: '+str(time_elapsed)+' mins')
+    
+def delete_zarr_files(data_dir, regex, print_statements_on=False, file_type='.zarr'):
+    """Deletes files matching regular expression. This is a
     necessary function because zarr files cannot be overwritten"""
     i = 0
-    for file in glob.glob(data_dir+regex+'.zarr'):
+    for file in glob.glob(data_dir+regex+file_type):
         os.system('rm -rf '+file)
         i = i+1
-    print('deleted '+str(i)+' files in '+data_dir)
-
-def subcomponent_a(ref_grid_key, print_statements_on=False):
-    """Subcomponent a"""
-    # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
-        print('---> Deleting existing intermediate model data files')
-    delete_zarr_files(data_dir='/home/jovyan/local-climate-data-tool/Data/'+
-                      'IntermediateData/Processed_Model_Data/',
-                      regex=VARIABLE_NAME+'_*')
+        print('   Deleted '+str(i)+' files in '+data_dir)
+
+def subcomponent_a(print_statements_on=False):
+    """Creates data dictionary of all available climate model data"""
 
     if print_statements_on:
-        print('---> Creating data dictionary of available model data')
+        print('====> Creating data dictionary of available model data')
     [_, dset_dict, _] = data_dict.create_data_dict(this_experiment_id=SCENARIO_LIST,
                                                    this_variable_id=VARIABLE_NAME,
                                                    this_table_id=TABLE_ID,
                                                    this_grid_label=GRID_LABEL)
+    if print_statements_on: print_time()
+    return dset_dict
 
+def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
+    """Processes raw climate model data to create intermediate spatial model
+    files with consistent formatting (dims: lat/lon/time). If intermediate spatial
+    model files exist in the output folder when this is run, those existing files 
+    are deleted"""
+
+    # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
-        print('---> Creating reference grid for data regridding')
+        print('====> Deleting existing intermediate model data files')
+    delete_zarr_files(data_dir=DIR_INTERMEDIATE_MODEL_DATA,
+                      regex=VARIABLE_NAME+'_*')
+    if print_statements_on: print_time()
+        
+    if print_statements_on:
+        print('====> Creating reference grid for data regridding')
     final_grid = process_data.create_reference_grid(reference_key=ref_grid_key,
                                                     dset_dict=dset_dict)
+    if print_statements_on: print_time()
 
     if print_statements_on:
-        print('---> Generating consistent data files for each model and scenario')
+        print('====> Generating consistent data files for each model and scenario')
     process_data.process_all_files_in_dictionary(dset_dict=dset_dict,
                                                  exceptions_list=EXCEPTIONS_LIST,
                                                  final_grid=final_grid)
+    if print_statements_on: print_time()
+        
+    if print_statements_on:
+        print('====> Deleting regridding intermediate files')
+    delete_zarr_files(data_dir=CURRENT_PATH,
+                      regex='nearest_s2d_*', file_type='.nc')
+    if print_statements_on: print_time()
 
-def subcomponent_b(num_chunks, normalized, print_statements_on=False):
-    """Subcomponent b"""
+def subcomponent_c(print_statements_on=False):
+    """Processes intermediate spatial model files (dims: lat/lon/time)
+    output from subcomponent c to create intermediate global mean 
+    model files (dims: time). If files exist in the output folder
+    when this is run, those existing files are deleted"""
+    if print_statements_on:
+        print('====> Deleting existing intermediate model data files')
+        
+    delete_zarr_files(data_dir=DIR_INTER_GLOBAL_DATA,
+                      regex=VARIABLE_NAME+'_*GLOBALMEAN*')
+    if print_statements_on: print_time()
+        
+    import subcomp_c_compute_global_mean_data as calculate_multi_model_means
+    
+    if print_statements_on: print_time()
+    
+def subcomponent_d(num_chunks, normalized, print_statements_on=False):
+    """Processes intermediate spatial model files (dims: lat/lon/time)
+    output from subcomponent b to create multimodel statistics (i.e. compressing
+    data across all models) of dims: lat/lon/time. If files exist in the output
+    folder when this is run, those existing files are deleted"""
     # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
-        print('---> Deleting existing processed data files')
-    delete_zarr_files(data_dir='/home/jovyan/local-climate-data-tool/Data/ProcessedData/',
+        print('====> Deleting existing processed data files')
+    delete_zarr_files(data_dir=DIR_PROCESSED_MODEL_DATA,
                       regex='modelData_'+VARIABLE_NAME+'_*')
+    
+    if print_statements_on: print_time()
 
     if print_statements_on:
-        print('---> Generating multimodel statistics')
+        print('====> Generating multimodel statistics')
     generate_stats.process_all_scenarios(data_path=DIR_INTERMEDIATE,
                                          variable_name=VARIABLE_NAME,
                                          scenario_list=SCENARIO_LIST,
                                          num_chunks=num_chunks,
                                          normalized=normalized)
+    if print_statements_on: print_time()
 
+def subcomponent_e(print_statements_on=False):
+    """Processes intermediate global mean model files (dims: time)
+    output from subcomponent c to create global mean multimodel 
+    statistics (i.e. compressing data across all models) of dims: time.
+    If files exist in the output folder when this is run, those existing
+    files are deleted."""
+    
+    if print_statements_on:
+        print('====> Deleting existing processed data files')
+    delete_zarr_files(data_dir=DIR_PROCESSED_MODEL_DATA_GLOBAL_MEAN,
+                      regex=VARIABLE_NAME+'_*GLOBALMEAN_*')
+    
+    if print_statements_on: print_time()
+    
+    import subcomp_e_multi_model_global_mean_stats as generate_global_stats
+    """Processes intermediate global mean model files (dims: time)
+        output from subcomponent c to create multimodel statistics (i.e. compressing
+        data across all models) of dims: time"""
+    
+    if print_statements_on: print_time()
+    
 def main(print_statements_on=PRINT_STATEMENTS_ON):
-    """Main module runs both subcomponent a and b"""
+    """ Runs all subcomponents in the appropriate sequence to create
+    climate data processed for use in the Dashboard Generator"""
+    
     if print_statements_on:
         print('---------------Running subcomponent A---------------')
-    subcomponent_a(ref_grid_key=REFERENCE_GRID_KEY,
-                   print_statements_on=print_statements_on)
-    
-    if print_statements_on:
-        print('---> Deleting regridding intermediate files')
-    delete_zarr_files(data_dir=CURRENT_PATH,
-                      regex='nearest_s2d_*')
-    
+    data_dict = subcomponent_a(print_statements_on=print_statements_on)
     
     if print_statements_on:
         print('---------------Running subcomponent B---------------')
-    subcomponent_b(num_chunks=20, normalized=False, print_statements_on=print_statements_on)
+    subcomponent_b(ref_grid_key=REFERENCE_GRID_KEY,
+                   dset_dict=data_dict,
+                   print_statements_on=print_statements_on)
+    
+    if print_statements_on:
+        print('---------------Running subcomponent C---------------')
+    subcomponent_c(print_statements_on=print_statements_on)
+    
+    if print_statements_on:
+        print('---------------Running subcomponent D---------------')
+    subcomponent_d(num_chunks=20, normalized=False, print_statements_on=print_statements_on)
+    
+    if print_statements_on:
+        print('---------------Running subcomponent E---------------')
+    subcomponent_e(print_statements_on=print_statements_on)
+    
 
 if __name__ == '__main__':
     main()

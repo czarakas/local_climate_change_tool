@@ -112,7 +112,7 @@ def export_stats(datasets, file_names):
     this_var = file_names[0].split('_')[0]
 
     ### calculate statistics
-    [mm_mean, mm_min, mm_max, mm_std] = compute_statistics(datasets, file_names)
+    [mm_mean, mm_min, mm_max, mm_std] = compute_stats(datasets, file_names)
 
     ### make dictionary for the data
     varnames = ['multi_mean', 'multi_min', 'multi_max', 'multi_std']

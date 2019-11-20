@@ -11,8 +11,8 @@ import analysis_parameters
 DATA_PATH = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 SCENARIO_LIST = analysis_parameters.EXPERIMENT_LIST
 VARIABLE_NAME = analysis_parameters.VARIABLE_ID
-OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/Data/ProcessedData/'
-INTERMEDIATE_OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/Data/IntermediateData/Multi_Model_Stats_Arrays/'
+OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
+INTERMEDIATE_OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/data/intermediate_data/'
 
 def get_scenario_fnames(data_path, scenario, normalized=False):
     """

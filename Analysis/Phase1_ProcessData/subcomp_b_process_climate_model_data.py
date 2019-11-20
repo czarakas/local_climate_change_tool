@@ -83,6 +83,10 @@ def process_dataset(this_key, dset_dict, final_grid):
 
     # Regrid dataset to reference grid
     dataset_regridded = regrid_model(ds, final_grid)
+    
+    # If using a temperature variable, convert from K to C
+    if THIS_VARIABLE_ID in ('tas','tasmin','tasmax'):
+        dataset_regridded[THIS_VARIABLE_ID] = dataset_regridded[THIS_VARIABLE_ID] - 273.15
 
     return dataset_regridded
 
