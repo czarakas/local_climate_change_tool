@@ -38,7 +38,7 @@ opts = dict(name='Local-Climate-Data-Tool',
             'xarray',
             'pandas',
             'numpy',
-            'glob',
+            'glob3',
             ],
             # requires="REQUIRES"
         )
