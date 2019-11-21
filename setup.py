@@ -39,7 +39,6 @@ opts = dict(name='Local-Climate-Data-Tool',
             'pandas',
             'numpy',
             'glob',
-            'time'
             ],
             # requires="REQUIRES"
         )
