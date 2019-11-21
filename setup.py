@@ -16,7 +16,7 @@ opts = dict(name='Local-Climate-Data-Tool',
             maintainer='Claire Zarakas',
             maintainer_email='czarakas@uw.edu',
             description=
-            '"""
+            """
             This local climate data tool displays the data from CMIP-6
             output for historical and 4 different future scenarios via
             the Shared Socioeconomic Pathways (SSPs) described below.
@@ -31,7 +31,7 @@ opts = dict(name='Local-Climate-Data-Tool',
             # classifiers="CLASSIFIERS",
             # author='Ax/Wx"',
             # author_email='axwx@googlegroups.com',
-            version='0.1,0',
+            version='0.1.0',
             packages=PACKAGES,
             # package_data={'axwx': ['data/*', 'data/test_wu_data/*']},
             install_requires=[
