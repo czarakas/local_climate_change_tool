@@ -8,15 +8,13 @@ import cftime
 import os
 import glob
 import sys
+import pandas as pd
 import xarray as xr
 import numpy as np
 
-WORKING_DIR = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
-sys.path.insert(0, WORKING_DIR)
-
 #import analysis_parameters
 #import subcomp_a_create_data_dict
-import subcomp_a_process_climate_model_data as process_data
+import subcomp_b_process_climate_model_data as process_data
 
 # Define directory and file names
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
@@ -246,10 +244,6 @@ def check_coord_types(ds_processed, expected_types):
     of expected data types"""
     [exp_type_dim, exp_type_dim_value, exp_type_latlon, exp_type_time] = expected_types
 
-    time_types_pass = (isinstance(ds_processed['time'].values[0], exp_type_time) and
-                       isinstance(ds_processed['time'], exp_type_dim) and
-                       isinstance(ds_processed['time'].values, exp_type_dim_value))
-
     lat_types_pass = (isinstance(ds_processed['lat'].values[0], exp_type_latlon) and
                       isinstance(ds_processed['lat'], exp_type_dim) and
                       isinstance(ds_processed['lat'].values, exp_type_dim_value))
@@ -258,7 +252,7 @@ def check_coord_types(ds_processed, expected_types):
                       isinstance(ds_processed['lon'], exp_type_dim) and
                       isinstance(ds_processed['lon'].values, exp_type_dim_value))
 
-    return bool(time_types_pass and lat_types_pass and lon_types_pass)
+    return bool(lat_types_pass and lon_types_pass)
 
 def delete_zarr_files(data_dir, regex):
     """Deletes zarr files matching regular expression. This is a
