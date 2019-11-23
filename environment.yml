@@ -1,4 +1,4 @@
-name: notebook
+name: CMIP6
 channels:
   - conda-forge
   - defaults
@@ -477,5 +477,4 @@ dependencies:
     - uritemplate==3.0.0
     - xgcm==0.2.0+77.g3151dd3
     - xmitgcm==0.4.1+10.gaea23d4
-prefix: /srv/conda/envs/notebook
-
+prefix: /srv/conda/envs/CMIP6
