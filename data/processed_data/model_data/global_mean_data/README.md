@@ -1,1 +1,1 @@
-This file contains the zarr files with multimodel statistics populated by running step1_calculate_statistics.py. Multimodel statistics for the regular time/lat/lon files coming soon.
+This folder contains the zarr files of multimodel statistics (mean, min, max, and stdev) for the global mean average temperatures from the CMIP6 models.
