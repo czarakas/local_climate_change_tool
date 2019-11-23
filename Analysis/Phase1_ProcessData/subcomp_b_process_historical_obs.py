@@ -1,132 +1,116 @@
 """
 Regrid the historical observations to be consistent with processed CMIP6 model
-output.
-
-*** WILL NOT RUN RIGHT NOW - need to correct the path to DATA_DIR ***
+output and compute the global mean of the historical observations.
 
 Author: Jacqueline Nugent
-Last Modified: November 21, 2019
+Last Modified: November 22, 2019
 """
-
-from netCDF4 import Dataset
-import xarray as xr
-import glob
-import pandas as pd
 import math
 import datetime as dt
+from netCDF4 import Dataset
+import xarray as xr
+import pandas as pd
+import numpy as np
 
 import analysis_parameters
 
-### TODO: that DATA_DIR is not defined!!!!!!!
-DATA_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_HISTORICAL_DATA
+DATA_DIR = analysis_parameters.DIR_INTERMEDIATE_OBSERVATION_DATA
 OUT_DIR = analysis_parameters.DIR_PROCESSED_DATA + 'observation_data/'
+OBS_FILE = DATA_DIR + 'Complete_TAVG_LatLong1.nc'
 
 
-def read_netcdf_files(data_path):
+def convert_to_360(lons):
     """
-    Open all Complete_<var>_LatLong1.nc observation files int the data_path.
-    Returns a list of the file names in the order [TAVG, TMAX, TMIN].
+    Convert longitudes with the convention -180 to 180 degrees to longitudes
+    with the convention 0 to 360 degrees. Argument is 1D numpy array of
+    longitudes. Returns 1D numpy array of converted longitudes.
     """
-    files = glob.glob(data_path + 'Complete' + '*.nc')
-    
-    return files
+    new_lons = np.empty(len(lons))
+
+    for n in range(len(lons)):
+        if lons[n] < 0:
+            new_lons[n] = 360 + lons[n]
+        else:
+            new_lons[n] = lons[n]
+
+    return new_lons
 
 
-def calculate_temps(files):
+def calculate_temps(filename):
     """
     Converts the temperature anomalies and climatologies from the
-    observations into actual average, maximum, and minimum temperatures.
+    observations file into actual average, maximum, and minimum temperatures.
     Returns the average, maximum, and minimum temperatures and their
     dimensions (time, lat, lon) as a list of numpy arrays.
     """
-    ### average monthly temperature:
-    nc1 = Dataset(files[0], 'r')
+    ### read in data, skipping first 100 years (1200 months) to match times
+    ### in CMIP6 model data:
+    nc1 = Dataset(filename, 'r')
     lat = nc1.variables['latitude'][:]
-    lon = nc1.variables['longitude'][:]
-    time_avg = nc1.variables['time'][:]
-    t_avg_anom = nc1.variables['temperature'][:][:][:]
+    lon = convert_to_360(nc1.variables['longitude'][:])
+    time_avg = nc1.variables['time'][1200:]
+    t_avg_anom = nc1.variables['temperature'][1200:][:][:]
     t_avg_clima = nc1.variables['climatology'][:][:][:]
 
-    ### maximum monthly temperature:
-    nc2 = Dataset(files[1], 'r')
-    time_max = nc2.variables['time'][:]
-    t_max_anom = nc2.variables['temperature'][:][:][:]
-    t_max_clima = nc1.variables['climatology'][:][:][:]
-
-    ### minimum monthly temperature:
-    nc3 = Dataset(files[2], 'r')
-    time_min = nc3.variables['time'][:]
-    t_min_anom = nc3.variables['temperature'][:][:][:]
-    t_min_clima = nc1.variables['climatology'][:][:][:]
-    
-    ### skip the time steps that are in the average file but not min or max:
-    nskip = len(time_avg)-len(time_min)
-    new_t_avg_anom = t_avg_anom[nskip:, :, :]
-
     ### convert native time variables (in decimal year) to match model times
-    [dec_start, yr_start] = math.modf(time_min[0])
+    [dec_start, yr_start] = math.modf(time_avg[0])
     mnth_start = int(dec_start*12 + 1)
     first = dt.datetime(year=int(yr_start), month=mnth_start, day=15)
 
-    [dec_end, yr_end] = math.modf(time_min[-1])
+    [dec_end, yr_end] = math.modf(time_avg[-1])
     mnth_end = int(dec_end*12 + 1)
     last = dt.datetime(year=int(yr_end), month=mnth_end, day=15)
 
-    time = pd.date_range(start=first, end=last, periods=len(time_min))
-    
-    ### calculate the actual temperature statistics from the anomalies and
-    ### climatologies:
-    t_avg = np.empty(np.shape(new_t_avg_anom))
-    t_max = np.empty(np.shape(t_max_anom))
-    t_min = np.empty(np.shape(t_min_anom))
+    time = pd.date_range(start=first, end=last, periods=len(time_avg))
+
+    ### calculate the avg temperatures from the anomalies and climatologies:
+    t_avg = np.empty(np.shape(t_avg_anom))
 
     for i in range(12):
-        t_avg[i::12, :, :] = [(x + t_avg_clima[i, :, :]) 
-                              for x in new_t_avg_anom[i::12, :, :]]
-        t_max[i::12, :, :] = [(x + t_max_clima[i, :, :]) 
-                              for x in t_max_anom[i::12, :, :]]
-        t_min[i::12, :, :] = [(x + t_min_clima[i, :, :]) 
-                              for x in t_min_anom[i::12, :, :]]
-        
-    return [t_avg, t_max, t_min, time, lat, lon]
-    
-    
-def create_obs_dataset(t_avg, t_max, t_min, time, lat, lon):
+        t_avg[i::12, :, :] = [(x + t_avg_clima[i, :, :])
+                              for x in t_avg_anom[i::12, :, :]]
+
+    return [t_avg, time, lat, lon]
+
+
+def create_obs_datasets(t_avg, time, lat, lon):
     """
-    Create a Dataset for the observations with variables tavg, tmax, and
-    tmin in degrees C and dimensions time, lat, and lon. Arguments are
-    the calculated average, maximum, and minimum temperatures returned
-    by calc_temps() and the dimensions of the variables (time, lat, lon).
-    """    
-    #### make data arrays for each variable 
-    tavg = xr.DataArray(data=t_avg,
-                             coords={'time': time, 'lat': lat, 'lon': lon},
-                             dims=['time', 'lat', 'lon'])
-    tmax = xr.DataArray(data=t_max,
-                             coords={'time': time, 'lat': lat, 'lon': lon},
-                             dims=['time', 'lat', 'lon'])
-    tmin = xr.DataArray(data=t_min,
-                             coords={'time': time, 'lat': lat, 'lon': lon},
-                             dims=['time', 'lat', 'lon'])
+    Create Datasets for (1) the average temperature observations with variable
+    'mean' in degrees C and dimensions time, lat, and lon, and (2) the
+    global mean of average temperature observations with variable 'mean' in
+    degrees C and dimension time.
 
-    ### create the Dataset
-    vardata = [tavg, tmax, tmin]
-    varnames = ['tavg', 'tmax', 'tmin']
-    var_dict = dict(zip(varnames, vardata))
-    best_data = xr.Dataset(data_vars=var_dict)
-    
-    return best_data
+    Arguments are the calculated average temperatures and the coordinates of
+    the dimensions (time, lat, lon) as returned by calculate_temps(). Returns
+    a list of Datasets of the form [observations, global mean observations].
+    """
+    best_data = xr.Dataset(data_vars={'mean': (['time', 'lat', 'lon'], t_avg)},
+                           coords={'time': time, 'lat': lat, 'lon': lon})
+
+    mean_data = best_data['mean'].mean(dim=['lat', 'lon'], skipna=True)
+    time = best_data.time
+    global_mean_data = xr.Dataset(data_vars={'mean': mean_data},
+                                  coords={'time': time})
+
+    ### reorganize data so that the longitudes are in ascending order
+    best_data = best_data.sortby('lon')
+
+    return [best_data, global_mean_data]
 
 
-def save_dataset(best):
-    """Save the processed temperature observation Dataset to a zarr file"""
-    best.load()
-    best.chunk({'lat':10, 'lon':10, 'time':-1})
-    best.to_zarr(OUT_DIR + 'historical_obs.zarr')
+def save_datasets(best_data, global_mean_data):
+    """Save the processed temperature observation Datasets to zarr files"""
+    best_data.load()
+    best_data.chunk({'lat':10, 'lon':10, 'time':-1})
+    best_data.to_zarr(OUT_DIR + 'historical_obs.zarr')
+
+    global_mean_data.load()
+    global_mean_data.chunk({'time':10})
+    global_mean_data.to_zarr(OUT_DIR + 'historical_obs_GLOBALMEAN.zarr')
 
 
 ####### MAIN WORKFLOW ########
-obs_file_names = read_netcdf_files(DATA_DIR)
-[t_avg, t_max, t_min, time, lat, lon] = calculate_temps(obs_file_names)
-obs_ds = create_obs_dataset(t_avg, t_max, t_min, time, lat, lon)
-save_dataset(obs_ds)
+
+[MEAN_TEMP, TIMES, LATS, LONGS] = calculate_temps(OBS_FILE)
+[OBS_DS, GLOBAL_MEAN_DS] = create_obs_datasets(MEAN_TEMP, TIMES, LATS, LONGS)
+save_datasets(OBS_DS, GLOBAL_MEAN_DS)

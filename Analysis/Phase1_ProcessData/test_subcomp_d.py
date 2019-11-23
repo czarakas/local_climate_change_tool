@@ -6,19 +6,17 @@ import time
 import cftime
 import glob
 import sys
+import pandas as pd
 import xarray as xr
 import numpy as np
 
-WORKING_DIR = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
-sys.path.insert(0, WORKING_DIR)
+import analysis_parameters as params
+import subcomp_d_multi_model_stats as mms
 
-import analysis_parameters
-import subcomp_b_multi_model_stats as mms
-
-DATA_PATH = '/home/jovyan/local-climate-data-tool/data/files_for_testing/processed_model_data/'
+DATA_PATH = params.DIR_TESTING_DATA+'processed_model_data/'
 SCENARIO = 'historical'
-FNAME_TEST = 'tas_historical_BCC-CSM2-MR'
-VARIABLE_NAME = analysis_parameters.VARIABLE_ID
+FNAME_TEST = 'tas_historical_CAMS-CSM1-0'
+VARIABLE_NAME = params.VARIABLE_ID
 NORMALIZED = False
 NUM_CHUNKS = 20
 EXP_TYPES = np.array([xr.core.dataarray.DataArray,
@@ -68,9 +66,9 @@ def test_read_in_fname(data_path=DATA_PATH, fname=FNAME_TEST, expected_types=EXP
     coord_types_pass = check_coord_types(ds, expected_types)
 
     # Check that time is reasonable (e.g. )
-    #years_pass = check_years(ds, min_year=1849, max_year=2200)
+    years_pass = check_years(ds, min_year=1849, max_year=2200)
 
-    assert file_exists and coord_names_pass and coord_types_pass #and years_pass 
+    assert file_exists and coord_names_pass and years_pass #and coord_types_pass
 
 def test_initialize_empty_mms_arrays(data_path=DATA_PATH, scenario_name=SCENARIO,
                                      num_chunks=NUM_CHUNKS, normalized=NORMALIZED):
@@ -109,9 +107,9 @@ def test_fill_empty_arrays(empty_dsets=EMPTY_DSETS, dim_info=DIM_INFO,
                (not np.isnan(multi_model_maxs).any()) and
                (not np.isnan(multi_model_stds).any()))
     
-    logical_val_order = ((multi_model_means[time_ind, lat_ind, lon_ind] < 
+    logical_val_order = ((multi_model_means[time_ind, lat_ind, lon_ind] <= 
                           multi_model_maxs[time_ind, lat_ind, lon_ind]) and
-                         (multi_model_means[time_ind, lat_ind, lon_ind] > 
+                         (multi_model_means[time_ind, lat_ind, lon_ind] >= 
                           multi_model_mins[time_ind, lat_ind, lon_ind]))
     
     assert no_nans and logical_val_order
