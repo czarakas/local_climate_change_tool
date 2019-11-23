@@ -1,6 +1,6 @@
 """
 Module to generate datasets of global means for each of the processed CMIP6
-zarr files. Converts temperature data from Kelvin to Celsius.
+zarr files.
 
 Running this script for all models take about 5 minutes.
 
@@ -9,7 +9,7 @@ in - something about this format makes it not work to overwrite existing
 files.
 
 Author: Jacqueline Nugent
-Last Modified: November 21, 2019
+Last Modified: November 22, 2019
 """
 import glob
 import xarray as xr
@@ -42,10 +42,8 @@ def read_zarr_files(data_path):
 def compute_global_mean(data_dict, this_key):
     """
     Compute the global average of model data from this model, for this
-    scenario, and for variable varname. Converts temperatures from
-    Kelvin to Celsius. Exports the mean as a new Dataset with dimension time.
-
-    Pass in key from the data_dict (var_scenario_model).
+    scenario, and for variable varname. Exports the mean as a new Dataset
+    with dimension time. Pass in key from the data_dict (var_scenario_model).
     """
     ### get information from the data_dict
     model_data = data_dict[this_key]
@@ -55,10 +53,6 @@ def compute_global_mean(data_dict, this_key):
     ntime = len(model_data.time)
     mean_data = np.empty(ntime)
     mean_data[:] = model_data[varname].mean(dim=['lat', 'lon'], skipna=True)
-    
-    ### If using a temperature variable, convert from K to C
-    if varname in ('tas', 'tasmin', 'tasmax'):
-        mean_data[:] = mean_data[:] - 273.15
 
     ### export as a dataset
     times = model_data.time
