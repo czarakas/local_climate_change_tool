@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/czarakas/local-climate-data-tool.svg?branch=master)](https://travis-ci.org/czarakas/local-climate-data-tool)
-
 # Local Climate Data Tool
 This local climate data tool displays the data from CMIP-6 output for historical
 and 4 different future scenarios via the Shared Socioeconomic Pathways (SSPs)
