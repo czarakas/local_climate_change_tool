@@ -74,6 +74,7 @@ conda env create -f OceanPangeoEnvironment.yml
 - Incorporate an option to visualize a running mean, 5 year mean, or the like. 
 - Use all models that are a part of CMIP6. This package allows you to incorporate more models as
     they are uploaded/added to CMIP6. 
+- Make a feature to toggle between absolute temperature and temperature differences from pre-industrial era. 
 
 ## Acknowledgements
 Cities and country lists corresponding to latitude and longitude are 
