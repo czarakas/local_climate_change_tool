@@ -11,19 +11,18 @@ import zarr
 import xarray as xr
 import sys
 
-dir_analysis = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData'
+dir_analysis = '../Phase1_ProcessData'
 sys.path.insert(0, dir_analysis)
 import analysis_parameters
 
 
 DF = pd.read_csv('worldcities.csv')
 COUNTRIES = list(set(DF['country']))
-DATA_PATH = analysis_parameters.DIR_DUMMY_DATA
 THIS_EXPERIMENT_ID = ['historical','ssp126', 'ssp370','ssp245','ssp585']
 EXPERIMENT_KEYS = THIS_EXPERIMENT_ID.copy()
 EXPERIMENT_KEYS.append('historical_obs')
 
-def read_data():
+def read_data(data_type):
     ''' Returns a dictionary with keys: 
             historical
             ssp126
@@ -36,8 +35,8 @@ def read_data():
     #initiate dictionary - which will match experiment names to data
     dict_timeseries = dict()
 
-    if data == 'dummy':
-        data_path = "/home/smturbev/uwsed/proj/"
+    if data_type == 'dummy':
+        data_path = analysis_parameters.DIR_DUMMY_DATA
         # Read in model data
         for experiment_id in THIS_EXPERIMENT_ID:
             filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
@@ -48,27 +47,27 @@ def read_data():
         ds = xr.open_zarr(filename)
         dict_timeseries['historical_obs'] = ds
 
-    elif data == 'global':
-        data_path = "/home/smturbev/uwsed/proj/"
+    elif data_type == 'global':
+        data_path = analysis_parameters.DIR_PROCESSED_DATA
         # Read in model data
         for experiment_id in THIS_EXPERIMENT_ID:
-            filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
+            filename = data_path + 'model_data/global_mean_data/tas_' + experiment_id + '_GLOBALMEAN_STATS.zarr'
             ds = xr.open_zarr(filename)
             dict_timeseries[experiment_id] = ds
         # Read in observation data
-        filename = data_path + 'Zarr/dummyData_observationData' + '.zarr'
+        filename = data_path + 'observation_data/historical_obs.zarr'
         ds = xr.open_zarr(filename)
         dict_timeseries['historical_obs'] = ds
 
-    elif data == 'real':
-        data_path = "/home/smturbev/uwsed/proj/"
+    elif data_type == 'real':
+        data_path = analysis_parameters.DIR_PROCESSED_DATA
         # Read in model data
         for experiment_id in THIS_EXPERIMENT_ID:
-            filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
+            filename = data_path + 'model_data/modelData_tas_' + experiment_id + '.zarr'
             ds = xr.open_zarr(filename)
             dict_timeseries[experiment_id] = ds
         # Read in observation data
-        filename = data_path + 'Zarr/dummyData_observationData' + '.zarr'
+        filename = data_path + 'observation_data/historical_obs.zarr'
         ds = xr.open_zarr(filename)
         dict_timeseries['historical_obs'] = ds
 
