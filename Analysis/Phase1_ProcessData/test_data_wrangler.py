@@ -3,7 +3,7 @@ import data_wrangler as dw
 import analysis_parameters as params
 
 # Define directory and file names
-DIR_TESTING = params.DIR_TESTING_DATA
+DIR_TESTING = params.DIR_DUMMY_DATA
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
 TEST_KEY2 = 'CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn'
 
