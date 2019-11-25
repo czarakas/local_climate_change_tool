@@ -24,7 +24,7 @@ install:
     - conda update -q conda
     - conda info -a
     - conda env create -f environment.yml
-    - source activate CMIP
+    - source activate CMIP6
     - conda install coverage
     - conda install coveralls
     - conda install flake8
@@ -32,11 +32,11 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-- "flake8 Analysis"
+- "flake8 Analysis/Phase1_ProcessData/"
 
 # the actual commands to run
 script:
-- coverage run -m unittest discover
+- coverage run Analysis/Phase1_ProcessData/test_data_wrangler.py
 
 # generate a coverage report to send to back to user
 after_success:
