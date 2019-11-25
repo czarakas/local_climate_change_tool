@@ -137,7 +137,7 @@ def process_all_scenarios(data_path, data_path_out=OUT_DIR):
     # read in the processed model data files
     global_mean_dict = read_zarr_files(data_path)
 
-    for key in global_mean_dictkeys():
+    for key in global_mean_dict.keys():
         # make a list of the datasets and filenames
         dataset_list = global_mean_dict[key]
         fnames = [dataset.file_name for dataset in dataset_list]
