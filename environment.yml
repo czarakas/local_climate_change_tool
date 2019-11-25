@@ -1,4 +1,4 @@
-name: test
+name: CMIP6
 channels:
   - conda-forge
   - defaults
@@ -125,4 +125,3 @@ dependencies:
     - tqdm==4.39.0
     - zarr==2.3.2
 prefix: /srv/conda/envs/test
-
