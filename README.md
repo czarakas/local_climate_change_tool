@@ -74,7 +74,12 @@ conda env create -f environment.yml
 - Add options to visualize seasonal or monthly means
 - Incorporate an option to visualize a running mean, 5 year mean, or the like.
 - Use all models that are a part of CMIP6. This package allows you to incorporate more models as
+<<<<<<< HEAD
+    they are uploaded/added to CMIP6. 
+- Make a feature to toggle between absolute temperature and temperature differences from pre-industrial era. 
+=======
     they are uploaded/added to CMIP6.
+>>>>>>> 1c1be6a501a0fcc359d8677dd1a3e748a8e76456
 
 ## Acknowledgements
 Cities and country lists corresponding to latitude and longitude are

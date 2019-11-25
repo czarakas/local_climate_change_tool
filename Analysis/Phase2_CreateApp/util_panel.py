@@ -32,20 +32,51 @@ def read_data():
             ssp585
             historical_obs
     '''
+    
     #initiate dictionary - which will match experiment names to data
     dict_timeseries = dict()
-    
-    # Read in model data
-    for experiment_id in THIS_EXPERIMENT_ID:
-        filename = DATA_PATH + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
-        ds = xr.open_zarr(filename)
-        dict_timeseries[experiment_id] = ds
 
-    # Read in observation data
-    filename = DATA_PATH + 'Zarr/dummyData_observationData' + '.zarr'
-    ds = xr.open_zarr(filename)
-    dict_timeseries['historical_obs'] = ds
+    if data == 'dummy':
+        data_path = "/home/smturbev/uwsed/proj/"
+        # Read in model data
+        for experiment_id in THIS_EXPERIMENT_ID:
+            filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
+            ds = xr.open_zarr(filename)
+            dict_timeseries[experiment_id] = ds
+        # Read in observation data
+        filename = data_path + 'Zarr/dummyData_observationData' + '.zarr'
+        ds = xr.open_zarr(filename)
+        dict_timeseries['historical_obs'] = ds
+
+    elif data == 'global':
+        data_path = "/home/smturbev/uwsed/proj/"
+        # Read in model data
+        for experiment_id in THIS_EXPERIMENT_ID:
+            filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
+            ds = xr.open_zarr(filename)
+            dict_timeseries[experiment_id] = ds
+        # Read in observation data
+        filename = data_path + 'Zarr/dummyData_observationData' + '.zarr'
+        ds = xr.open_zarr(filename)
+        dict_timeseries['historical_obs'] = ds
+
+    elif data == 'real':
+        data_path = "/home/smturbev/uwsed/proj/"
+        # Read in model data
+        for experiment_id in THIS_EXPERIMENT_ID:
+            filename = data_path + 'Zarr/dummyData_modelData_' + experiment_id + '.zarr'
+            ds = xr.open_zarr(filename)
+            dict_timeseries[experiment_id] = ds
+        # Read in observation data
+        filename = data_path + 'Zarr/dummyData_observationData' + '.zarr'
+        ds = xr.open_zarr(filename)
+        dict_timeseries['historical_obs'] = ds
+
+    else:
+        raise Exception('''Input parameter should be one of the following:\n
+                        - dummy\n - real \n - global\nnot %s'''%(data))
     return dict_timeseries
+
 
 def create_country2city2latlon_dict():
     '''
