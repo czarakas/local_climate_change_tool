@@ -16,8 +16,7 @@ PYTHON_REQUIRES = '>= 3.5'
 NAME = 'Local-Climate-Data-Tool'
 MAINTAINER = 'Claire Zarakas'
 MAINTAINER_EMAIL = 'czarakas@uw.edu'
-DESCRIPTION =
-"""
+DESCRIPTION = """
 This local climate data tool displays the data from CMIP-6
 output for historical and 4 different future scenarios via
 the Shared Socioeconomic Pathways (SSPs) described below.
@@ -41,7 +40,6 @@ opts = dict(name=NAME,
             url=URL,
             download_url=DOWNLOAD_URL,
             license=LICENSE,
-            classifiers=CLASSIFIERS,
             version=VERSION,
             packages=PACKAGES,
             python_requires=PYTHON_REQUIRES,
