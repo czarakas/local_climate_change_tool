@@ -2,12 +2,8 @@
 Module to generate datasets of multimodel statistics for each of the CMIP6
 scenarios for the global mean data (dimension time).
 
-Make sure to clear the directory you would like the zarr files to be saved
-in - something about this format makes it not work to overwrite existing
-files.
-
 Author: Jacqueline Nugent
-Last Modified: November 20, 2019
+Last Modified: November 24, 2019
 """
 import glob
 import xarray as xr
@@ -16,7 +12,6 @@ import numpy as np
 import analysis_parameters
 
 
-DATA_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
 OUT_DIR = analysis_parameters.DIR_PROCESSED_DATA + 'model_data/global_mean_data/'
 SCENARIOS = analysis_parameters.EXPERIMENT_LIST
 
@@ -115,7 +110,7 @@ def export_stats(datasets, file_names):
     [mm_mean, mm_min, mm_max, mm_std] = compute_stats(datasets, file_names)
 
     ### make dictionary for the data
-    varnames = ['multi_mean', 'multi_min', 'multi_max', 'multi_std']
+    varnames = ['mean', 'min', 'max', 'stdev']
     stats = [mm_mean, mm_min, mm_max, mm_std]
     stats_dict = dict(zip(varnames, stats))
 
@@ -135,16 +130,20 @@ def save_dataset(ds, out_path):
     ds.to_zarr(out_path + file_name + '.zarr')
 
 
-####### MAIN WORKFLOW ########
+##################### Main Workflow ##########################################
 
-GLOBAL_MEAN_DICT = read_zarr_files(DATA_DIR)
+def process_all_scenarios(data_path, data_path_out=OUT_DIR):
+    """Process all scenarios"""
+    # read in the processed model data files
+    global_mean_dict = read_zarr_files(data_path)
 
-### for global mean files:
-for key in GLOBAL_MEAN_DICT.keys():
-    # compute the global mean multimodel stats
-    dataset_list = GLOBAL_MEAN_DICT[key]
-    fnames = [dataset.file_name for dataset in dataset_list]
-    ds_gm_stats = export_stats(dataset_list, fnames)
+    for key in global_mean_dictkeys():
+        # make a list of the datasets and filenames
+        dataset_list = global_mean_dict[key]
+        fnames = [dataset.file_name for dataset in dataset_list]
 
-    # save the global mean multitmodel stats dataset
-    save_dataset(ds_gm_stats, OUT_DIR)
+        # generate the multimodel stats dataset
+        ds_gm_stats = export_stats(dataset_list, fnames)
+
+        # save the dataset
+        save_dataset(ds_gm_stats, data_path_out)
