@@ -61,11 +61,11 @@ def compute_global_mean(data_dict, this_key):
     return mean_dataset
 
 
-def save_dataset(ds):
+def save_dataset(ds, data_path_out):
     """Save the global mean dataset as a zarr file"""
     ds.load()
     ds.chunk({'time':10})
-    ds.to_zarr(OUT_DIR + ds.file_name + '.zarr')
+    ds.to_zarr(data_path_out + ds.file_name + '.zarr')
 
 
 ##################### Main Workflow ##########################################
@@ -80,4 +80,4 @@ def compute_all_means(data_path, data_path_out=OUT_DIR):
         ds_global_mean = compute_global_mean(processed_dict, key)
         
         # save the global mean dataset
-        save_dataset(ds_global_mean)
+        save_dataset(ds_global_mean, data_path_out)

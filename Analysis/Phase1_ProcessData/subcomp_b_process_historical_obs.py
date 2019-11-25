@@ -97,15 +97,15 @@ def create_obs_datasets(t_avg, time, lat, lon):
     return [best_data, global_mean_data]
 
 
-def save_datasets(best_data, global_mean_data):
+def save_datasets(best_data, global_mean_data, data_path_out):
     """Save the processed temperature observation Datasets to zarr files"""
     best_data.load()
     best_data.chunk({'lat':10, 'lon':10, 'time':-1})
-    best_data.to_zarr(OUT_DIR + 'historical_obs.zarr')
+    best_data.to_zarr(data_path_out + 'historical_obs.zarr')
 
     global_mean_data.load()
     global_mean_data.chunk({'time':10})
-    global_mean_data.to_zarr(OUT_DIR + 'historical_obs_GLOBALMEAN.zarr')
+    global_mean_data.to_zarr(data_path_out + 'historical_obs_GLOBALMEAN.zarr')
 
 
 ##################### Main Workflow ##########################################
@@ -121,4 +121,4 @@ def process_all_observations(data_path, data_path_out=OUT_DIR):
     [obs_ds, gbl_mean_ds] = create_obs_datasets(mean_temp, times, lats, longs)
 
     # save the datasets
-    save_datasets(obs_ds, gbl_mean_ds)
+    save_datasets(obs_ds, gbl_mean_ds, data_path_out)
