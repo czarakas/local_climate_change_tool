@@ -4,12 +4,8 @@ zarr files.
 
 Running this script for all models take about 5 minutes.
 
-Make sure to clear the directory you would like the zarr files to be saved
-in - something about this format makes it not work to overwrite existing
-files.
-
 Author: Jacqueline Nugent
-Last Modified: November 22, 2019
+Last Modified: November 24, 2019
 """
 import glob
 import xarray as xr
@@ -17,7 +13,7 @@ import numpy as np
 
 import analysis_parameters
 
-INTERMEDIATE_MODEL_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+
 OUT_DIR = analysis_parameters.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
 
 
@@ -72,13 +68,16 @@ def save_dataset(ds):
     ds.to_zarr(OUT_DIR + ds.file_name + '.zarr')
 
 
-######### MAIN WORKFLOW: #########
+##################### Main Workflow ##########################################
 
-PROCESSED_DICT = read_zarr_files(INTERMEDIATE_MODEL_DIR)
-
-for key in PROCESSED_DICT.keys():
-    # compute the global mean
-    ds_global_mean = compute_global_mean(PROCESSED_DICT, key)
-
-    # save the global mean dataset
-    save_dataset(ds_global_mean)
+def compute_all_means(data_path, data_path_out=OUT_DIR):
+    """Process all files in the dictionary"""
+    # read in the processed model data files
+    processed_dict = read_zarr_files(data_path)
+    
+    for key in processed_dict.keys():
+        # compute the global mean
+        ds_global_mean = compute_global_mean(processed_dict, key)
+        
+        # save the global mean dataset
+        save_dataset(ds_global_mean)

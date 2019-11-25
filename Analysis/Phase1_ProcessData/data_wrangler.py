@@ -12,14 +12,18 @@ E - Calculate global mean statistics for each scenario:             1   min
 TOTAL: 23.5 mins
 
 """
-
+### TODO: incorporate obs in with other subcomp b? 
+### TODO: adjust docstring above & main print statements with subcomp b_obs
 import os
 import time
 import glob
 import analysis_parameters as params
 import subcomp_a_create_data_dict as data_dict
 import subcomp_b_process_climate_model_data as process_data
+import subcomp_b_process_historical_obs as process_obs
+import subcomp_c_compute_global_mean_data as global_means
 import subcomp_d_multi_model_stats as generate_stats
+import subcomp_e_multi_model_global_mean_stats as global_stats
 
 START_TIME = time.time()
 
@@ -49,9 +53,11 @@ OUTPUT_PATH = params.DIR_PROCESSED_DATA
 CURRENT_PATH = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
 DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 DIR_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
+DIR_PROCESSED_OBS_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/observation_data/'
 DIR_INTERMEDIATE_MODEL_DATA = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 DIR_INTER_GLOBAL_DATA = params.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
 DIR_PROCESSED_MODEL_DATA_GLOBAL_MEAN = DIR_PROCESSED_MODEL_DATA+'global_mean_data/'
+DIR_INTER_OBS_DATA = analysis_parameters.DIR_INTERMEDIATE_OBSERVATION_DATA
 
 #----------------------------------------------------------------------
 # FUNCTION DEFINITIONS
@@ -123,6 +129,28 @@ def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
     if print_statements_on:
         print_time()
 
+def subcomponent_b_obs(print_statements_on=False):
+    """Processes raw historical climate observations to create processed files
+    with formatting to match climate model data (dims: lat/lon/time) and
+    processed global mean observation files (dims: time). If processed
+    historical observation files exist in the output folder when this is run,
+    those existing files are deleted"""
+
+    # Delete existing files because you can't overwrite zarr files
+    if print_statements_on:
+        print('====> Deleting existing processed observation files')
+    delete_zarr_files(data_dir=DIR_PROCESSED_OBS_DATA,
+                      regex='historical_obs*')
+    if print_statements_on:
+        print_time()
+
+    if print_statements_on:
+        print('====> Processing historical observations')
+    process_obs.process_all_observations(data_path=DIR_INTER_OBS_DATA)
+
+    if print_statements_on:
+        print_time()
+
 def subcomponent_c(print_statements_on=False):
     """Processes intermediate spatial model files (dims: lat/lon/time)
     output from subcomponent c to create intermediate global mean
@@ -136,7 +164,9 @@ def subcomponent_c(print_statements_on=False):
     if print_statements_on:
         print_time()
 
-    import subcomp_c_compute_global_mean_data
+    if print_statements_on:
+        print('====> Generating global mean files')
+    global_means.compute_all_means(data_path=DIR_INTERMEDIATE_MODEL_DATA)
 
     if print_statements_on:
         print_time()
@@ -181,7 +211,7 @@ def subcomponent_e(print_statements_on=False):
     if print_statements_on:
         print_time()
 
-    import subcomp_e_multi_model_global_mean_stats
+    global_stats.process_all_scenarios(data_path=DIR_INTER_GLOBAL_DATA)
 
     if print_statements_on:
         print_time()
@@ -199,6 +229,10 @@ def main(print_statements_on=PRINT_STATEMENTS_ON):
     subcomponent_b(ref_grid_key=REFERENCE_GRID_KEY,
                    dset_dict=data_dict,
                    print_statements_on=print_statements_on)
+
+    if print_statements_on:
+        print('---------------Running subcomponent B_obs-----------')
+    subcomponent_b_obs(print_statements_on=print_statements_on)
 
     if print_statements_on:
         print('---------------Running subcomponent C---------------')
