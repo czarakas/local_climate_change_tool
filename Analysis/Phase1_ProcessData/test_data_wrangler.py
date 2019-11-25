@@ -12,9 +12,9 @@ TESTING_OUTPUT_DIR = '/home/jovyan/local-climate-data-tool/data/files_for_testin
 VARNAME = params.VARIABLE_ID
 
 # Read testing data into dictionary
-DSET_DICT = dict()
-DSET_DICT[TEST_KEY1] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY1+'.nc')
-DSET_DICT[TEST_KEY2] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY2+'.nc')
+# DSET_DICT = dict()
+# DSET_DICT[TEST_KEY1] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY1+'.nc')
+# DSET_DICT[TEST_KEY2] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY2+'.nc')
 
 def test_print_time():
     dw.print_time()
