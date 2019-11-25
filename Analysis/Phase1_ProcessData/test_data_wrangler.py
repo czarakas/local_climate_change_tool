@@ -25,4 +25,7 @@ def test_subcomp_a(experiment_ID='ssp126'):
 def test_subcomp_b(ref_grid_key='TEST_KEY2',dset_dict=DSET_DICT,
                    print_statements_on=True, data_dir=DIR_TESTING+'raw_data/'):
     dw.subcomponent_b(ref_grid_key, dset_dict, print_statements_on, data_dir)
-
+       
+        
+if __name__ == "__main__":
+    main()  
