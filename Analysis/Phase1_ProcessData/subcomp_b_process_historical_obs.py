@@ -3,7 +3,7 @@ Regrid the historical observations to be consistent with processed CMIP6 model
 output and compute the global mean of the historical observations.
 
 Author: Jacqueline Nugent
-Last Modified: November 22, 2019
+Last Modified: November 24, 2019
 """
 import math
 import datetime as dt
@@ -14,9 +14,8 @@ import numpy as np
 
 import analysis_parameters
 
-DATA_DIR = analysis_parameters.DIR_INTERMEDIATE_OBSERVATION_DATA
+
 OUT_DIR = analysis_parameters.DIR_PROCESSED_DATA + 'observation_data/'
-OBS_FILE = DATA_DIR + 'Complete_TAVG_LatLong1.nc'
 
 
 def convert_to_360(lons):
@@ -109,8 +108,17 @@ def save_datasets(best_data, global_mean_data):
     global_mean_data.to_zarr(OUT_DIR + 'historical_obs_GLOBALMEAN.zarr')
 
 
-####### MAIN WORKFLOW ########
+##################### Main Workflow ##########################################
 
-[MEAN_TEMP, TIMES, LATS, LONGS] = calculate_temps(OBS_FILE)
-[OBS_DS, GLOBAL_MEAN_DS] = create_obs_datasets(MEAN_TEMP, TIMES, LATS, LONGS)
-save_datasets(OBS_DS, GLOBAL_MEAN_DS)
+def process_all_observations(data_path, data_path_out=OUT_DIR):
+    """Processes the historical observations file"""
+    obs_file = data_path + 'Complete_TAVG_LatLong1.nc'
+
+    # read in the file and calculate average temperatures
+    [mean_temp, times, lats, longs] = calculate_temps(obs_file)
+
+    # generate the datasets
+    [obs_ds, gbl_mean_ds] = create_obs_datasets(mean_temp, times, lats, longs)
+
+    # save the datasets
+    save_datasets(obs_ds, gbl_mean_ds)
