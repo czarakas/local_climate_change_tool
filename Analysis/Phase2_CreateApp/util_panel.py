@@ -1,10 +1,11 @@
-'''
+"""
 util_panel.py
 Sami Turbeville
 CSE 583 Project: CMIP 6 Local Climate Tool
 
-Module of useful functions for creating panel.
-'''
+Module of useful functions for creating data that
+panel reads in. 
+"""
 
 import pandas as pd
 import zarr
@@ -23,14 +24,22 @@ EXPERIMENT_KEYS = THIS_EXPERIMENT_ID.copy()
 EXPERIMENT_KEYS.append('historical_obs')
 
 def read_data(data_type):
-    ''' Returns a dictionary with keys: 
+    """
+    Input: data_type - key word can be one of the following:
+            'dummy'
+            'global'
+            'real'
+            
+    Returns a dictionary for data_type with keys: 
             historical
             ssp126
             ssp370
             ssp245
             ssp585
             historical_obs
-    '''
+        Note, returned xarray for gloabl means has no lat lon
+        information. 
+    """
     
     #initiate dictionary - which will match experiment names to data
     dict_timeseries = dict()
@@ -78,14 +87,14 @@ def read_data(data_type):
 
 
 def create_country2city2latlon_dict():
-    '''
+    """
     Returns a nested dictionary. First key is country.
         Second Key is city. The value is the lat lon 
         value that will be used to update the timeseries
         plot. The first key will be a drop down menu and 
         the second will be a drop down menu that depends 
         on the input of the first. 
-    '''
+    """
     my_dict = dict()
     for country in COUNTRIES:
         my_dict.update({country : dict()})
