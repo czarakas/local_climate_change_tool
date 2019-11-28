@@ -16,3 +16,5 @@ DIR_INTERMEDIATE_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/da
 DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA = '/home/jovyan/local-climate-data-tool/data/intermediate_processed_data/Processed_Global_Mean_Data/'
 DIR_INTERMEDIATE_OBSERVATION_DATA  =  '/home/jovyan/local-climate-data-tool/data/intermediate_processed_data/Raw_Historical_Observations/'
 DIR_PROCESSED_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/'
+
+DIR_GOOGLE_DRIVE_PERMISSIONS = '/home/jovyan/local-climate-data-tool/data/catalogs/'

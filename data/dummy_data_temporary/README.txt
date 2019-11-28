@@ -1,1 +1,0 @@
-The "dummy data" files in these files represent the data structure of the files we aim to generate from actual CMIP6 and observational data. This is not real data.

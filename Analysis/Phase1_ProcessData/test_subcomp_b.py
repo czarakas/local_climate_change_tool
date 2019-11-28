@@ -1,5 +1,5 @@
 """
-Tests for subcomponent a
+Tests for subcomponent b
 """
 
 # Import modules
