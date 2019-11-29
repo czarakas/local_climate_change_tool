@@ -1,9 +1,9 @@
 """
 Regrid the historical observations to be consistent with processed CMIP6 model
-output and compute the global mean of the historical observations.
+output.
 
 Author: Jacqueline Nugent
-Last Modified: November 24, 2019
+Last Modified: November 29, 2019
 """
 import math
 import datetime as dt
@@ -72,40 +72,33 @@ def calculate_temps(filename):
     return [t_avg, time, lat, lon]
 
 
-def create_obs_datasets(t_avg, time, lat, lon):
+def create_obs_dataset(t_avg, time, lat, lon):
     """
-    Create Datasets for (1) the average temperature observations with variable
-    'mean' in degrees C and dimensions time, lat, and lon, and (2) the
-    global mean of average temperature observations with variable 'mean' in
-    degrees C and dimension time.
+    Create Dataset for the average temperature observations with variable
+    'mean' in degrees C and dimensions time, lat, and lon.
 
     Arguments are the calculated average temperatures and the coordinates of
     the dimensions (time, lat, lon) as returned by calculate_temps(). Returns
-    a list of Datasets of the form [observations, global mean observations].
+    a the Dataset.
     """
     best_data = xr.Dataset(data_vars={'mean': (['time', 'lat', 'lon'], t_avg)},
                            coords={'time': time, 'lat': lat, 'lon': lon})
 
-    mean_data = best_data['mean'].mean(dim=['lat', 'lon'], skipna=True)
-    time = best_data.time
-    global_mean_data = xr.Dataset(data_vars={'mean': mean_data},
-                                  coords={'time': time})
-
     ### reorganize data so that the longitudes are in ascending order
     best_data = best_data.sortby('lon')
+    
+    # temp:
+    print('dataset created')
 
-    return [best_data, global_mean_data]
+    return best_data
 
 
-def save_datasets(best_data, global_mean_data, data_path_out):
+def save_dataset(best_data, data_path_out):
     """Save the processed temperature observation Datasets to zarr files"""
+    print('saving dataset...')
     best_data.load()
     best_data.chunk({'lat':10, 'lon':10, 'time':-1})
     best_data.to_zarr(data_path_out + 'historical_obs.zarr')
-
-    global_mean_data.load()
-    global_mean_data.chunk({'time':10})
-    global_mean_data.to_zarr(data_path_out + 'historical_obs_GLOBALMEAN.zarr')
 
 
 ##################### Main Workflow ##########################################
@@ -118,7 +111,7 @@ def process_all_observations(data_path, data_path_out=OUT_DIR):
     [mean_temp, times, lats, longs] = calculate_temps(obs_file)
 
     # generate the datasets
-    [obs_ds, gbl_mean_ds] = create_obs_datasets(mean_temp, times, lats, longs)
+    obs_ds = create_obs_dataset(mean_temp, times, lats, longs)
 
     # save the datasets
-    save_datasets(obs_ds, gbl_mean_ds, data_path_out)
+    save_dataset(obs_ds, data_path_out)
