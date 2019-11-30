@@ -10,7 +10,7 @@ GRID_LABEL = 'gn'
 
 ######### Data Directory Information
 DIR_HOME = '/home/jovyan/local-climate-data-tool/'
-DIR_UTIL = DIR_HOME + 'Analysis/'
+DIR_UTIL = DIR_HOME + 'code/'
 DIR_DATA = DIR_HOME + 'data/'
 DIR_CATALOG = DIR_DATA + 'catalogs/'
 DIR_DUMMY_DATA = DIR_DATA + 'dummy_data_temporary/'
