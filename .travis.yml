@@ -32,7 +32,7 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-- "flake8 ../code/phase1_data_wrangler/data_wrangler.py" --exit-zero
+- "flake8 ../code/" --exit-zero
 
 # the actual commands to run
 script:
