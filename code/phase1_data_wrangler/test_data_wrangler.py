@@ -22,9 +22,9 @@ def test_print_time():
 def test_subcomp_a(experiment_ID='ssp126'):
     dset_dict = dw.subcomponent_a(print_statements_on=True)
 
-def test_subcomp_b(ref_grid_key='TEST_KEY2',dset_dict=DSET_DICT,
-                   print_statements_on=True, data_dir=DIR_TESTING+'raw_data/'):
-    dw.subcomponent_b(ref_grid_key, dset_dict, print_statements_on, data_dir)
+#def test_subcomp_b(ref_grid_key='TEST_KEY2',dset_dict=DSET_DICT,
+#                   print_statements_on=True, data_dir=DIR_TESTING+'raw_data/'):
+#    dw.subcomponent_b(ref_grid_key, dset_dict, print_statements_on, data_dir)
 
 
 def main():

@@ -51,8 +51,6 @@ DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 DIR_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
 DIR_PROCESSED_OBS_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/observation_data/'
 DIR_INTERMEDIATE_MODEL_DATA = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
-DIR_INTER_GLOBAL_DATA = params.DIR_INTERMEDIATE_PROCESSED_GLOBAL_DATA
-DIR_PROCESSED_MODEL_DATA_GLOBAL_MEAN = DIR_PROCESSED_MODEL_DATA+'global_mean_data/'
 DIR_INTER_OBS_DATA = params.DIR_INTERMEDIATE_OBSERVATION_DATA
 
 #----------------------------------------------------------------------
