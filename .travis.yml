@@ -31,13 +31,12 @@ install:
 
 
 # a list of commands to run before the main script
-# before_script:
-# - "flake8 Analysis/Phase1_ProcessData/"
+before_script:
+- "flake8 code/"
 
 # the actual commands to run
 script:
-- "flake8 Analysis/Phase1_ProcessData/"
-- coverage run Analysis/Phase1_ProcessData/test_data_wrangler.py
+- coverage run dummy_test.py
 
 # generate a coverage report to send to back to user
 after_success:
