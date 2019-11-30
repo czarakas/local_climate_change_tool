@@ -86,8 +86,8 @@ def download_data(dir_google_drive_permissions,
 def download_data_predefined(file_to_download, print_statements_on):
     dir_google_drive_permissions = params.DIR_GOOGLE_DRIVE_PERMISSIONS
     if file_to_download=='Processed_Data':
-        #file link to view: https://drive.google.com/file/d/1l4JAwE8QZPNYDkXlmjuyv8MymG89fhie/view?usp=sharing
-        file_id = '1l4JAwE8QZPNYDkXlmjuyv8MymG89fhie'
+        #file link to view: https://drive.google.com/open?id=1EG9ZzuoaG4z3KuYubdspTV8S8skTFMzE
+        file_id = '1EG9ZzuoaG4z3KuYubdspTV8S8skTFMzE'
         filename_id = 'processed_data.tar.gz'
         filename_extracted = 'processed_data'
         dir_extracted_data = params.DIR_PROCESSED_DATA
