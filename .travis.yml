@@ -36,7 +36,7 @@ before_script:
 
 # the actual commands to run
 script:
-- "flake8 ../code/phase2_dashboard_generator"
+- "flake8 ../code/"
 - coverage run dummy_test.py
 
 # generate a coverage report to send to back to user
