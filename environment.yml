@@ -68,8 +68,8 @@ dependencies:
   - libcurl=7.65.3
   - libedit=3.1.20170329
   - libffi=3.2.1
-  - libgcc-ng=9.1.0
-  - libgfortran-ng=7.3.0
+  #- libgcc-ng
+  - libgfortran-ng
   - libiconv=1.15
   - liblapack=3.8.0
   - libllvm9=9.0.0
@@ -78,11 +78,11 @@ dependencies:
   - libpng=1.6.37
   - libsodium=1.0.17
   - libssh2=1.8.2
-  - libstdcxx-ng=9.1.0
+  #- libstdcxx-ng
   - libtiff=4.1.0
   - libuuid=2.32.1
   - libxcb=1.13
-  - libxkbcommon=0.9.1
+  #- libxkbcommon
   - libxml2=2.9.10
   - locket=0.2.0
   - lz4-c=1.8.3
@@ -102,7 +102,7 @@ dependencies:
   - netcdf-fortran=4.4.5
   - netcdf4=1.5.3
   - notebook=6.0.1
-  - nspr=4.23
+  - nspr
   - nss=3.47
   - numpy=1.17.3
   - olefile=0.46
