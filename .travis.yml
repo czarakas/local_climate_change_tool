@@ -8,6 +8,11 @@ python:
     - 3.6
     - 3.5
 
+# specify what platforms of OS will be run
+os:
+  - linux
+  - osx
+
 # what branches should be evaluated
 branches:
     only:
