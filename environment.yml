@@ -1,99 +1,90 @@
 name: CMIP6
 channels:
-  - pyviz
-  - anaconda
   - conda-forge
   - defaults
 dependencies:
-  - _libgcc_mutex=0.1
   - appdirs=1.4.3
+  #- appnope=0.1.0#
+  - appnope
+  - asciitree=0.3.3
+  - atomicwrites=1.3.0
   - attrs=19.3.0
   - backcall=0.1.0
   - bleach=3.1.0
   - bokeh=1.4.0
-  - bottleneck=1.3.1
   - bzip2=1.0.8
-  - ca-certificates=2019.10.16
-  - certifi=2019.9.11
+  - ca-certificates=2019.11.28
+  - certifi=2019.11.28
   - cffi=1.13.2
   - cftime=1.0.4.2
   - chardet=3.0.4
   - click=7.0
   - cloudpickle=1.2.2
-  - colorcet=2.0.2
+  - colorcet=2.0.1
+  - coverage=4.5.4
   - cryptography=2.8
   - curl=7.65.3
   - cycler=0.10.0
   - cytoolz=0.10.1
   - dask=2.8.1
   - dask-core=2.8.1
-  - dbus=1.13.6
   - decorator=4.4.1
   - defusedxml=0.6.0
   - distributed=2.8.1
   - entrypoints=0.3
   - esmf=8.0.0
   - esmpy=8.0.0
-  - expat=2.2.5
-  - fontconfig=2.13.1
+  - fasteners=0.14.1
   - freetype=2.10.0
-  - fsspec=0.6.0
-  - gettext=0.19.8.1
-  - glib=2.58.3
-  - gst-plugins-base=1.14.5
-  - gstreamer=1.14.5
+  - fsspec=0.6.1
+  - glob2=0.7
   - hdf4=4.2.13
   - hdf5=1.10.5
   - heapdict=1.0.1
   - holoviews=1.12.7
+  - httplib2=0.14.0
   - hvplot=0.5.2
-  - icu=64.2
   - idna=2.8
-  - importlib_metadata=0.23
+  - importlib_metadata=1.1.0
   - intake=0.5.3
   - ipykernel=5.1.3
-  - ipython=7.9.0
+  - ipython=7.10.1
   - ipython_genutils=0.2.0
   - jedi=0.15.1
   - jinja2=2.10.3
   - jpeg=9c
+  - json5=0.8.5
   - jsonschema=3.2.0
   - jupyter_client=5.3.3
   - jupyter_core=4.6.1
+  - jupyterlab=1.2.3
+  - jupyterlab_server=1.0.6
   - kiwisolver=1.1.0
   - krb5=1.16.3
   - libblas=3.8.0
   - libcblas=3.8.0
-  - libclang=9.0.0
   - libcurl=7.65.3
+  - libcxx=9.0.0
   - libedit=3.1.20170329
   - libffi=3.2.1
-  #- libgcc-ng
-  - libgfortran-ng
-  - libiconv=1.15
+  #- libgfortran=4.0.0
+  - libgfortran
   - liblapack=3.8.0
-  - libllvm9=9.0.0
   - libnetcdf=4.7.1
   - libopenblas=0.3.7
   - libpng=1.6.37
   - libsodium=1.0.17
   - libssh2=1.8.2
-  #- libstdcxx-ng
   - libtiff=4.1.0
-  - libuuid=2.32.1
-  - libxcb=1.13
-  #- libxkbcommon
-  - libxml2=2.9.10
+  - llvm-openmp=8.0.1
   - locket=0.2.0
   - lz4-c=1.8.3
   - markdown=3.1.1
   - markupsafe=1.1.1
-  - matplotlib=3.1.2
   - matplotlib-base=3.1.2
   - mistune=0.8.4
+  - monotonic=1.5
   - more-itertools=7.2.0
-  - mpi=1.0
-  - mpich=3.3.2
   - msgpack-numpy=0.4.4.3
   - msgpack-python=0.6.2
   - nbconvert=5.6.1
@@ -102,53 +93,56 @@ dependencies:
   - netcdf-fortran=4.4.5
   - netcdf4=1.5.3
   - notebook=6.0.1
-  - nspr
-  - nss=3.47
+  - numcodecs=0.6.4
   - numpy=1.17.3
+  - oauth2client=4.1.3
   - olefile=0.46
-  - openssl=1.1.1
+  - openssl=1.1.1d
   - packaging=19.2
   - pandas=0.25.3
-  - pandoc=2.8
+  - pandoc=2.8.0.1
   - pandocfilters=1.4.2
   - panel=0.7.0
   - param=1.9.2
   - parso=0.5.1
   - partd=1.0.0
-  - pcre=8.43
   - pexpect=4.7.0
   - pickleshare=0.7.5
   - pillow=6.2.1
   - pip=19.3.1
+  - pluggy=0.13.1
   - prometheus_client=0.7.1
-  - prompt_toolkit=3.0.0
-  - psutil=5.6.5
-  - pthread-stubs=0.4
+  - prompt_toolkit=3.0.2
+  - psutil=5.6.7
   - ptyprocess=0.6.0
+  - py=1.8.0
+  - pyasn1=0.4.8
+  - pyasn1-modules=0.2.7
   - pycparser=2.19
   - pyct=0.4.6
   - pyct-core=0.4.6
-  - pygments=2.4.2
-  - pyopenssl=19.0.0
+  - pygments=2.5.2
+  - pyopenssl=19.1.0
   - pyparsing=2.4.5
-  - pyqt=5.12.3
   - pyrsistent=0.15.6
   - pysocks=1.7.1
-  - python=3.7.3
+  - pytest=4.6.4
+  - pytest-cov=2.8.1
+  - python=3.8.0
+  - python-dateutil=2.8.1
   - python-snappy=0.5.4
   - pytz=2019.3
   - pyviz_comms=0.7.2
   - pyyaml=5.1.2
   - pyzmq=18.1.1
-  - qt=5.12.5
   - readline=8.0
   - requests=2.22.0
+  - rsa=4.0
   - ruamel.yaml=0.16.5
   - ruamel.yaml.clib=0.2.0
-  - ruamel_yaml=0.15.46
   - scipy=1.3.2
   - send2trash=1.5.0
-  - setuptools=42.0.0
+  - setuptools=42.0.2
   - six=1.13.0
   - snappy=1.1.7
   - sortedcontainers=2.1.0
@@ -166,41 +160,21 @@ dependencies:
   - wheel=0.33.6
   - xarray=0.14.1
   - xesmf=0.2.1
-  - xorg-libxau=1.0.9
-  - xorg-libxdmcp=1.1.3
   - xz=5.2.4
-  - yaml=0.1.7
+  - yaml=0.2.2
+  - zarr=2.3.2
   - zeromq=4.3.2
   - zict=1.0.0
   - zipp=0.6.0
   - zlib=1.2.11
   - zstd=1.4.4
   - pip:
-    - asciitree==0.3.3
-    - boto3==1.10.26
-    - botocore==1.13.26
     - cachetools==3.1.1
-    - docutils==0.15.2
-    - fasteners==0.15
-    - gcsfs==0.4.0
+    - google-api-python-client==1.7.11
     - google-auth==1.7.1
-    - google-auth-oauthlib==0.4.1
-    - intake-esm==2019.10.15
-    - intake-xarray==0.3.1
-    - jmespath==0.9.4
-    - monotonic==1.5
-    - numcodecs==0.6.4
-    - oauthlib==3.1.0
-    - pyasn1==0.4.8
-    - pyasn1-modules==0.2.7
-    - pyqt5-sip==4.19.18
-    - pyqtwebengine==5.12.1
-    - python-dateutil==2.8.0
-    - requests-oauthlib==1.3.0
-    - rsa==4.0
-    - s3fs==0.4.0
-    - s3transfer==0.2.1
-    - tqdm==4.39.0
-    - zarr==2.3.2
+    - google-auth-httplib2==0.0.3
+    - matplotlib==3.1.2
+    - msgpack==0.6.2
+    - uritemplate==3.0.0
 prefix: /srv/conda/envs/CMIP6
 

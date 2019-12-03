@@ -11,10 +11,11 @@ python:
 # specify what platforms of OS will be run
 os:
   - linux
-  - osx
+  #- osx
+  #- windows
 
 # what branches should be evaluated
-branches:
+branches:\
     only:
         - master
 

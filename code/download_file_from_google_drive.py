@@ -2,13 +2,13 @@ import io
 import tarfile
 import os
 import oauth2client
-from apiclient import discovery
+import googleapiclient.discovery as discovery
 from httplib2 import Http
 from oauth2client import file, client, tools
 from googleapiclient.http import MediaIoBaseDownload
 import sys
 
-WORKING_DIR = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
+WORKING_DIR = '/Users/clairezarakas/Documents/GitHub/local-climate-data-tool/code/phase1_data_wrangler/'
 sys.path.insert(0, WORKING_DIR)
 import analysis_parameters as params
 
