@@ -15,7 +15,7 @@ os:
   #- windows
 
 # what branches should be evaluated
-branches:
+branches:\
     only:
         - master
 
