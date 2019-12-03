@@ -3,7 +3,7 @@ Regrid the historical observations to be consistent with processed CMIP6 model
 output.
 
 Author: Jacqueline Nugent
-Last Modified: November 29, 2019
+Last Modified: December 2, 2019
 """
 import math
 import datetime as dt
@@ -16,6 +16,8 @@ import analysis_parameters
 
 
 OUT_DIR = analysis_parameters.DIR_PROCESSED_DATA + 'observation_data/'
+OBS_FILE_NAME = 'Complete_TAVG_LatLong1.nc'
+OUT_FILE_NAME = 'historical_obs.zarr'
 
 
 def convert_to_360(lons):
@@ -86,26 +88,22 @@ def create_obs_dataset(t_avg, time, lat, lon):
 
     ### reorganize data so that the longitudes are in ascending order
     best_data = best_data.sortby('lon')
-    
-    # temp:
-    print('dataset created')
 
     return best_data
 
 
 def save_dataset(best_data, data_path_out):
     """Save the processed temperature observation Datasets to zarr files"""
-    print('saving dataset...')
     best_data.load()
     best_data.chunk({'lat':10, 'lon':10, 'time':-1})
-    best_data.to_zarr(data_path_out + 'historical_obs.zarr')
+    best_data.to_zarr(data_path_out + OUT_FILE_NAME)
 
 
 ##################### Main Workflow ##########################################
 
 def process_all_observations(data_path, data_path_out=OUT_DIR):
     """Processes the historical observations file"""
-    obs_file = data_path + 'Complete_TAVG_LatLong1.nc'
+    obs_file = data_path + OBS_FILE_NAME
 
     # read in the file and calculate average temperatures
     [mean_temp, times, lats, longs] = calculate_temps(obs_file)
