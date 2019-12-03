@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - appdirs=1.4.3
-  #- appnope=0.1.0
+  #- appnope=0.1.0#
   - appnope
   - asciitree=0.3.3
   - atomicwrites=1.3.0
