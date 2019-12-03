@@ -12,7 +12,7 @@ import zarr
 import xarray as xr
 import sys
 
-dir_analysis = '../Phase1_ProcessData'
+dir_analysis = '../phase1_data_wrangler'
 sys.path.insert(0, dir_analysis)
 import analysis_parameters
 
