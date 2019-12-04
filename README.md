@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/czarakas/local-climate-data-tool/badge.svg)](https://coveralls.io/github/czarakas/local-climate-data-tool)
 [![GitHub license](https://img.shields.io/github/license/czarakas/local-climate-data-tool)](https://github.com/czarakas/local-climate-data-tool/blob/master/LICENSE)
 
-# Local Climate Data Tool
+# Local Climate Change Tool
 This local climate data tool displays the data from CMIP-6 output for historical
 and 4 different future scenarios via the Shared Socioeconomic Pathways (SSPs)
 described below. The motivation for this tool is to make climate data more
