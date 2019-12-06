@@ -43,7 +43,7 @@ before_script:
 # the actual commands to run
 script:
 #- "flake8 ../code/"
-- coverage run "../local-climate-change-tool/unit_test/dummy_test.py"
+- coverage run "../local-climate-change-tool/unit_test/test_dummy.py"
 
 # generate a coverage report to send to back to user
 after_success:
