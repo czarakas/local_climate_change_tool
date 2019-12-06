@@ -15,7 +15,7 @@ os:
   #- windows
 
 # what branches should be evaluated
-branches:\
+branches:
     only:
         - master
 
@@ -38,12 +38,12 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-- "flake8 ../code/" --exit-zero
+- flake8 "../local-climate-change-tool/"
 
 # the actual commands to run
 script:
 #- "flake8 ../code/"
-- coverage run dummy_test.py
+- coverage run "../local-climate-change-tool/unit_test/dummy_test.py"
 
 # generate a coverage report to send to back to user
 after_success:
