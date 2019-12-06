@@ -4,14 +4,12 @@ climate data for use in the Dashbboard Generator module.
 
 Approximate run time on ocean.pangeo.io:
 A - Create data dictionary of available climate model data:         1   min
-B - Process climate model data files to be consistently formatted: 13   mins
-C - Process historical observations to be consistently formatted:  ?? mins
-D - Calculate summary statistics for each scenario:                 7.5 mins
+B - Process climate model data files to be consistently formatted:  13  mins
+C - Calculate summary statistics for each scenario:                 7.5 mins
+D - Process historical observations to be consistently formatted:   1   min
 
-TOTAL: 23.5 mins
-
+TOTAL: 22.5 mins
 """
-### TODO: fix the docstring above with adjusted times
 import os
 import time
 import glob
@@ -154,7 +152,6 @@ def subcomponent_d(print_statements_on=False):
     processed global mean observation files (dims: time). If processed
     historical observation files exist in the output folder when this is run,
     those existing files are deleted"""
-
     # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
         print('====> Deleting existing processed observation files')
