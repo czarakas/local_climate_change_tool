@@ -82,7 +82,8 @@ This section describes the set up of the directories in this repository.
 
 **Data**: holds the files containing the data from CMIP6 (scenario models and historical model)
     and BEST (historical reanalysis data).
-**environment.yml**: contains dependencies for you to install the conda environment used for this project.
+
+**environment.yml**: contains dependencies for you to install the conda environment used for this project. 
 
 ```            
 conda env create -f environment.yml
