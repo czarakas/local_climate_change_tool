@@ -38,12 +38,12 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-- flake8 "../local-climate-change-tool/"
+- flake8 ../local-climate-change-tool/
 
 # the actual commands to run
 script:
 #- "flake8 ../code/"
-- coverage run "../local-climate-change-tool/unit_test/test_dummy.py"
+- coverage run ../local-climate-change-tool/unit_test/test_dummy.py
 
 # generate a coverage report to send to back to user
 after_success:
