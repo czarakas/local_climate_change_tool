@@ -48,6 +48,7 @@ Created by a team of researchers at the University of Washington. For bugs and
 ## Directory Hierarchy
 This section describes the set up of the directories in this repository.
 
+```bash
 ├── LICENSE
 ├── README.md
 ├── data
@@ -71,7 +72,7 @@ This section describes the set up of the directories in this repository.
 │   ├── phase2_dashboard_generator
 │   └── unit_test
 └── setup.py
-
+```
 
 1. examples: contains example code from CMIP6 hackathon
 1. phase1_data_wrangler: files to process the data into a format that
