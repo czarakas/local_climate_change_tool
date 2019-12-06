@@ -8,7 +8,8 @@ from oauth2client import file, client, tools
 from googleapiclient.http import MediaIoBaseDownload
 import sys
 
-WORKING_DIR = '/Users/clairezarakas/Documents/GitHub/local-climate-data-tool/code/phase1_data_wrangler/'
+cwd = os.getcwd()
+WORKING_DIR = cwd+'phase1_data_wrangler/'
 sys.path.insert(0, WORKING_DIR)
 import analysis_parameters as params
 
@@ -90,7 +91,7 @@ def download_data_predefined(file_to_download, print_statements_on):
         file_id = '1EG9ZzuoaG4z3KuYubdspTV8S8skTFMzE'
         filename_id = 'processed_data.tar.gz'
         filename_extracted = 'processed_data'
-        dir_extracted_data = params.DIR_PROCESSED_DATA
+        dir_extracted_data = params.DATA
         need_to_extract = True
     elif file_to_download=='Raw_Historical_Obs':
         #file link to view: https://drive.google.com/open?id=1J3lpNptF2PxLRCJxJVJkDpd4ndyDKp8j

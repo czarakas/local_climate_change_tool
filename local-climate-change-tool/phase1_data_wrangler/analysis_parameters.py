@@ -1,6 +1,7 @@
 """
 Defines parameters for what data to use and where data is saved
 """
+import os
 
 ######### Settings for data dictionary
 EXPERIMENT_LIST = ['historical', 'ssp126', 'ssp370', 'ssp245', 'ssp585']
@@ -8,10 +9,16 @@ VARIABLE_ID = 'tas'
 TABLE_ID = 'Amon'
 GRID_LABEL = 'gn'
 
-######### Data Directory Information
-DIR_HOME = '/home/jovyan/local-climate-data-tool/'           #
+######### Gets Home Directory
+cwd = os.getcwd()
+project_folder_name ='/local-climate-data-tool/'
+project_folder_location = cwd.split(project_folder_name,1)[0]
+
+DIR_HOME = project_folder_location+project_folder_name
+
+######### Data Directory Information          #
 DIR_UTIL = DIR_HOME + 'local-climate-change-tool/'
-DIR_DATA = DIR_HOMEL + 'data/'
+DIR_DATA = DIR_HOME + 'data/'
 DIR_CATALOG = DIR_DATA + 'catalogs/'
 DIR_TESTING_DATA = DIR_DATA + 'files_for_testing/'
 DIR_DUMMY_DATA = DIR_DATA + 'dummy_data_temporary/'
