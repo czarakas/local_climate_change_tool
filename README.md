@@ -47,19 +47,41 @@ Created by a team of researchers at the University of Washington. For bugs and
 
 ## Directory Hierarchy
 This section describes the set up of the directories in this repository.
-**Analysis**: comprises all of the python scripts and notebooks to analyze and
-            generate the panel application for interactive visualization of
-            the data.
 
-1. Examples: contains example code from CMIP6 hackathon
-1. Phase1_ProcessData: files to process the data into a format that
+├── LICENSE
+├── README.md
+├── data
+│   ├── catalogs
+│   ├── files_for_testing
+│   ├── intermediate_processed_data
+│   └── processed_data
+├── docs
+│   ├── Component_Specification.pdf
+│   ├── Data_Description.pdf
+│   ├── Final_Presentation_Dec_4.pdf
+│   ├── Functional_Specification.pdf
+│   ├── TechnologyReview.pptx
+│   ├── examples
+│   └── testing_docs
+├── environment.yml
+├── local-climate-change-tool
+│   ├── Download_ProcessedData_from_Google.ipynb
+│   ├── download_file_from_google_drive.py
+│   ├── phase1_data_wrangler
+│   ├── phase2_dashboard_generator
+│   └── unit_test
+└── setup.py
+
+
+1. examples: contains example code from CMIP6 hackathon
+1. phase1_data_wrangler: files to process the data into a format that
    readable for input into the panel application
-1. Phase2_CreateApp: files to generate the panel application that
+1. phase2_dashboard_generator: files to generate the panel application that
    displays the interactive dash board for user interaction.
 
 **Data**: holds the files containing the data from CMIP6 (scenario models and historical model)
     and BEST (historical reanalysis data).
-**environment.yml**: contains dependencies for you to install the environment used for this project.
+**environment.yml**: contains dependencies for you to install the conda environment used for this project.
 
 ```            
 conda env create -f environment.yml
