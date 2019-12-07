@@ -38,12 +38,12 @@ def test_convert_to_360():
     assert np.array_equal(exp_lons, conv_lons)
 
 
-def test_calculate_temps(test_file=TEST_FILE):
+def test_calculate_temps():
     """
     Tests that the raw observations file exists and calculate_temps function returns a list 
     of length 4 with t_avg, time, and lat and lon with the expected data types.
     """
-    output = process_obs.calculate_temps(test_file)
+    output = process_obs.calculate_temps(filename=TEST_FILE)
     exp_length = 4
     exp_types = [np.ndarray, pd.core.indexes.datetimes.DatetimeIndex, 
                       np.ndarray, np.ndarray]
@@ -110,3 +110,15 @@ def test_save_dataset():
     assert lat_pass
     assert lon_pass
     assert time_pass
+
+
+def main():
+    """Runs all tests for each of the functions in the subcomp_d module."""
+    test_convert_to_360()
+    test_calculate_temps()
+    test_create_obs_dataset()
+    test_save_dataset()
+
+
+if __name__ == '__main__':
+    main()
