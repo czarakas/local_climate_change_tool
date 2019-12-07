@@ -9,7 +9,8 @@ from googleapiclient.http import MediaIoBaseDownload
 import sys
 
 cwd = os.getcwd()
-WORKING_DIR = cwd+'phase1_data_wrangler/'
+WORKING_DIR = cwd+'/phase1_data_wrangler/'
+print(WORKING_DIR)
 sys.path.insert(0, WORKING_DIR)
 import analysis_parameters as params
 
