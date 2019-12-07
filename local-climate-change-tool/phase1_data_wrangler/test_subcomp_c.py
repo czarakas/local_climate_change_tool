@@ -10,6 +10,8 @@ import pandas as pd
 import xarray as xr
 import numpy as np
 
+sys.path.append(".")
+
 import analysis_parameters as params
 import subcomp_c_multi_model_stats as mms
 

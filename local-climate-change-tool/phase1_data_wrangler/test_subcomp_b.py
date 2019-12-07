@@ -12,6 +12,8 @@ import pandas as pd
 import xarray as xr
 import numpy as np
 
+sys.path.append(".")
+
 #import analysis_parameters
 #import subcomp_a_create_data_dict
 import subcomp_b_process_climate_model_data as process_data

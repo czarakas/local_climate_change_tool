@@ -2,12 +2,15 @@
 Unit tests for subcomponent d
 """
 import math
+import sys
 import datetime as dt
 from netCDF4 import Dataset
 import xarray as xr
 import pandas as pd
 import numpy as np
 import glob
+
+sys.path.append(".")
 
 import data_wrangler as dw
 import analysis_parameters as params
