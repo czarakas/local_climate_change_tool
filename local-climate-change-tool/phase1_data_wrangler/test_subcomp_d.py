@@ -18,7 +18,7 @@ import subcomp_d_process_historical_obs as process_obs
 
 
 TEST_DATA_DIR = params.DIR_INTERMEDIATE_OBSERVATION_DATA
-TEST_OUTPUT_DIR = '/home/jovyan/local-climate-data-tool/data/files_for_testing/'
+TEST_OUTPUT_DIR = params.DIR_TESTING_DATA
 TEST_FILE = TEST_DATA_DIR + 'Complete_TAVG_LatLong1.nc'
 OUTPUT_FILE_NAME = 'historical_obs.zarr'
 OUTPUT_FILE = TEST_OUTPUT_DIR + OUTPUT_FILE_NAME

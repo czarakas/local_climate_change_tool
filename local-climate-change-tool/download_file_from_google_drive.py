@@ -101,6 +101,13 @@ def download_data_predefined(file_to_download, print_statements_on):
         filename_extracted = 'Complete_TAVG_LatLong1.nc'
         dir_extracted_data = params.DIR_INTERMEDIATE_OBSERVATION_DATA
         need_to_extract = False
+    elif file_to_download=='Files_for_Testing':
+        #file link to view: https://drive.google.com/open?id=1M5IoOgRVOMjC4O-lJO3WXlrkdR1OhPKX
+        file_id = '1M5IoOgRVOMjC4O-lJO3WXlrkdR1OhPKX'
+        filename_id = 'files_for_testing.tar.gz'
+        filename_extracted = 'files_for_testing'
+        dir_extracted_data = params.DIR_DATA
+        need_to_extract = True
 
     download_data(dir_google_drive_permissions,
                   dir_extracted_data,
@@ -109,3 +116,8 @@ def download_data_predefined(file_to_download, print_statements_on):
                   filename_extracted,
                   need_to_extract,
                   print_statements_on)
+
+if __name__ == '__main__':
+    download_data_predefined('Processed_Data', print_statements_on)
+    download_data_predefined('Raw_Historical_Obs', print_statements_on)
+    download_data_predefined('Files_for_Testing', print_statements_on)
