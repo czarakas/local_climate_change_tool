@@ -1,1 +1,1 @@
-This folder contains a smaller subset of data which is small enough to be uploaded to Github that can be used for testing. Only testing modules will alter this folder.
+This folder will contain a smaller subset of climate model data (for testing purposes) which is small enough to be uploaded to Google Drive. It can be populated by downloading the files from Google Drive. Only testing modules will alter this folder.
