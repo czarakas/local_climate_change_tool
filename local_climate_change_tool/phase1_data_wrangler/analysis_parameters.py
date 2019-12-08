@@ -11,7 +11,7 @@ GRID_LABEL = 'gn'
 
 ######### Gets Home Directory
 cwd = os.getcwd()
-project_folder_name ='/local-climate-data-tool/'
+project_folder_name ='/local_climate_change_tool/'
 project_folder_location = cwd.split(project_folder_name,1)[0]
 
 DIR_HOME = project_folder_location+project_folder_name
