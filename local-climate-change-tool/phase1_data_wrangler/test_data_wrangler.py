@@ -1,15 +1,18 @@
 import sys
 import unittest
 import xarray as xr
-import data_wrangler as dw
-import analysis_parameters as params
 import unittest
 import pytest
 import os
-import time
+
+from local_climate_change_tool.phase1_data_wrangler import data_wrangler as data_wrangler
+from local_climate_change_tool.phase1_data_wrangler import analysis_parameters as analysis_parameters
+# import phase1_data_wrangler.data_wrangler as data_wrangler
+# import phase1_data_wrangler.analysis_parameters as analysis_parameters
 
 # Define directory and a dummy file to test deletions
-DIR_TESTING_FILES = params.DIR_TESTING_DATA
+DIR_TESTING_FILES = analysis_parameters.DIR_TESTING_DATA
+DIR_TESTING_FILES = DIR_TESTING_DATA
 DUMMY_NAME = 'foo'
 DUMMY_EXT = '.txt'
 DUMMY_FILE = DUMMY_NAME + DUMMY_EXT
@@ -17,13 +20,13 @@ DUMMY_FILE = DUMMY_NAME + DUMMY_EXT
 class test_data_wrangler(unittest.TestCase):
     def test_print_time(self):
         """Test that the print_time function executes without exceptions"""
-        dw.print_time()
+        data_wrangler.print_time()
         self.assertTrue(True)
 
     def test_delete_zarr_files(self):
         """Tests that delete_zarr_files function deletes the expected file"""
         open(DIR_TESTING_FILES + DUMMY_FILE, 'x')
-        dw.delete_zarr_files(data_dir = DIR_TESTING_FILES, regex=DUMMY_NAME,
+        data_wrangler.delete_zarr_files(data_dir = DIR_TESTING_FILES, regex=DUMMY_NAME,
                        file_type=DUMMY_EXT)
         self.assertFalse(os.path.isfile(DIR_TESTING_FILES + DUMMY_FILE))
     

@@ -17,7 +17,6 @@ import data_wrangler as dw
 import analysis_parameters as params
 import subcomp_d_process_historical_obs as process_obs
 
-
 TEST_DATA_DIR = params.DIR_INTERMEDIATE_OBSERVATION_DATA
 TEST_OUTPUT_DIR = params.DIR_TESTING_DATA + 'dummy_obs_data/'
 TEST_FILE = TEST_DATA_DIR + 'Complete_TAVG_LatLong1.nc'
@@ -75,27 +74,28 @@ class test_subcomp_d(unittest.TestCase):
         self.assertTrue(correct_length)
 
 
-    def test_create_obs_dataset(self):
-        """
-        Tests that the create_obs_dataset function returns a dataset with the expected types and
-        dimensions.
-        """
-        [t_avg, time, lat, lon] = process_obs.calculate_temps(filename=TEST_FILE)
-        test_ds = process_obs.create_obs_dataset(t_avg, time, lat, lon)
-        test_coords = [x for x in test_ds.coords]
+#     def test_create_obs_dataset(self):
+#         """
+#         Tests that the create_obs_dataset function returns a dataset with the expected types and
+#         dimensions and longitudes are in ascending order.
+#         """
+#         [t_avg, time, lat, lon] = process_obs.calculate_temps(filename=TEST_FILE)
+#         test_ds = process_obs.create_obs_dataset(t_avg, time, lat, lon)
+#         test_coords = [x for x in test_ds.coords]
 
-        ds_pass = isinstance(test_ds, EXP_TYPES[0])
-        lat_pass = (isinstance(test_ds['lat'].values[0], EXP_TYPES[1]) and
-                    len(test_ds['lat'].values) == EXP_DIMS[0])
-        lon_pass = (isinstance(test_ds['lon'].values[0], EXP_TYPES[2]) and
-                    len(test_ds['lon'].values) == EXP_DIMS[1])
-        time_pass = (isinstance(test_ds['time'].values[0], EXP_TYPES[3])and
-                     len(test_ds['time'].values) == EXP_DIMS[2])
+#         ds_pass = isinstance(test_ds, EXP_TYPES[0])
+#         lat_pass = (isinstance(test_ds['lat'].values[0], EXP_TYPES[1]) and
+#                     len(test_ds['lat'].values) == EXP_DIMS[0])
+#         lon_pass = (isinstance(test_ds['lon'].values[0], EXP_TYPES[2]) and
+#                     len(test_ds['lon'].values) == EXP_DIMS[1])
+#         time_pass = (isinstance(test_ds['time'].values[0], EXP_TYPES[3])and
+#                      len(test_ds['time'].values) == EXP_DIMS[2])
 
-        self.assertTrue( ds_pass)
-        self.assertTrue( lat_pass)
-        self.assertTrue( lon_pass)
-        self.assertTrue( time_pass)
+#         self.assertTrue( ds_pass)
+#         self.assertTrue( lat_pass)
+#         self.assertTrue( lon_pass)
+#         self.assertTrue( time_pass)
+#         self.assertTrue(test_ds['lon'].values[0] < test_ds['lon'].values[-1])
 
 
     def test_save_dataset(self): 
@@ -135,6 +135,7 @@ class test_subcomp_d(unittest.TestCase):
 #         # zarr can't overwrite
 #         dw.delete_zarr_files(data_dir=TEST_OUTPUT_DIR,
 #                              regex=OUTPUT_FILE_NAME, file_type='')
+        
         
         
 
