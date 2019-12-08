@@ -32,7 +32,7 @@ VERSION = '0.1.0'
 
 with open('requirements.txt') as f:
     REQUIRES = f.read().splitlines()
-    
+
 # REQUIRES = ['dask==2.8.1', 'numpy==1.17.3', 'pandas==0.25.3', 'pandocfilters==1.4.2', 
 # 'panel==0.7.0', 'param==1.9.2', 'hvplot==0.5.2', 'jupyter-client', 'jupyter-core==4.6.1', 
 # 'jupyterlab==1.2.3', 'jupyterlab-server==1.0.6', 'google-api-python-client==1.7.11', 
@@ -54,7 +54,6 @@ opts = dict(name=NAME,
             python_requires=PYTHON_REQUIRES,
             setup_requires=SETUP_REQUIRES,
             install_requires=REQUIRES,
-            requires=REQUIRES,
             )
 
 if __name__ == '__main__':
