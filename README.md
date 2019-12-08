@@ -9,7 +9,7 @@ described below. The motivation for this tool is to make climate data more
 accessible to people with little to no computing knowledge or background in
 atmospheric science or climate studies.
 
-### SSPs
+#### SSPs
 Used the Tier 1 - 21st century scenarios listed below ranging from highest to lowest
 emission scenarios.
 
@@ -27,7 +27,7 @@ Fueled Development.
 
 *See [here](https://doi.org/10.5194/gmd-9-1937-2016) for a very detailed explanation.*
 
-### Historical
+#### Historical
 1. Modeled Historical: CMIP6 historical simulation
 1. Observed Historical: data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
 
@@ -40,7 +40,11 @@ every point on the grid at all time steps. For more information, visit
 [http://berkeleyearth.org/](http://berkeleyearth.org/).
 
 ## User Guide
-Install package by cloning this repository then running setup.py in this current directory.
+Install package by cloning this repository then running setup.py in this current directory. The package consists of two main components: the **data wrangler** and the **dashboard generator** (documented in more detail in the Component Specification). Because running the data wrangler requires access to large raw climate model datasets, and we would like users to be able to launch the dashboard without navigating a high performance computing system, we have uploaded the processed datasets that are output by the data wrangler to google drive and included a script to download that already processed data.
+We recommend users configure their python environments differently depending on which components of the package they intend to use:
+* *using the dashboard generator component with already processed data*: use SIMPLER ENVIRONMENT
+* *running tests of the data wrangler*: use SIMPLER ENVIRONMENT
+* *running both the data wrangler and the dashboard generator*: use COMPLICATED ENVIRONMENT.
 
 Created by a team of researchers at the University of Washington. For bugs and
     issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
