@@ -92,16 +92,16 @@ def create_obs_dataset(t_avg, time, lat, lon):
     return best_data
 
 
-def save_dataset(best_data, data_path_out):
+def save_dataset(best_data, data_path_out, out_file_name=OUT_FILE_NAME):
     """Save the processed temperature observation Datasets to zarr files"""
     best_data.load()
     best_data.chunk({'lat':10, 'lon':10, 'time':-1})
-    best_data.to_zarr(data_path_out + OUT_FILE_NAME)
+    best_data.to_zarr(data_path_out + out_file_name)
 
 
 ##################### Main Workflow ##########################################
 
-def process_all_observations(data_path, data_path_out=OUT_DIR):
+def process_all_observations(data_path, data_path_out=OUT_DIR, out_file_name=OUT_FILE_NAME):
     """Processes the historical observations file"""
     obs_file = data_path + OBS_FILE_NAME
 
@@ -112,4 +112,4 @@ def process_all_observations(data_path, data_path_out=OUT_DIR):
     obs_ds = create_obs_dataset(mean_temp, times, lats, longs)
 
     # save the datasets
-    save_dataset(obs_ds, data_path_out)
+    save_dataset(obs_ds, data_path_out, out_file_name)
