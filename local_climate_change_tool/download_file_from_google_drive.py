@@ -136,6 +136,6 @@ def download_data_predefined(file_to_download, print_statements_on):
                   print_statements_on)
 
 if __name__ == '__main__':
-    download_data_predefined('Processed_Data', print_statements_on=True)
-    download_data_predefined('Raw_Historical_Obs', print_statements_on=True)
-    download_data_predefined('Files_for_Testing', print_statements_on=True)
+    download_data_predefined('Processed_Data', print_statements_on)
+    download_data_predefined('Raw_Historical_Obs', print_statements_on)
+    download_data_predefined('Files_for_Testing', print_statements_on)
