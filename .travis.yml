@@ -39,11 +39,11 @@ install:
 
 # a list of commands to run before the main script
 before_script:
-#- flake8 "../local_climate_change_tool/"
+#
 
 # the actual commands to run
 script:
-- pytest --cov="local_climate_change_tool/phase1_data_wrangler/"
+- flake8 "../local_climate_change_tool/"
 
 # generate a coverage report to send to back to user
 after_success:
