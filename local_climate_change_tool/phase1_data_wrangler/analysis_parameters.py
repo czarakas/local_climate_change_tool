@@ -17,7 +17,7 @@ project_folder_location = cwd.split(project_folder_name,1)[0]
 DIR_HOME = project_folder_location+project_folder_name
 
 ######### Data Directory Information          #
-DIR_UTIL = DIR_HOME + 'local-climate-change-tool/'
+DIR_UTIL = DIR_HOME + 'local_climate_change_tool/'
 DIR_DATA = DIR_HOME + 'data/'
 DIR_CATALOG = DIR_DATA + 'catalogs/'
 DIR_TESTING_DATA = DIR_DATA + 'files_for_testing/'
