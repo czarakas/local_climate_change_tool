@@ -4,9 +4,9 @@ test_subcomp_c.py
 Contains the test class for subcomp_c_multi_model_stats.py.
 """
 import time
-import cftime
 import glob
 import unittest
+import cftime
 import pandas as pd
 import xarray as xr
 import numpy as np
