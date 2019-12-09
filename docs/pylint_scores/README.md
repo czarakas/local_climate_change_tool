@@ -1,0 +1,1 @@
+This folder contains screenshots of pylint scores for the python files in the package.
