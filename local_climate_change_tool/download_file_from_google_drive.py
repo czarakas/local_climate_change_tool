@@ -18,7 +18,7 @@ CWD = os.getcwd()
 WORKING_DIR = CWD + '/phase1_data_wrangler/'
 print(WORKING_DIR)
 sys.path.insert(0, WORKING_DIR)
-import analysis_parameters as params
+from phase1_data_wrangler import analysis_parameters as params
 
 
 def get_credentials(permissions_dir):

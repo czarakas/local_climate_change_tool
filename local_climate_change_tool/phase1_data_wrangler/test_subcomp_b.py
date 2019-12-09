@@ -16,6 +16,10 @@ from phase1_data_wrangler.subcomp_b_process_climate_model_data import \
     reindex_time, generate_new_filename, create_reference_grid, \
     regrid_model, process_dataset, process_all_files_in_dictionary
 from phase1_data_wrangler.analysis_parameters import DIR_TESTING_DATA
+import download_file_from_google_drive
+
+# Download files
+download_file_from_google_drive.download_data_predefined('Files_for_Testing')
 
 # Define directory and file names
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
@@ -37,6 +41,7 @@ DSET_DICT[TEST_KEY2] = xr.open_dataset(TESTING_DATA_DIR+TEST_KEY2+'.nc')
 
 #---------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------
+
 def check_coord_names(ds_processed, ds_coords_expected):
     """Checks whether the coordinate names of ds are expected names."""
     coords_list = []

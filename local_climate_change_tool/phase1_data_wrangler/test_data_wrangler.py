@@ -2,6 +2,10 @@
 test_data_wrangler.py
 
 Contains the test class for data_wrangler.py.
+We only test the print_time and delete_zarr_files functions
+in this testing module because the data_wrangler module
+primarily runs all the subcomponents at once, and we test
+each subcomponent individually in the corresponding test modules.
 """
 import unittest
 import os
