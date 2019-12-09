@@ -1,10 +1,7 @@
 """
 util_panel.py
-Sami Turbeville
-CSE 583 Project: CMIP 6 Local Climate Tool
 
-Module of useful functions for creating data that
-panel reads in.
+Module of functions for creating data that the climate_dashboard panel reads in.
 """
 
 import sys
@@ -25,14 +22,13 @@ EXPERIMENT_KEYS.append('historical_obs')
 
 
 def read_data():
-    """
-    Returns a dictionary for data_type with keys:
-            historical
-            ssp126
-            ssp370
-            ssp245
-            ssp585
-            historical_obs
+    """Reads in the data.
+
+    Reads in the data and returns a dictionary for data_type with keys
+    'historical', 'ssp126', 'ssp370', 'ssp245', 'ssp585', and 'historical_obs'.
+
+    Returns:
+        dict_timeseries: The data_type dictionary.
     """
     dict_timeseries = dict()
     data_path = analysis_parameters.DIR_PROCESSED_DATA
@@ -50,13 +46,15 @@ def read_data():
 
 
 def create_country2city2latlon_dict():
-    """
-    Returns a nested dictionary. First key is country.
-        Second Key is city. The value is the lat lon
-        value that will be used to update the timeseries
-        plot. The first key will be a drop down menu and
-        the second will be a drop down menu that depends
-        on the input of the first.
+    """Creates a country-city, latitude-longitude dictionary.
+
+    Returns a nested dictionary. First key is country. Second Key is city.
+    The value is the lat lon value that will be used to update the timeseries
+    plot. The first key will be a drop down menu and the second will be a drop
+    down menu that depends on the input of the first.
+
+    Returns:
+        my_dict: The city latitude-longitude dictionary.
     """
     my_dict = dict()
     for country in COUNTRIES:
@@ -68,4 +66,5 @@ def create_country2city2latlon_dict():
         lon = DF['lng'].values[i]
         latlon = [lat, lon]
         my_dict[coun].update({city: latlon})
+
     return my_dict
