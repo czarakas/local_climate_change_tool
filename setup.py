@@ -1,4 +1,4 @@
-# Setup module for Local-Climate-Data-Tool
+# Setup module for local_climate_change_tool
 
 
 import sys
@@ -17,7 +17,7 @@ NAME = 'Local-Climate-Data-Tool'
 MAINTAINER = 'Claire Zarakas'
 MAINTAINER_EMAIL = 'czarakas@uw.edu'
 DESCRIPTION = """
-This local climate data tool displays the data from CMIP-6
+This local climate change tool displays the data from CMIP-6
 output for historical and 4 different future scenarios via
 the Shared Socioeconomic Pathways (SSPs) described below.
 The motivation for this tool is to make climate data more
@@ -25,10 +25,10 @@ accessible to people with little to no computing knowledge or
 background in atmospheric science or climate studies.
 """
 LONG_DESCRIPTION = open('README.md').read()
-URL = 'https://github.com/czarakas/local-climate-data-tool'
-DOWNLOAD_URL = 'https://github.com/czarakas/local-climate-data-tool/archive/master.zip'
+URL = 'https://github.com/czarakas/local_climate_change_tool.git'
+DOWNLOAD_URL = 'https://github.com/czarakas/local_climate_change_tool.git'
 LICENSE = 'MIT Licence'
-VERSION = '0.1.0'
+VERSION = '1.0'
 
 with open('requirements.txt') as f:
     REQUIRES = f.read().splitlines()

@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/czarakas/local-climate-data-tool.svg?branch=master)](https://travis-ci.org/czarakas/local-climate-data-tool)
-[![Coverage Status](https://coveralls.io/repos/github/czarakas/local-climate-data-tool/badge.svg)](https://coveralls.io/github/czarakas/local-climate-data-tool)
-[![GitHub license](https://img.shields.io/github/license/czarakas/local-climate-data-tool)](https://github.com/czarakas/local-climate-data-tool/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/czarakas/local-climate-data-tool.svg?branch=master)](https://travis-ci.org/czarakas/local_climate_change_tool)
+[![Coverage Status](https://coveralls.io/repos/github/czarakas/local-climate-data-tool/badge.svg)](https://coveralls.io/github/czarakas/local_climate_change_tool)
+[![GitHub license](https://img.shields.io/github/license/czarakas/local-climate-data-tool)](https://github.com/czarakas/local_climate_change_tool/blob/master/LICENSE)
 
 # Local Climate Change Tool
 This local climate data tool displays the data from CMIP-6 output for historical
