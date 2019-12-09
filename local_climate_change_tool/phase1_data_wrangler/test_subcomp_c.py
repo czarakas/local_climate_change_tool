@@ -4,7 +4,6 @@ Test for subcomp c
 import time
 import cftime
 import glob
-import sys
 import unittest
 import pandas as pd
 import xarray as xr
@@ -15,8 +14,6 @@ from phase1_data_wrangler.analysis_parameters import \
 from phase1_data_wrangler.subcomp_c_multi_model_stats import \
     initialize_empty_mms_arrays, fill_empty_arrays, create_xr_dataset, \
     get_scenario_fnames, read_in_fname
-
-sys.path.append(".")
 
 DATA_PATH = DIR_TESTING_DATA+'processed_model_data/'
 SCENARIO = 'historical'
@@ -55,6 +52,7 @@ def check_coord_names(ds_processed, ds_coords_expected):
         coords_list.append(coord)
     return bool(set(coords_list) == set(ds_coords_expected))
 
+
 def check_years(ds_processed, min_year, max_year):
     """ Check that times are within range of plausible years for
     model output"""
@@ -72,6 +70,7 @@ def check_years(ds_processed, min_year, max_year):
     else:
         print('Start year is too small')
         return False
+
 
 def check_coord_types(ds_processed, expected_types):
     """Checks that processed dataset consists of coordinates
@@ -92,6 +91,7 @@ def check_coord_types(ds_processed, expected_types):
 
     return bool(time_types_pass and lat_types_pass and lon_types_pass)
 
+
 class TestSubcompC(unittest.TestCase):
     """Test class for subcomp_c_multi_model_stats"""
     def test_fname_list(self, data_path=DATA_PATH, scenario=SCENARIO, normalized=NORMALIZED):
@@ -104,6 +104,7 @@ class TestSubcompC(unittest.TestCase):
         correct_type = isinstance(names[0], str)
 
         self.assertTrue(more_than_one_fname and correct_type)
+
 
     def test_read_in_fname(self, data_path=DATA_PATH, fname=FNAME_TEST, expected_types=EXP_TYPES):
         """Docstring..."""
@@ -121,6 +122,7 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(file_exists and coord_names_pass and years_pass)
 
+
     def test_initialize_empty_mms_arrays(self, data_path=DATA_PATH, scenario_name=SCENARIO,
                                          num_chunks=NUM_CHUNKS, normalized=NORMALIZED):
         """Docstring"""
@@ -132,6 +134,7 @@ class TestSubcompC(unittest.TestCase):
         files_exist = empty_dsets is not None
 
         self.assertTrue(files_exist)
+
 
     def test_fill_empty_arrays(self, empty_dsets=EMPTY_DSETS, dim_info=DIM_INFO,
                                file_names=FILE_NAMES, datasets=DATASETS,
@@ -160,6 +163,7 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(no_nans and logical_val_order)
 
+
     def test_create_xr_dataset(self, dims=DIMS, mean_vals=MULTI_MODEL_MEANS,
                                max_vals=MULTI_MODEL_MAXS, min_vals=MULTI_MODEL_MINS,
                                std_vals=MULTI_MODEL_STDS):
@@ -168,6 +172,7 @@ class TestSubcompC(unittest.TestCase):
         ds = create_xr_dataset(lats, lons, times, mean_vals, max_vals, min_vals, std_vals)
 
         self.assertTrue(ds is not None)
+
 
 if __name__ == '__main__':
     unittest.main()

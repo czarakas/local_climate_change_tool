@@ -1,7 +1,6 @@
 """
 Unit tests for subcomponent d
 """
-import sys
 import glob
 import unittest
 import os
@@ -14,8 +13,6 @@ from phase1_data_wrangler.analysis_parameters import \
     DIR_INTERMEDIATE_OBSERVATION_DATA, DIR_TESTING_DATA
 from phase1_data_wrangler.subcomp_d_process_historical_obs import \
     convert_to_360, calculate_temps, save_dataset
-
-sys.path.append(".")
 
 TEST_DATA_DIR = DIR_INTERMEDIATE_OBSERVATION_DATA
 TEST_OUTPUT_DIR = DIR_TESTING_DATA + 'dummy_obs_data/'
@@ -38,6 +35,7 @@ DUMMY_OBS = xr.Dataset(data_vars={'mean': (['time', 'lat', 'lon'],
                                            np.empty((2, 2, 2)))},
                        coords={'time': [0, 1], 'lat': [0, 1], 'lon':[0, 1]})
 
+
 class TestSubcompD(unittest.TestCase):
     """Test class for subcomp_d_process_historical_obs"""
     def test_convert_to_360(self):
@@ -51,6 +49,7 @@ class TestSubcompD(unittest.TestCase):
         conv_lons = convert_to_360(test_lons)
 
         self.assertTrue(np.array_equal(exp_lons, conv_lons))
+
 
     def test_calculate_temps(self):
         """
@@ -72,6 +71,7 @@ class TestSubcompD(unittest.TestCase):
 
         self.assertTrue(correct_types)
         self.assertTrue(correct_length)
+
 
     def test_save_dataset(self):
         """Tests that the dataset was saved correctly."""
@@ -99,6 +99,7 @@ class TestSubcompD(unittest.TestCase):
         self.assertTrue(file_exists)
         self.assertTrue(ds_pass)
         self.assertTrue(coord_pass)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,7 +6,6 @@ import cftime
 import unittest
 import os
 import glob
-import sys
 import pandas as pd
 import xarray as xr
 import numpy as np
@@ -16,8 +15,6 @@ from phase1_data_wrangler.subcomp_b_process_climate_model_data import \
     regrid_model, process_dataset, process_all_files_in_dictionary
 from phase1_data_wrangler.analysis_parameters import DIR_TESTING_DATA
 
-sys.path.append(".")
-
 # Define directory and file names
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
 TEST_KEY2 = 'CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn'
@@ -26,7 +23,9 @@ TESTING_DATA_DIR = DIR_TESTING_DATA+'raw_data/'
 TESTING_OUTPUT_DIR = DIR_TESTING_DATA+'processed_model_data/'
 VARNAME = 'tas'
 TEST_INDS = [44, 120, 0]
-EXP_TYPES = np.array([xr.core.dataarray.DataArray, np.ndarray, np.float64,
+EXP_TYPES = np.array([xr.core.dataarray.DataArray,
+                      np.ndarray,
+                      np.float64,
                       cftime._cftime.DatetimeProlepticGregorian])
 
 # Read testing data into dictionary
@@ -42,6 +41,7 @@ def check_coord_names(ds_processed, ds_coords_expected):
     for coord in ds_processed.coords:
         coords_list.append(coord)
     return bool(set(coords_list) == set(ds_coords_expected))
+
 
 def check_dims(ds_processed, ds_original, ds_ref_grid):
     """Checks whether dimensions of dataset are expected based on
@@ -59,6 +59,7 @@ def check_dims(ds_processed, ds_original, ds_ref_grid):
     else:
         print('Incorrect time dimension')
         return False
+
 
 def check_years(ds_processed, min_year, max_year):
     """ Check that times are within range of plausible years for
@@ -78,6 +79,7 @@ def check_years(ds_processed, min_year, max_year):
         print('Start year is too small')
         return False
 
+
 def check_coord_types(ds_processed, expected_types):
     """Checks that processed dataset consists of coordinates
     of expected data types"""
@@ -93,6 +95,7 @@ def check_coord_types(ds_processed, expected_types):
 
     return bool(lat_types_pass and lon_types_pass)
 
+
 def delete_zarr_files(data_dir, regex):
     """Deletes zarr files matching regular expression. This is a
     necessary function because zarr files cannot be overwritten"""
@@ -102,8 +105,8 @@ def delete_zarr_files(data_dir, regex):
         i = i+1
     print('deleted '+str(i)+' files in '+data_dir)
 
-class TestSubcompB(unittest.TestCase):
-    """Test class for subcomp_b_process_climate_model_data"""
+
+class test_subcomp_a(unittest.TestCase):
     def test_reindex_time(self):
         """Tests whether the reindex_time function works as expected"""
         [yr, month, day] = [1850, 1, 15]
@@ -127,16 +130,17 @@ class TestSubcompB(unittest.TestCase):
                 continue
         self.assertTrue(dates_converted)
 
+
     def test_generate_new_filename(self, test_key=TEST_KEY1):
         """Test that the generate_new_filename function generates a string"""
         fname = generate_new_filename(test_key)
         self.assertTrue(((fname is not None) and (type(fname) == str)))
 
+
     def test_create_reference_grid(self, dset_dict=DSET_DICT, test_key=TEST_KEY2):
         """ Tests that the reference grid function creates a sensible reference grid"""
         ds_original = dset_dict[test_key]
-        ds_ref_grid = create_reference_grid(dset_dict=dset_dict,
-                                            reference_key=test_key)
+        ds_ref_grid = create_reference_grid(dset_dict=dset_dict, reference_key=test_key)
 
         # Check that latitude and longitude dimensions haven't changed in regridding
         correct_dim_size = ((ds_original.dims['lat'] == ds_ref_grid.dims['lat']) and
@@ -164,16 +168,15 @@ class TestSubcompB(unittest.TestCase):
         self.assertTrue(one_dim)
         self.assertTrue(big_enough)
 
+
     def test_regrid_model_dims(self, dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
                                key_for_grid=TEST_KEY2):
         """Tests that the regrid function results in an array of the right dimensions"""
 
         # Regrid model output
         ds_to_regrid = dset_dict[key_to_regrid]
-        reference_grid = create_reference_grid(dset_dict=dset_dict,
-                                               reference_key=key_for_grid)
-        ds_regridded = regrid_model(ds_to_regrid,
-                                    reference_grid)
+        reference_grid = create_reference_grid(dset_dict=dset_dict, reference_key=key_for_grid)
+        ds_regridded = regrid_model(ds_to_regrid, reference_grid)
 
         # Check that lat/lonregridded data actually aligns with reference grid
         correct_lat_dim = np.size(ds_regridded['lat'].values) == np.size(reference_grid['lat'].values)
@@ -183,12 +186,12 @@ class TestSubcompB(unittest.TestCase):
         correct_time_dim = np.equal(ds_regridded['time'].values, ds_to_regrid['time'].values).all()
         self.assertTrue(correct_lat_dim and correct_lon_dim and correct_time_dim)
 
+
     def test_regrid_model_nans(self, dset_dict=DSET_DICT, key_to_regrid=TEST_KEY1,
                                key_for_grid=TEST_KEY2, varname=VARNAME):
         """Tests that the regrid function doesn't create any nans"""
         ds_to_regrid = dset_dict[key_to_regrid]
-        reference_grid = create_reference_grid(dset_dict=dset_dict,
-                                               reference_key=key_for_grid)
+        reference_grid = create_reference_grid(dset_dict=dset_dict, reference_key=key_for_grid)
         ds_regridded = regrid_model(ds_to_regrid, reference_grid)
 
         # Check that there aren't nans if there weren't in original array
@@ -196,6 +199,7 @@ class TestSubcompB(unittest.TestCase):
             raise ValueError('NANs were in original array')
         else:
             self.assertTrue(not np.isnan(ds_regridded[varname].values).any())
+
 
     def test_process_dataset(self,
                              dset_dict=DSET_DICT,
@@ -231,15 +235,16 @@ class TestSubcompB(unittest.TestCase):
         self.assertTrue(dims_pass)
         self.assertTrue(coord_types_pass)
 
+
     def test_save_dataset(self,
                           dset_dict=DSET_DICT,
                           data_path_out=TESTING_OUTPUT_DIR,
                           key_for_grid=TEST_KEY2,
                           exceptions_list=(),
                           expected_types=EXP_TYPES):
+        """Docstring"""
         final_grid = create_reference_grid(dset_dict=dset_dict,
                                            reference_key=key_for_grid)
-        """Tests the save_dataset functionß"""
 
         delete_zarr_files(data_dir=data_path_out, regex='*')
 
@@ -267,6 +272,7 @@ class TestSubcompB(unittest.TestCase):
         self.assertTrue(coord_names_pass)
         self.assertTrue(years_pass)
         self.assertTrue(coord_types_pass)
+
 
 if __name__ == '__main__':
     unittest.main()

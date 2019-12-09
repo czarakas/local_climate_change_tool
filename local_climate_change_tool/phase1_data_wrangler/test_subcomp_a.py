@@ -1,11 +1,8 @@
 """Unit test for subcomp a"""
-import sys
 import unittest
 import pandas as pd
 from phase1_data_wrangler.subcomp_a_create_data_dict import create_data_dict
 from phase1_data_wrangler.analysis_parameters import TABLE_ID, GRID_LABEL
-
-sys.path.append(".")
 
 SCENARIO_NAME = 'ssp126'
 VARIABLE_NAME = 'tas'
@@ -28,9 +25,11 @@ class TestClassA(unittest.TestCase):
         self.assertTrue(isinstance(DSET_DICT, dict))
         self.assertTrue(dset_dict is not None)
 
+
     def test_dset_full(self, dset_dict=DSET_DICT):
         """Test that the dictionary has keys"""
         self.assertTrue(len(dset_dict.keys()) > 0)
+
 
     def test_dataset_info(self, dataset_info=DATASET_INFO, expected_cols=EXPECTED_COLS):
         """Test that dataset_info is a nonemtpy DataFrame with the expected columns"""
@@ -38,11 +37,13 @@ class TestClassA(unittest.TestCase):
         self.assertTrue(len(dataset_info) > 0)
         self.assertEqual(set(dataset_info.columns), set(expected_cols))
 
+
     def test_modelnames_list(self, modelnames=MODELNAMES):
         """Test that modelnames is a nonempty list of strings"""
         self.assertTrue(len(modelnames) > 0)
         self.assertTrue(isinstance(modelnames, list))
         self.assertTrue(isinstance(modelnames[0], str))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -13,6 +13,7 @@ DUMMY_NAME = 'foo'
 DUMMY_EXT = '.txt'
 DUMMY_FILE = DUMMY_NAME + DUMMY_EXT
 
+
 class TestDataWrangler(unittest.TestCase):
     """Unit test for data_wrangler.py"""
     def test_print_time(self):
@@ -20,12 +21,14 @@ class TestDataWrangler(unittest.TestCase):
         print_time()
         self.assertTrue(True)
 
+
     def test_delete_zarr_files(self):
         """Tests that delete_zarr_files function deletes the expected file"""
         open(DIR_TESTING_FILES + DUMMY_FILE, 'x')
         delete_zarr_files(data_dir=DIR_TESTING_FILES, regex=DUMMY_NAME,
                           file_type=DUMMY_EXT)
         self.assertFalse(os.path.isfile(DIR_TESTING_FILES + DUMMY_FILE))
+
 
 if __name__ == "__main__":
     unittest.main()
