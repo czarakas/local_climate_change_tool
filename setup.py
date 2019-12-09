@@ -13,7 +13,7 @@ PACKAGES = find_packages()
 SETUP_REQUIRES = ['setuptools >= 24.2.0']
 PYTHON_REQUIRES = '>= 3.5'
 
-NAME = 'Local-Climate-Data-Tool'
+NAME = 'local_climate_change_tool'
 MAINTAINER = 'Claire Zarakas'
 MAINTAINER_EMAIL = 'czarakas@uw.edu'
 DESCRIPTION = """
