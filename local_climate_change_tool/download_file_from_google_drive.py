@@ -3,9 +3,8 @@ download_file_from_google_drive.py
 
 Module for Download_ProcessedData_from_Google.ipynb to download the processed
 data from the google drive into local_climate_change_tool/data/processed_data/.
-This is gathers data used to run the climate dashboard.
+This gathers data used to run the climate dashboard.
 """
-
 import io
 import tarfile
 import os
@@ -23,7 +22,7 @@ import analysis_parameters as params
 
 
 def get_credentials(permissions_dir):
-    '''Gets the credentials for the drive in which the data is saved'''
+    """Gets the credentials for the drive in which the data is saved."""
     obj = lambda: None
     web_dict = {'auth_host_name':'localhost', 'noauth_local_webserver':'store_true',
                 'auth_host_port':[8080, 8090], 'logging_level':'ERROR'}
@@ -42,8 +41,15 @@ def get_credentials(permissions_dir):
         creds = tools.run_flow(flow, store, obj)
     return creds
 
+
 def download_file(file_id, filename_id, creds):
-    '''Starts file download and prints update statements for user'''
+    """Starts the file download and prints update statements for the user.
+
+    Args:
+        file_id: The string key specifying which file to download.
+        filename_id: The string key of the name of the file.
+        creds: The credentials, as returned by get_credentials.
+    """
     drive = discovery.build('drive', 'v3', http=creds.authorize(Http()))
     request = drive.files().get_media(fileId=file_id)
     file_to_download = io.FileIO(filename_id, mode='w')
@@ -53,22 +59,27 @@ def download_file(file_id, filename_id, creds):
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
 
+
 def extract_files(filename_id, dir_extracted_data):
-    '''Extracts the tar files to be readeable'''
+    """Extracts the tar files in filename_id to be readable."""
     file_to_extract = tarfile.open(filename_id)
     file_to_extract.extractall(path=dir_extracted_data)
 
+
 def remove_extracted_files(dir_extracted_data, filename_extracted):
-    '''Removes the extracted files from the directory'''
+    """Removes the extracted tar files from the directory."""
     os.system('rm -rf ' + dir_extracted_data + filename_extracted)
 
+
 def remove_compressed_file(filename_compressed):
-    '''Removes the compressed files from the directory'''
+    """Removes the compressed files from the directory."""
     os.system('rm -rf ' + filename_compressed)
 
+
 def move_file(filename_id, dir_extracted_data):
-    '''Moves the files into the appropriate directory'''
+    """Moves the file to the appropriate directory."""
     os.system('mv ' + filename_id + ' ' + dir_extracted_data + filename_id)
+
 
 def download_data(dir_google_drive_permissions,
                   dir_extracted_data,
@@ -77,7 +88,17 @@ def download_data(dir_google_drive_permissions,
                   filename_extracted,
                   need_to_extract,
                   print_statements_on=True):
-    '''downloads the data to the local repository in the appropriate directory'''
+    """Downloads the data to the local repository in the correct directory.
+
+    Args:
+        dir_google_drive_permissions: String name of the drive where data is saved.
+        dir_extracted_data: String directory of the extracted tar files.
+        file_id: The string key specifying which file to download.
+        filename_id: The string key of the name of the file.
+        filename_extracted: The string name of the file after extracting it from the tar file.
+        need_to_extract: True if the file is a tar file you need to extract.
+        print_statements_on: True (default) to print what is happening to the user.
+    """
     if print_statements_on:
         print(' -> getting credentials')
     creds = get_credentials(permissions_dir=dir_google_drive_permissions)
@@ -102,8 +123,9 @@ def download_data(dir_google_drive_permissions,
     else:
         move_file(filename_id, dir_extracted_data)
 
+
 def download_data_predefined(file_to_download, print_statements_on):
-    '''Starts the process to download the files from google drive'''
+    """Starts the process to download the files from google drive."""
     dir_google_drive_permissions = params.DIR_GOOGLE_DRIVE_PERMISSIONS
     if file_to_download == 'Processed_Data':
         # file link to view: https://drive.google.com/open?id=1EG9ZzuoaG4z3KuYubdspTV8S8skTFMzE
@@ -134,6 +156,7 @@ def download_data_predefined(file_to_download, print_statements_on):
                   filename_extracted,
                   need_to_extract,
                   print_statements_on)
+
 
 if __name__ == '__main__':
     download_data_predefined('Processed_Data', print_statements_on)

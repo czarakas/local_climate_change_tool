@@ -1,5 +1,7 @@
 """
-Test for subcomp c
+test_subcomp_c.py
+
+Contains the test class for subcomp_c_multi_model_stats.py.
 """
 import time
 import cftime
@@ -46,7 +48,7 @@ DS = create_xr_dataset(lats=LATS, lons=LONS, times=TIMES,
 
 #----------------------------------------------------------------------------------
 def check_coord_names(ds_processed, ds_coords_expected):
-    """Checks whether coordinate names of ds are expected names"""
+    """Checks whether coordinate names of ds are expected names."""
     coords_list = []
     for coord in ds_processed.coords:
         coords_list.append(coord)
@@ -54,8 +56,7 @@ def check_coord_names(ds_processed, ds_coords_expected):
 
 
 def check_years(ds_processed, min_year, max_year):
-    """ Check that times are within range of plausible years for
-    model output"""
+    """Check that times are within range of plausible years for the output."""
     first_date = ds_processed['time'].values[0]
     if isinstance(first_date, np.datetime64):
         first_yr = pd.to_datetime(first_date).year
@@ -73,8 +74,10 @@ def check_years(ds_processed, min_year, max_year):
 
 
 def check_coord_types(ds_processed, expected_types):
-    """Checks that processed dataset consists of coordinates
-    of expected data types"""
+    """
+    Checks that processed dataset consists of coordinates
+    of expected data types.
+    """
     [exp_type_dim, exp_type_dim_value, exp_type_latlon, exp_type_time] = expected_types
 
     time_types_pass = (isinstance(ds_processed['time'].values[0], exp_type_time) and
@@ -93,10 +96,13 @@ def check_coord_types(ds_processed, expected_types):
 
 
 class TestSubcompC(unittest.TestCase):
-    """Test class for subcomp_c_multi_model_stats"""
+    """Test class for subcomp_c_multi_model_stats.py."""
+
     def test_fname_list(self, data_path=DATA_PATH, scenario=SCENARIO, normalized=NORMALIZED):
-        """Test that filename list generation actually generates a list of more than
-        one filename and that the filenames are strings"""
+        """
+        Tests that filename list generation actually generates a list of more
+        than one filename and that the filenames are strings.
+        """
         names = get_scenario_fnames(data_path, scenario, normalized)
 
         more_than_one_fname = bool(len(names) > 0)
@@ -105,9 +111,11 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(more_than_one_fname and correct_type)
 
-
     def test_read_in_fname(self, data_path=DATA_PATH, fname=FNAME_TEST, expected_types=EXP_TYPES):
-        """Docstring..."""
+        """
+        Checks that the file name is read in correctly and its contents
+        are as expected.
+        """
         ds = read_in_fname(data_path=DATA_PATH, fname=FNAME_TEST)
 
         file_exists = ds is not None
@@ -122,10 +130,9 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(file_exists and coord_names_pass and years_pass)
 
-
     def test_initialize_empty_mms_arrays(self, data_path=DATA_PATH, scenario_name=SCENARIO,
                                          num_chunks=NUM_CHUNKS, normalized=NORMALIZED):
-        """Docstring"""
+        """Tests that the arrays were initialized."""
         [empty_dsets,
          dim_info, dims,
          file_names,
@@ -135,12 +142,13 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(files_exist)
 
-
     def test_fill_empty_arrays(self, empty_dsets=EMPTY_DSETS, dim_info=DIM_INFO,
                                file_names=FILE_NAMES, datasets=DATASETS,
                                varname=VARIABLE_NAME, num_chunks=NUM_CHUNKS):
-        """Test that the multi-model statistics do not contain nans and
-        that min < mean < max"""
+        """
+        Tests that the multi-model statistics do not contain nans and
+        that min < mean < max.
+        """
         time_ind = 0
         lat_ind = 0
         lon_ind = 0
@@ -163,11 +171,10 @@ class TestSubcompC(unittest.TestCase):
 
         self.assertTrue(no_nans and logical_val_order)
 
-
     def test_create_xr_dataset(self, dims=DIMS, mean_vals=MULTI_MODEL_MEANS,
                                max_vals=MULTI_MODEL_MAXS, min_vals=MULTI_MODEL_MINS,
                                std_vals=MULTI_MODEL_STDS):
-        """Docstring..."""
+        """Tests that the dataset exists after it was created."""
         [lats, lons, times] = dims
         ds = create_xr_dataset(lats, lons, times, mean_vals, max_vals, min_vals, std_vals)
 

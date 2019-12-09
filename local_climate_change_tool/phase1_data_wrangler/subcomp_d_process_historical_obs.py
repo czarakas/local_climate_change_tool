@@ -1,9 +1,8 @@
 """
-Regrid the historical observations to be consistent with processed CMIP6 model
-output.
+subcomp_d_process_historical_obs.py
 
-Author: Jacqueline Nugent
-Last Modified: December 2, 2019
+Regrids the historical observations to be consistent with processed climate
+model output.
 """
 import math
 import datetime as dt
@@ -14,16 +13,22 @@ import numpy as np
 
 from phase1_data_wrangler.analysis_parameters import DIR_PROCESSED_DATA
 
+
 OUT_DIR = DIR_PROCESSED_DATA + 'observation_data/'
 OBS_FILE_NAME = 'Complete_TAVG_LatLong1.nc'
 OUT_FILE_NAME = 'historical_obs.zarr'
 
 
 def convert_to_360(lons):
-    """
-    Convert longitudes with the convention -180 to 180 degrees to longitudes
-    with the convention 0 to 360 degrees. Argument is 1D numpy array of
-    longitudes. Returns 1D numpy array of converted longitudes.
+    """Converts longitudes.
+
+    Converts longitudes with the convention -180 to 180 degrees to longitudes
+    with the convention 0 to 360 degrees.
+
+    Args: 
+        lons: The numpy array of original longitudes.
+    Returns:
+        new_lons: The numpy array of converted longitudes.
     """
     new_lons = np.empty(len(lons))
 
@@ -37,14 +42,21 @@ def convert_to_360(lons):
 
 
 def calculate_temps(filename):
-    """
+    """Calculates monthly average temperatures from the obsevations file.
+
     Converts the temperature anomalies and climatologies from the
     observations file into actual average, maximum, and minimum temperatures.
-    Returns the average, maximum, and minimum temperatures and their
-    dimensions (time, lat, lon) as a list of numpy arrays.
+
+    Args: 
+        filename: The string name of the observations file.
+    Returns:
+        t_avg: Numpy array of the average temperature.
+        time: Numpy array of time coordinates.
+        lat: Numpy array of latitude coordinateas.
+        lon: Numpy array of longitude coordinates.
     """
-    ### read in data, skipping first 100 years (1200 months) to match times
-    ### in CMIP6 model data:
+    # read in data, skipping first 100 years (1200 months) to match times
+    # in CMIP6 model data:
     nc1 = Dataset(filename, 'r')
     lat = nc1.variables['latitude'][:]
     lon = convert_to_360(nc1.variables['longitude'][:])
@@ -52,7 +64,7 @@ def calculate_temps(filename):
     t_avg_anom = nc1.variables['temperature'][1200:][:][:]
     t_avg_clima = nc1.variables['climatology'][:][:][:]
 
-    ### convert native time variables (in decimal year) to match model times
+    # convert native time variables (in decimal year) to match model times
     [dec_start, yr_start] = math.modf(time_avg[0])
     mnth_start = int(dec_start*12 + 1)
     first = dt.datetime(year=int(yr_start), month=mnth_start, day=15)
@@ -74,25 +86,30 @@ def calculate_temps(filename):
 
 
 def create_obs_dataset(t_avg, time, lat, lon):
-    """
-    Create Dataset for the average temperature observations with variable
+    """Creates historical observations dataset.
+
+    Creates a dataset for the average temperature observations with variable
     'mean' in degrees C and dimensions time, lat, and lon.
 
-    Arguments are the calculated average temperatures and the coordinates of
-    the dimensions (time, lat, lon) as returned by calculate_temps(). Returns
-    a the Dataset.
+    Args:
+        t_avg: Numpy array of the average temperature.
+        time: Numpy array of time coordinates.
+        lat: Numpy array of latitude coordinateas.
+        lon: Numpy array of longitude coordinates.
+    Returns:
+        best_data: Dataset of the BEST temperature observations.
     """
     best_data = xr.Dataset(data_vars={'mean': (['time', 'lat', 'lon'], t_avg)},
                            coords={'time': time, 'lat': lat, 'lon': lon})
 
-    ### reorganize data so that the longitudes are in ascending order
+    # reorganize data so that the longitudes are in ascending order
     best_data = best_data.sortby('lon')
 
     return best_data
 
 
 def save_dataset(best_data, data_path_out, out_file_name=OUT_FILE_NAME):
-    """Save the processed temperature observation Datasets to zarr files"""
+    """Saves the processed temperature observation Datasets to zarr files."""
     best_data.load()
     best_data.chunk({'lat':10, 'lon':10, 'time':-1})
     best_data.to_zarr(data_path_out + out_file_name)
@@ -101,7 +118,7 @@ def save_dataset(best_data, data_path_out, out_file_name=OUT_FILE_NAME):
 ##################### Main Workflow ##########################################
 
 def process_all_observations(data_path, data_path_out=OUT_DIR, out_file_name=OUT_FILE_NAME):
-    """Processes the historical observations file"""
+    """Processes the historical observations file."""
     obs_file = data_path + OBS_FILE_NAME
 
     # read in the file and calculate average temperatures

@@ -1,9 +1,11 @@
 """
-Defines parameters for what data to use and where data is saved
+analysis_parameters.py
+
+Defines parameters for what data to use and where data is saved.
 """
 import os
 
-######### Settings for data dictionary
+######### Settings for Data Dictionary
 EXPERIMENT_LIST = ['historical', 'ssp126', 'ssp370', 'ssp245', 'ssp585']
 VARIABLE_ID = 'tas'
 TABLE_ID = 'Amon'
@@ -18,7 +20,7 @@ DIR_HOME = PROJECT_FOLDER_LOCATION + PROJECT_FOLDER_NAME
 if '/local_climate_change_tool/local_climate_change_tool' in DIR_HOME:
     DIR_HOME = PROJECT_FOLDER_LOCATION + '/'
 
-######### Data Directory Information          #
+######### Data Directory Information
 DIR_UTIL = DIR_HOME + 'local_climate_change_tool/'
 DIR_DATA = DIR_HOME + 'data/'
 DIR_CATALOG = DIR_DATA + 'catalogs/'

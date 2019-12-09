@@ -1,5 +1,7 @@
 """
-Unit tests for subcomponent d
+test_subcomp_d.py
+
+Contains the test class for subcomp_d_process_historical_obs.
 """
 import glob
 import unittest
@@ -37,7 +39,8 @@ DUMMY_OBS = xr.Dataset(data_vars={'mean': (['time', 'lat', 'lon'],
 
 
 class TestSubcompD(unittest.TestCase):
-    """Test class for subcomp_d_process_historical_obs"""
+    """Test class for subcomp_d_process_historical_obs.py"""
+
     def test_convert_to_360(self):
         """
         Tests if the convert_to_360 function correctly converts -180 to 180
@@ -49,7 +52,6 @@ class TestSubcompD(unittest.TestCase):
         conv_lons = convert_to_360(test_lons)
 
         self.assertTrue(np.array_equal(exp_lons, conv_lons))
-
 
     def test_calculate_temps(self):
         """
@@ -71,7 +73,6 @@ class TestSubcompD(unittest.TestCase):
 
         self.assertTrue(correct_types)
         self.assertTrue(correct_length)
-
 
     def test_save_dataset(self):
         """Tests that the dataset was saved correctly."""

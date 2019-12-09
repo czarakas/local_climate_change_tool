@@ -1,5 +1,7 @@
 """
-This script runs all subcomponents in the appropriate order to generate
+data_wrangler.py
+
+Runs all subcomponents (A-D) in the appropriate order to generate
 climate data for use in the Dashbboard Generator module.
 
 Approximate run time on ocean.pangeo.io:
@@ -25,9 +27,6 @@ from phase1_data_wrangler.analysis_parameters import EXPERIMENT_LIST, \
 
 START_TIME = time.time()
 
-#----------------------------------------------------------------------
-# GLOBAL PARAMETER SETTINGS
-#----------------------------------------------------------------------
 # Settings for this script
 
 PRINT_STATEMENTS_ON = True
@@ -53,20 +52,26 @@ DIR_PROCESSED_OBS_DATA = '/home/jovyan/local-climate-data-tool/data/processed_da
 DIR_INTERMEDIATE_MODEL_DATA = DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 DIR_INTER_OBS_DATA = DIR_INTERMEDIATE_OBSERVATION_DATA
 
-#----------------------------------------------------------------------
-# FUNCTION DEFINITIONS
-#----------------------------------------------------------------------
 
 def print_time(start_time=START_TIME):
-    """Prints the minutes elapsed since the start of running the script"""
+    """Prints the minutes elapsed since the start of running the script."""
     current_time = time.time()
     time_elapsed = current_time-start_time
     mins_elapsed = round(time_elapsed/60, 2)
     print('            Time elapsed: '+str(mins_elapsed)+' mins')
 
+
 def delete_zarr_files(data_dir, regex, print_statements_on=False, file_type='.zarr'):
-    """Deletes files matching regular expression. This is a
-    necessary function because zarr files cannot be overwritten"""
+    """Deletes files matching regular expression.
+
+    This is necessary because zarr files cannot be overwritten.
+
+    Args:
+        data_dir: A string with path to the directory containing the files
+        regex: A string with the regular expression (e.g. 'file_*').
+        file_type: A string with the extension of the file(s) (e.g. '.zarr').
+        print_statements_on: True if you want to print what is happening.
+    """
     i = 0
     for file in glob.glob(data_dir+regex+file_type):
         os.system('rm -rf '+file)
@@ -74,9 +79,18 @@ def delete_zarr_files(data_dir, regex, print_statements_on=False, file_type='.za
     if print_statements_on:
         print('   Deleted '+str(i)+' files in '+data_dir)
 
-def subcomponent_a(print_statements_on=False):
-    """Creates data dictionary of all available climate model data"""
 
+def subcomponent_a(print_statements_on=False):
+    """Creates data dictionary of all available climate model data.
+
+    Creates a dictionary of experiment, variable, table id, and grid label
+    for all available climate model data.
+
+    Args:
+        print_statements_on: True if you want to print what is happening.
+    Returns:
+        dset_dict: The climate data dictionary.
+    """
     if print_statements_on:
         print('====> Creating data dictionary of available model data')
     [_, dset_dict, _] = create_data_dict(this_experiment_id=SCENARIO_LIST,
@@ -87,12 +101,19 @@ def subcomponent_a(print_statements_on=False):
         print_time()
     return dset_dict
 
-def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
-    """Processes raw climate model data to create intermediate spatial model
-    files with consistent formatting (dims: lat/lon/time). If intermediate spatial
-    model files exist in the output folder when this is run, those existing files
-    are deleted"""
 
+def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
+    """Processes raw climate model data.
+
+    Creates intermediate spatial model files with consistent formatting
+    (dims: lat/lon/time). If intermediate spatial model files exist in the
+    output folder when this is run, those existing files are deleted.
+
+    Args:
+        ref_grid_key: Label for key of the reference grid.
+        dset_dict: The climate data dictionary.
+        print_statements_on: True if you want to print what is happening.
+    """
     # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
         print('====> Deleting existing intermediate model data files')
@@ -123,11 +144,20 @@ def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
     if print_statements_on:
         print_time()
 
+
 def subcomponent_c(num_chunks, normalized, print_statements_on=False):
-    """Processes intermediate spatial model files (dims: lat/lon/time)
-    output from subcomponent b to create multimodel statistics (i.e. compressing
-    data across all models) of dims: lat/lon/time. If files exist in the output
-    folder when this is run, those existing files are deleted"""
+    """Processes intermediate spatial model files.
+
+    Process files (dims: lat/lon/time) with output from subcomponent b to
+    create multimodel statistics (i.e. compressing data across all models)
+    of dims: lat/lon/time. If files exist in the output folder when this is
+    run, those existing files are deleted.
+
+    Args:
+        num_chunks: Integer number of chunks to use for saving the zarr file.
+        normalized: False (default) if the data is not normalized.
+        print_statements_on: True if you want to print what is happening.
+    """
     # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
         print('====> Deleting existing processed data files')
@@ -148,12 +178,17 @@ def subcomponent_c(num_chunks, normalized, print_statements_on=False):
     if print_statements_on:
         print_time()
 
+
 def subcomponent_d(print_statements_on=False):
-    """Processes raw historical climate observations to create processed files
-    with formatting to match climate model data (dims: lat/lon/time) and
-    processed global mean observation files (dims: time). If processed
-    historical observation files exist in the output folder when this is run,
-    those existing files are deleted"""
+    """Processes raw historical climate observations.
+
+    Creates processed files with formatting to match climate model data
+    (dims: lat/lon/time). If processed historical observation files exist
+    in the output folder when this is run, those existing files are deleted.
+
+    Args:
+        print_statements_on: True if you want to print what is happening.
+    """
     # Delete existing files because you can't overwrite zarr files
     if print_statements_on:
         print('====> Deleting existing processed observation files')
@@ -169,10 +204,16 @@ def subcomponent_d(print_statements_on=False):
     if print_statements_on:
         print_time()
 
-def main(print_statements_on=PRINT_STATEMENTS_ON):
-    """ Runs all subcomponents in the appropriate sequence to create
-    climate data processed for use in the Dashboard Generator"""
 
+def main(print_statements_on=PRINT_STATEMENTS_ON):
+    """Runs all subcomponents in the appropriate sequence.
+
+    Runs subcomponents A-D to create climate data processed for use in the
+    Dashboard Generator.
+
+    Args:
+        print_statements_on: True if you want to print what is happening.
+    """
     if print_statements_on:
         print('---------------Running subcomponent A---------------')
     data_dict = subcomponent_a(print_statements_on=print_statements_on)
