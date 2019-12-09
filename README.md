@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/czarakas/local-climate-data-tool.svg?branch=master)](https://travis-ci.org/czarakas/local_climate_change_tool)
-[![Coverage Status](https://coveralls.io/repos/github/czarakas/local-climate-data-tool/badge.svg)](https://coveralls.io/github/czarakas/local_climate_change_tool)
+[![Coverage Status](https://coveralls.io/repos/github/czarakas/local-climate-data-tool/badge.svg?branch=master)](https://coveralls.io/github/czarakas/local_climate_change_tool)
 [![GitHub license](https://img.shields.io/github/license/czarakas/local-climate-data-tool)](https://github.com/czarakas/local_climate_change_tool/blob/master/LICENSE)
 
 # Local Climate Change Tool
