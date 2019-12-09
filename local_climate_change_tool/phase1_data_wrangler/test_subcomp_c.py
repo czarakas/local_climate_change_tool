@@ -1,7 +1,6 @@
 """
-Need to add docstring
+Test for subcomp c
 """
-
 import time
 import cftime
 import glob
@@ -11,15 +10,18 @@ import pandas as pd
 import xarray as xr
 import numpy as np
 
+from phase1_data_wrangler.analysis_parameters import \
+    DIR_TESTING_DATA, VARIABLE_ID
+from phase1_data_wrangler.subcomp_c_multi_model_stats import \
+    initialize_empty_mms_arrays, fill_empty_arrays, create_xr_dataset, \
+    get_scenario_fnames, read_in_fname
+
 sys.path.append(".")
 
-import analysis_parameters as params
-import subcomp_c_multi_model_stats as mms
-
-DATA_PATH = params.DIR_TESTING_DATA+'processed_model_data/'
+DATA_PATH = DIR_TESTING_DATA+'processed_model_data/'
 SCENARIO = 'historical'
 FNAME_TEST = 'tas_historical_CAMS-CSM1-0'
-VARIABLE_NAME = params.VARIABLE_ID
+VARIABLE_NAME = VARIABLE_ID
 NORMALIZED = False
 NUM_CHUNKS = 20
 EXP_TYPES = np.array([xr.core.dataarray.DataArray,
@@ -30,20 +32,20 @@ EXP_TYPES = np.array([xr.core.dataarray.DataArray,
 [EMPTY_DSETS,
  DIM_INFO, DIMS,
  FILE_NAMES,
- DATASETS] = mms.initialize_empty_mms_arrays(data_path=DATA_PATH, scenario_name=SCENARIO,
-                                             num_chunks=NUM_CHUNKS, normalized=NORMALIZED)
+ DATASETS] = initialize_empty_mms_arrays(data_path=DATA_PATH, scenario_name=SCENARIO,
+                                         num_chunks=NUM_CHUNKS, normalized=NORMALIZED)
 [LATS, LONS, TIMES] = DIMS
 
 [MULTI_MODEL_MEANS,
  MULTI_MODEL_MINS,
  MULTI_MODEL_MAXS,
- MULTI_MODEL_STDS] = mms.fill_empty_arrays(empty_dsets=EMPTY_DSETS, dim_info=DIM_INFO,
-                                           file_names=FILE_NAMES, datasets=DATASETS,
-                                           varname=VARIABLE_NAME, num_chunks=NUM_CHUNKS)
+ MULTI_MODEL_STDS] = fill_empty_arrays(empty_dsets=EMPTY_DSETS, dim_info=DIM_INFO,
+                                       file_names=FILE_NAMES, datasets=DATASETS,
+                                       varname=VARIABLE_NAME, num_chunks=NUM_CHUNKS)
 
-DS = mms.create_xr_dataset(lats=LATS, lons=LONS, times=TIMES,
-                           mean_vals=MULTI_MODEL_MEANS, max_vals=MULTI_MODEL_MAXS,
-                           min_vals=MULTI_MODEL_MINS, std_vals=MULTI_MODEL_STDS)
+DS = create_xr_dataset(lats=LATS, lons=LONS, times=TIMES,
+                       mean_vals=MULTI_MODEL_MEANS, max_vals=MULTI_MODEL_MAXS,
+                       min_vals=MULTI_MODEL_MINS, std_vals=MULTI_MODEL_STDS)
 
 #----------------------------------------------------------------------------------
 def check_coord_names(ds_processed, ds_coords_expected):
@@ -90,20 +92,22 @@ def check_coord_types(ds_processed, expected_types):
 
     return bool(time_types_pass and lat_types_pass and lon_types_pass)
 
-class test_subcomp_c(unittest.TestCase):
+class TestSubcompC(unittest.TestCase):
+    """Test class for subcomp_c_multi_model_stats"""
     def test_fname_list(self, data_path=DATA_PATH, scenario=SCENARIO, normalized=NORMALIZED):
         """Test that filename list generation actually generates a list of more than
         one filename and that the filenames are strings"""
-        names = mms.get_scenario_fnames(data_path, scenario, normalized)
+        names = get_scenario_fnames(data_path, scenario, normalized)
 
-        more_than_one_fname = bool(len(names)>0)
+        more_than_one_fname = bool(len(names) > 0)
 
-        correct_type = isinstance(names[0],str)
+        correct_type = isinstance(names[0], str)
 
         self.assertTrue(more_than_one_fname and correct_type)
 
     def test_read_in_fname(self, data_path=DATA_PATH, fname=FNAME_TEST, expected_types=EXP_TYPES):
-        ds = mms.read_in_fname(data_path=DATA_PATH, fname=FNAME_TEST)
+        """Docstring..."""
+        ds = read_in_fname(data_path=DATA_PATH, fname=FNAME_TEST)
 
         file_exists = ds is not None
 
@@ -119,16 +123,11 @@ class test_subcomp_c(unittest.TestCase):
 
     def test_initialize_empty_mms_arrays(self, data_path=DATA_PATH, scenario_name=SCENARIO,
                                          num_chunks=NUM_CHUNKS, normalized=NORMALIZED):
+        """Docstring"""
         [empty_dsets,
          dim_info, dims,
          file_names,
-         datasets] = mms.initialize_empty_mms_arrays(data_path, scenario_name, num_chunks, normalized)
-
-        # test empty_dsets
-        # test dim_info
-        # test dims
-        # test file_names
-        # test datasets
+         datasets] = initialize_empty_mms_arrays(data_path, scenario_name, num_chunks, normalized)
 
         files_exist = empty_dsets is not None
 
@@ -146,17 +145,17 @@ class test_subcomp_c(unittest.TestCase):
         [multi_model_means,
          multi_model_mins,
          multi_model_maxs,
-         multi_model_stds] = mms.fill_empty_arrays(empty_dsets, dim_info, file_names,
-                                                   datasets, varname, num_chunks)
+         multi_model_stds] = fill_empty_arrays(empty_dsets, dim_info, file_names,
+                                               datasets, varname, num_chunks)
 
         no_nans = ((not np.isnan(multi_model_means).any()) and
                    (not np.isnan(multi_model_mins).any()) and
                    (not np.isnan(multi_model_maxs).any()) and
                    (not np.isnan(multi_model_stds).any()))
 
-        logical_val_order = ((multi_model_means[time_ind, lat_ind, lon_ind] <= 
+        logical_val_order = ((multi_model_means[time_ind, lat_ind, lon_ind] <=
                               multi_model_maxs[time_ind, lat_ind, lon_ind]) and
-                             (multi_model_means[time_ind, lat_ind, lon_ind] >= 
+                             (multi_model_means[time_ind, lat_ind, lon_ind] >=
                               multi_model_mins[time_ind, lat_ind, lon_ind]))
 
         self.assertTrue(no_nans and logical_val_order)
@@ -164,16 +163,11 @@ class test_subcomp_c(unittest.TestCase):
     def test_create_xr_dataset(self, dims=DIMS, mean_vals=MULTI_MODEL_MEANS,
                                max_vals=MULTI_MODEL_MAXS, min_vals=MULTI_MODEL_MINS,
                                std_vals=MULTI_MODEL_STDS):
+        """Docstring..."""
         [lats, lons, times] = dims
-        ds = mms.create_xr_dataset(lats, lons, times, mean_vals, max_vals, min_vals, std_vals)
+        ds = create_xr_dataset(lats, lons, times, mean_vals, max_vals, min_vals, std_vals)
 
-        self.assertTrue( ds is not None)
-
-    #def export_dataset(ds, output_path, variable_name, scenario_name, normalized=False):
-
-    #def create_scenario_mms_datasets
-
-    #def process_all_scenarios
+        self.assertTrue(ds is not None)
 
 if __name__ == '__main__':
     unittest.main()

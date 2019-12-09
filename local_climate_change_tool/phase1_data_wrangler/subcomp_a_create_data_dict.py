@@ -3,9 +3,7 @@ Creates data dictionary based on analysis parameters
 """
 
 import intake
-import analysis_parameters as params
-
-DIR_CATALOG = params.DIR_CATALOG
+from phase1_data_wrangler.analysis_parameters import DIR_CATALOG
 
 
 def create_data_dict(this_experiment_id, this_variable_id,

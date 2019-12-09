@@ -12,10 +12,9 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 
-import analysis_parameters
+from phase1_data_wrangler.analysis_parameters import DIR_PROCESSED_DATA
 
-
-OUT_DIR = analysis_parameters.DIR_PROCESSED_DATA + 'observation_data/'
+OUT_DIR = DIR_PROCESSED_DATA + 'observation_data/'
 OBS_FILE_NAME = 'Complete_TAVG_LatLong1.nc'
 OUT_FILE_NAME = 'historical_obs.zarr'
 

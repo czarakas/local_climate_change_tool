@@ -14,14 +14,16 @@ import cftime
 import xarray as xr
 import xesmf as xe
 import numpy as np
-import analysis_parameters as params
+
+from phase1_data_wrangler.analysis_parameters import EXPERIMENT_LIST, \
+    VARIABLE_ID, DIR_PROCESSED_DATA, DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 
 ############ Read in Settings for Data Dictionary#############################
 
-THIS_EXPERIMENT_ID = params.EXPERIMENT_LIST
-THIS_VARIABLE_ID = params.VARIABLE_ID
-OUTPUT_PATH = params.DIR_PROCESSED_DATA
-DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+THIS_EXPERIMENT_ID = EXPERIMENT_LIST
+THIS_VARIABLE_ID = VARIABLE_ID
+OUTPUT_PATH = DIR_PROCESSED_DATA
+DIR_INTERMEDIATE = DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 
 ########### Create functions for analysis ####################################
 

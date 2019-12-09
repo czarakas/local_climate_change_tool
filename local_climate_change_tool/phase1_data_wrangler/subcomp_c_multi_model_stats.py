@@ -6,12 +6,15 @@ import time
 import glob
 import xarray as xr
 import numpy as np
-import analysis_parameters as params
 
-DATA_PATH = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
-SCENARIO_LIST = params.EXPERIMENT_LIST
-VARIABLE_NAME = params.VARIABLE_ID
-OUTPUT_PATH = params.DIR_PROCESSED_DATA+'model_data/'
+from phase1_data_wrangler.analysis_parameters import \
+    DIR_INTERMEDIATE_PROCESSED_MODEL_DATA, EXPERIMENT_LIST, VARIABLE_ID, \
+    DIR_PROCESSED_DATA
+
+DATA_PATH = DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+SCENARIO_LIST = EXPERIMENT_LIST
+VARIABLE_NAME = VARIABLE_ID
+OUTPUT_PATH = DIR_PROCESSED_DATA+'model_data/'
 INTERMEDIATE_OUTPUT_PATH = '/home/jovyan/local-climate-data-tool/data/intermediate_data/'
 
 def get_scenario_fnames(data_path, scenario, normalized=False):

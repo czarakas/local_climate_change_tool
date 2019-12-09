@@ -13,11 +13,15 @@ TOTAL: 22.5 mins
 import os
 import time
 import glob
-import analysis_parameters as params
-import subcomp_a_create_data_dict as data_dict
-import subcomp_b_process_climate_model_data as process_data
-import subcomp_c_multi_model_stats as generate_stats
-import subcomp_d_process_historical_obs as process_obs
+
+from phase1_data_wrangler.subcomp_a_create_data_dict import create_data_dict
+from phase1_data_wrangler.subcomp_b_process_climate_model_data import \
+    create_reference_grid, process_all_files_in_dictionary
+from phase1_data_wrangler.subcomp_c_multi_model_stats import process_all_scenarios
+from phase1_data_wrangler.subcomp_d_process_historical_obs import process_all_observations
+from phase1_data_wrangler.analysis_parameters import EXPERIMENT_LIST, \
+    VARIABLE_ID, TABLE_ID, GRID_LABEL, DIR_PROCESSED_DATA, \
+    DIR_INTERMEDIATE_PROCESSED_MODEL_DATA, DIR_INTERMEDIATE_OBSERVATION_DATA
 
 START_TIME = time.time()
 
@@ -37,19 +41,17 @@ EXCEPTIONS_LIST = ('tas_historical_CESM2',
 REFERENCE_GRID_KEY = 'CMIP.BCC.BCC-CSM2-MR.historical.Amon.gn'
 
 # Parameter names
-SCENARIO_LIST = params.EXPERIMENT_LIST
-VARIABLE_NAME = params.VARIABLE_ID
-TABLE_ID = params.TABLE_ID
-GRID_LABEL = params.GRID_LABEL
+SCENARIO_LIST = EXPERIMENT_LIST
+VARIABLE_NAME = VARIABLE_ID
 
 # Directory information
-OUTPUT_PATH = params.DIR_PROCESSED_DATA
+OUTPUT_PATH = DIR_PROCESSED_DATA
 CURRENT_PATH = '/home/jovyan/local-climate-data-tool/Analysis/Phase1_ProcessData/'
-DIR_INTERMEDIATE = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+DIR_INTERMEDIATE = DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
 DIR_PROCESSED_MODEL_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/model_data/'
 DIR_PROCESSED_OBS_DATA = '/home/jovyan/local-climate-data-tool/data/processed_data/observation_data/'
-DIR_INTERMEDIATE_MODEL_DATA = params.DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
-DIR_INTER_OBS_DATA = params.DIR_INTERMEDIATE_OBSERVATION_DATA
+DIR_INTERMEDIATE_MODEL_DATA = DIR_INTERMEDIATE_PROCESSED_MODEL_DATA
+DIR_INTER_OBS_DATA = DIR_INTERMEDIATE_OBSERVATION_DATA
 
 #----------------------------------------------------------------------
 # FUNCTION DEFINITIONS
@@ -77,10 +79,10 @@ def subcomponent_a(print_statements_on=False):
 
     if print_statements_on:
         print('====> Creating data dictionary of available model data')
-    [_, dset_dict, _] = data_dict.create_data_dict(this_experiment_id=SCENARIO_LIST,
-                                                   this_variable_id=VARIABLE_NAME,
-                                                   this_table_id=TABLE_ID,
-                                                   this_grid_label=GRID_LABEL)
+    [_, dset_dict, _] = create_data_dict(this_experiment_id=SCENARIO_LIST,
+                                         this_variable_id=VARIABLE_NAME,
+                                         this_table_id=TABLE_ID,
+                                         this_grid_label=GRID_LABEL)
     if print_statements_on:
         print_time()
     return dset_dict
@@ -101,16 +103,16 @@ def subcomponent_b(ref_grid_key, dset_dict, print_statements_on=False):
 
     if print_statements_on:
         print('====> Creating reference grid for data regridding')
-    final_grid = process_data.create_reference_grid(reference_key=ref_grid_key,
-                                                    dset_dict=dset_dict)
+    final_grid = create_reference_grid(reference_key=ref_grid_key,
+                                       dset_dict=dset_dict)
     if print_statements_on:
         print_time()
 
     if print_statements_on:
         print('====> Generating consistent data files for each model and scenario')
-    process_data.process_all_files_in_dictionary(dset_dict=dset_dict,
-                                                 exceptions_list=EXCEPTIONS_LIST,
-                                                 final_grid=final_grid)
+    process_all_files_in_dictionary(dset_dict=dset_dict,
+                                    exceptions_list=EXCEPTIONS_LIST,
+                                    final_grid=final_grid)
     if print_statements_on:
         print_time()
 
@@ -138,11 +140,11 @@ def subcomponent_c(num_chunks, normalized, print_statements_on=False):
 
     if print_statements_on:
         print('====> Generating multimodel statistics')
-    generate_stats.process_all_scenarios(data_path=DIR_INTERMEDIATE,
-                                         variable_name=VARIABLE_NAME,
-                                         scenario_list=SCENARIO_LIST,
-                                         num_chunks=num_chunks,
-                                         normalized=normalized)
+    process_all_scenarios(data_path=DIR_INTERMEDIATE,
+                          variable_name=VARIABLE_NAME,
+                          scenario_list=SCENARIO_LIST,
+                          num_chunks=num_chunks,
+                          normalized=normalized)
     if print_statements_on:
         print_time()
 
@@ -162,7 +164,7 @@ def subcomponent_d(print_statements_on=False):
 
     if print_statements_on:
         print('====> Processing historical observations')
-    process_obs.process_all_observations(data_path=DIR_INTER_OBS_DATA)
+    process_all_observations(data_path=DIR_INTER_OBS_DATA)
 
     if print_statements_on:
         print_time()
