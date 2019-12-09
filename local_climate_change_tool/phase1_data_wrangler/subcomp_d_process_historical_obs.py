@@ -25,7 +25,7 @@ def convert_to_360(lons):
     Converts longitudes with the convention -180 to 180 degrees to longitudes
     with the convention 0 to 360 degrees.
 
-    Args: 
+    Args:
         lons: The numpy array of original longitudes.
     Returns:
         new_lons: The numpy array of converted longitudes.
@@ -47,7 +47,7 @@ def calculate_temps(filename):
     Converts the temperature anomalies and climatologies from the
     observations file into actual average, maximum, and minimum temperatures.
 
-    Args: 
+    Args:
         filename: The string name of the observations file.
     Returns:
         t_avg: Numpy array of the average temperature.

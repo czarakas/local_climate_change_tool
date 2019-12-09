@@ -124,7 +124,7 @@ def download_data(dir_google_drive_permissions,
         move_file(filename_id, dir_extracted_data)
 
 
-def download_data_predefined(file_to_download, print_statements_on):
+def download_data_predefined(file_to_download, print_statements_on=True):
     """Starts the process to download the files from google drive."""
     dir_google_drive_permissions = params.DIR_GOOGLE_DRIVE_PERMISSIONS
     if file_to_download == 'Processed_Data':
@@ -159,6 +159,6 @@ def download_data_predefined(file_to_download, print_statements_on):
 
 
 if __name__ == '__main__':
-    download_data_predefined('Processed_Data', print_statements_on)
-    download_data_predefined('Raw_Historical_Obs', print_statements_on)
-    download_data_predefined('Files_for_Testing', print_statements_on)
+    download_data_predefined('Processed_Data', print_statements_on=True)
+    download_data_predefined('Raw_Historical_Obs', print_statements_on=True)
+    download_data_predefined('Files_for_Testing', print_statements_on=True)

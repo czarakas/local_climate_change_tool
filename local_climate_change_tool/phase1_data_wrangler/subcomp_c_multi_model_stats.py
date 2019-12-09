@@ -25,7 +25,7 @@ def get_scenario_fnames(data_path, scenario, normalized=False):
 
     Get a string list of all zarr files in the data_path for the given
     scenario.
-    
+
     Args:
         data_path: The string file path.
         scenario: The string name of the scenario.
@@ -46,7 +46,7 @@ def get_scenario_fnames(data_path, scenario, normalized=False):
 
 def read_in_fname(data_path, fname):
     """Read in zarr file.
-    
+
     Reads in the zarr file with name datapath/fname.zarr and returns the
     correpsonding xarray.
 
@@ -63,7 +63,7 @@ def read_in_fname(data_path, fname):
 def initialize_empty_mms_arrays(data_path, scenario_name, num_chunks,
                                 normalized=False):
     """Initialize arrays.
-    
+
     Initialize empty arrays that will hold the multi-model stats data for the
     given scenario.
 
@@ -112,7 +112,7 @@ def initialize_empty_mms_arrays(data_path, scenario_name, num_chunks,
 
 def fill_empty_arrays(empty_dsets, dim_info, file_names, datasets, varname, num_chunks):
     """Fills the arrays with the multi-model statistics for that scenario.
-    
+
     Args:
         empty_dsets: List of empty arrays.
         dim_info: List of number of chunks (lat & lon), models, time, lat, & lon.
