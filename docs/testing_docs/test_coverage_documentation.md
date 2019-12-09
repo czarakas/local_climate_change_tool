@@ -5,7 +5,7 @@ We wrote 5 unit tests for the Data Wrangler module of our package. We did not wr
 
 ### Folder Contents:
 
-* **Test_Coverage_Screenshot.png**: This is a screenshot of pytests' assessment of our test coverage. To reproduce this screenshot, you can run the following command from within the **/local_climate_change_tool/local_climate_change_tool/** folder:
+* **Data_Wrangler_Test_Coverage_Screenshot.png**: This is a screenshot of pytests' assessment of our test coverage. To reproduce this screenshot, you can run the following command from within the **/local_climate_change_tool/local_climate_change_tool/** folder:
 
 > pytest --cov=phase1_data_wrangler
 
