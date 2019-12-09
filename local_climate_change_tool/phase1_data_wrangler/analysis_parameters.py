@@ -15,6 +15,8 @@ PROJECT_FOLDER_NAME = '/local_climate_change_tool/'
 PROJECT_FOLDER_LOCATION = CWD.split(PROJECT_FOLDER_NAME, 1)[0]
 
 DIR_HOME = PROJECT_FOLDER_LOCATION + PROJECT_FOLDER_NAME
+if '/local_climate_change_tool/local_climate_change_tool' in DIR_HOME:
+    DIR_HOME = PROJECT_FOLDER_LOCATION + '/'
 
 ######### Data Directory Information          #
 DIR_UTIL = DIR_HOME + 'local_climate_change_tool/'
