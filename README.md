@@ -53,7 +53,6 @@ Created by a team of researchers at the University of Washington. For bugs and
 This section describes the set up of the directories in this repository.
 
 ```bash
-```bash
 ├── LICENSE
 ├── README.md
 ├── data
@@ -68,45 +67,18 @@ This section describes the set up of the directories in this repository.
 │   ├── Functional_specs.pdf
 │   ├── TechnologyReview.pptx
 │   └── testing_docs
-│       ├── Test_Coverage_Screenshot.png
-│       └── test_coverage_documentation.md
 ├── environment.yml
 ├── examples
 │   └── User_guide.pdf
 ├── local_climate_change_tool
 │   ├── Download_ProcessedData_from_Google.ipynb
 │   ├── __pycache__
-│   │   └── download_file_from_google_drive.cpython-38.pyc
 │   ├── download_file_from_google_drive.py
 │   ├── phase1_data_wrangler
-│   │   ├── README.md
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   └── analysis_parameters.cpython-38.pyc
-│   │   ├── analysis_parameters.py
-│   │   ├── data_wrangler.py
-│   │   ├── subcomp_a_create_data_dict.py
-│   │   ├── subcomp_b_process_climate_model_data.py
-│   │   ├── subcomp_c_multi_model_stats.py
-│   │   ├── subcomp_d_process_historical_obs.py
-│   │   ├── test_data_wrangler.py
-│   │   ├── test_subcomp_a.py
-│   │   ├── test_subcomp_b.py
-│   │   ├── test_subcomp_c.py
-│   │   └── test_subcomp_d.py
 │   └── phase2_dashboard_generator
-│       ├── README.md
-│       ├── __init__.py
-│       ├── __pycache__
-│       │   └── util_panel.cpython-38.pyc
-│       ├── climate_dashboard.ipynb
-│       ├── uncertainty_plot.gif
-│       ├── util_panel.py
-│       └── worldcities.csv
 ├── requirements.txt
-└── setup.p
+└── setup.py
 ```
-
 1. examples: contains a user guide explaining how to use the tool
 1. phase1_data_wrangler: files to process the data into a format that
    readable for input into the panel application
