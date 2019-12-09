@@ -45,7 +45,7 @@ We recommend users configure their python environments differently depending on 
 * *using the dashboard generator component with already processed data*: use SIMPLER ENVIRONMENT
 * *running tests of the data wrangler*: use SIMPLER ENVIRONMENT
 * *running both the data wrangler and the dashboard generator*: use COMPLICATED ENVIRONMENT.
-For more instructions on how to use the climate dashboard, please refer to the User Guide located in the examples folder (`docs/User_guide.pdf`).
+For more instructions on how to use the climate dashboard, please refer to the User Guide located in the examples folder (`examples/User_guide.pdf`).
 
 Created by a team of researchers at the University of Washington. For bugs and
     issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
