@@ -1,1 +1,1 @@
-This file contains processed historical observations from the BEST monthly land temperature datasets for average, minimum, and maximum temperature. It will be populated when the processed data is downloaded from the google drive OR when the subcomp_d_process_historical_obs function in data_wrangler.py is run. 
+This folder contains processed historical observations from the BEST monthly land temperature datasets for average surface temperature.
