@@ -78,24 +78,29 @@ This section describes the set up of the directories in this repository.
 └── setup.py
 ```
 
-1. examples: contains example code from CMIP6 hackathon
+1. examples: contains a user guide explaining how to use the tool
 1. phase1_data_wrangler: files to process the data into a format that
    readable for input into the panel application
 1. phase2_dashboard_generator: files to generate the panel application that
    displays the interactive dash board for user interaction.
 
-**Data**: holds the files containing the data from CMIP6 (scenario models and historical model)
-    and BEST (historical reanalysis data).
+**Data**: holds folders to hold the data from CMIP6 (scenario models and historical model), BEST (historical reanalysis data), and some smaller data files for testing. These directories are initially empty and will be populated when the data_wrangler is run or when processed files are downloaded from the google drive.
 
 **environment.yml**: contains dependencies for you to install the conda environment used for this project. 
 
 ```            
 conda env create -f environment.yml
 ```
-**docs**: contains documentation and documents required for cse583 class project.
-1. Functional_Specification.pdf
+
+**requirements.txt**: contains extra dependencies that are installed in `setup.py`.
+
+**docs**: contains documentation and documents required for cse583 class project as well as some other helpful documentation.
+1. Functional_specs.pdf
 1. Component_Specification.pdf
 1. TechnologyReview.pptx
+1. Data_Description.pdf
+1. Final_Presentation_Dec_4.pdf
+1. pylint_scores/
 
 ## Future Directions
 - Create display map of selected region and surroundings so that users can visualize the scale
