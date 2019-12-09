@@ -39,12 +39,12 @@ def read_data():
     # Read in model data
     for experiment_id in THIS_EXPERIMENT_ID:
         filename = data_path + 'model_data/modelData_tas_' + experiment_id + '.zarr'
-        ds = xr.open_zarr(filename)
-        dict_timeseries[experiment_id] = ds
+        data = xr.open_zarr(filename)
+        dict_timeseries[experiment_id] = data
     # Read in observation data
     filename = data_path + 'observation_data/historical_obs.zarr'
-    ds = xr.open_zarr(filename)
-    dict_timeseries['historical_obs'] = ds
+    data = xr.open_zarr(filename)
+    dict_timeseries['historical_obs'] = data
 
     return dict_timeseries
 
