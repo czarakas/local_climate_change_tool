@@ -43,7 +43,7 @@ before_script:
 
 # the actual commands to run
 script:
-#- "flake8 ../code/"
+##- "flake8 ../code/"
 pytest --cov="local_climate_change_tool/phase1_data_wrangler/"
 #- coverage run "local-climate-change-tool/unit_test/test_dummy.py"
 
