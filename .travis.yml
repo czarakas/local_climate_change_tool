@@ -33,6 +33,7 @@ install:
     - source activate CMIP6
     - conda install coverage
     - conda install coveralls
+    - conda install pylint
     - conda install flake8
     - conda install pytest-cov
 
