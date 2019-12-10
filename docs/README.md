@@ -18,4 +18,6 @@ Included here are:
 - ***Functional_specs.pdf***: Describes our vision for this tool and lays out use cases.
 - ***TechnologyReview.pdf***: Another class presentation for CSE D 583 that overviews the use cases and
     demonstrates two python packages that could be used to generate an interactive panel. We decided
-    to go with panel instead of dash. 
+    to go with panel instead of dash.
+- ***Cover_Sheet.pdf***: Describes where and how we have met the project requirements and describes some
+    software engineering lessons we have learned along the way.
