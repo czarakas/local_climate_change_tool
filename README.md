@@ -43,11 +43,8 @@ every point on the grid at all time steps. For more information, visit
 
 ## User Guide
 Install package by cloning this repository then running setup.py in this current directory. The package consists of two main components: the **data wrangler** and the **dashboard generator** (documented in more detail in the Component Specification). Because running the data wrangler requires access to large raw climate model datasets, and we would like users to be able to launch the dashboard without navigating a high performance computing system, we have uploaded the processed datasets that are output by the data wrangler to google drive and included a script to download that already processed data.
-We recommend users configure their python environments differently depending on which components of the package they intend to use:
-* *using the dashboard generator component with already processed data*: use SIMPLER ENVIRONMENT
-* *running tests of the data wrangler*: use SIMPLER ENVIRONMENT
-* *running both the data wrangler and the dashboard generator*: use COMPLICATED ENVIRONMENT.
-For more instructions on how to use the climate dashboard, please refer to the User Guide located in the examples folder ([`examples/User_guide.pdf`](examples/User_Guide.pdf)).
+We recommend users configure their python environments following step 2 of the User Guide located in the examples folder ([`examples/User_guide.pdf`](examples/User_Guide.pdf)). This will ensure that all packages necessary for the data to be processed and the panel to be run are installed correctly.
+The User Guide also contains more instructions on how to use the climate dashboard.
 
 Created by a team of researchers at the University of Washington. For bugs and
 issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
@@ -104,25 +101,22 @@ the ```examples/User``` directory.
 **environment.yml**: contains dependencies for you to install the conda environment 
 used for this project. 
     
-**requirements.txt**: contains extra dependencies that are installed in `setup.py`.
+**requirements.txt**: contains extra dependencies to install using `pip` inside the created environment as outlined in the User Guide ([`examples/User_guide.pdf`](examples/User_Guide.pdf)).
 
 ### How to Install the Local Climate Change Tool
 #### Step 1: Create your environment
-Choose from any of the three options below to set up your environment. 
-- **Option 1**: Using setup.py to install minimum dependencies.
+Run the following commands from the terminal to create the environment. 
+
+    ```conda create --name climate_tool```
     
-    ```python setup.py install --user```
-
-
-- **Option 2:** Importing the conda environment for development purposes.
+    ```conda activate climate_tool```
     
-    ```conda env create -f environment.yml```
-
-
-- **Option 3:** Manually install python packages using pip.
+    ```conda install pip```
     
     ```pip install -r requirements.txt```
     
+    ```python setup.py install --user```
+
 #### Step 2: Download/Generate the processed climate data
 Follow the instructions in 
 [```local_climate_change_tool/Phase1_User_Interface.ipynb```](local_climate_change_tool/Phase1_User_Interface.ipynb)
