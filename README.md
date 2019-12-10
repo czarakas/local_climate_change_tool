@@ -100,7 +100,7 @@ python setup.py install --user
 conda env create -f environment.yml
 ```
 
--**Option 3:** Manually install python packages using pip.
+- **Option 3:** Manually install python packages using pip.
 ```
 pip install -r requirements.txt
 ```
