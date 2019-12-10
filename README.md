@@ -74,9 +74,6 @@ This section describes the set up of the directories in this repository.
 ├── environment.yml
 ├── examples/
 │   └── User_guide.pdf
-├── local_climate_change_tool/
-│   ├── Download_ProcessedData_from_Google.ipynb
-│   ├── __pycache__
 ├── local_climate_change_tool
 │   ├── Phase1_User_Interface.ipynb
 │   ├── download_file_from_google_drive.py
