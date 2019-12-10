@@ -93,19 +93,16 @@ are initially empty and will be populated when the data_wrangler is run or when 
 are downloaded from the google drive.
 
 The documentation for this project including Functional and Component Specifications, and class
-presentations for CSE583 is in ```docs/```. 
+presentations for CSE583 is in ```docs/```. This documentation includes an overview of our project structure and details on where and how we have met each of the project requirements contained in the **Cover Sheet** ([`docs/Cover_Sheet.pdf`](docs/Cover_Sheet.pdf)). The Cover Sheet also explains the software engineering lessons we have learned throughout this process.
 
 For a easy-to-follow guide and instructions to set up the ***Local Climate Change Tool***, see
 the ```examples/User``` directory. 
-
-#### Cover Sheet
-An overview of our project structure and details on where and how we have met each of the project requirements is contained in the Cover Sheet ([`docs/Cover_Sheet.pdf`](docs/Cover_Sheet.pdf)).
 
 #### Other Important Files
 **environment.yml**: contains dependencies for you to install the conda environment 
 used for this project. 
     
-**requirements.txt**: contains extra dependencies to install using `pip` inside the created environment as outlined in the User Guide ([`examples/User_guide.pdf`](examples/User_Guide.pdf)). This document also contains a description of software engineering lessons we have learned throughout this process.
+**requirements.txt**: contains extra dependencies to install using `pip` inside the created environment as outlined in the User Guide ([`examples/User_guide.pdf`](examples/User_Guide.pdf)). 
 
 ### How to Install the Local Climate Change Tool
 #### Step 1: Create your environment
