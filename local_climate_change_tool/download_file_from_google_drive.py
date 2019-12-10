@@ -142,8 +142,8 @@ def download_data_predefined(file_to_download, print_statements_on=True):
         dir_extracted_data = params.DIR_INTERMEDIATE_OBSERVATION_DATA
         need_to_extract = False
     elif file_to_download == 'Files_for_Testing':
-        # file link to view: https://drive.google.com/open?id=1M5IoOgRVOMjC4O-lJO3WXlrkdR1OhPKX
-        file_id = '1M5IoOgRVOMjC4O-lJO3WXlrkdR1OhPKX'
+        # file link to view: https://drive.google.com/open?id=1YktaFuywO9H0nvp9H6SLeCmP24G-hSr3
+        file_id = '1YktaFuywO9H0nvp9H6SLeCmP24G-hSr3'
         filename_id = 'files_for_testing.tar.gz'
         filename_extracted = 'files_for_testing'
         dir_extracted_data = params.DIR_DATA

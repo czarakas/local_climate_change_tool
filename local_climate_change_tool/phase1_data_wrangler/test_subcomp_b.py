@@ -18,9 +18,6 @@ from phase1_data_wrangler.subcomp_b_process_climate_model_data import \
 from phase1_data_wrangler.analysis_parameters import DIR_TESTING_DATA
 import download_file_from_google_drive
 
-# Download files
-download_file_from_google_drive.download_data_predefined('Files_for_Testing')
-
 # Define directory and file names
 TEST_KEY1 = 'ScenarioMIP.MOHC.UKESM1-0-LL.ssp585.Amon.gn'
 TEST_KEY2 = 'CMIP.CAMS.CAMS-CSM1-0.historical.Amon.gn'
