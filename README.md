@@ -10,12 +10,12 @@ accessible to people with little to no computing knowledge or background in
 atmospheric science or climate studies.
 
 #### SSPs
-These scenarios are different shared socioeconomic pathways (SSPs), which make projections
-on what would happen in the future based on various assumptions of human activity, e.g. how
-much carbon-based energy is used and the amount of carbon emissions, assuming no further
-climate change or changing policies. In the order of most to least sustainable, these assumptions
-are SSP1: Sustainability, SSP2: Middle-of-the-road, SSP3: Regional Rivalry, and SSP5: Fossil
-Fueled Development.
+Climate models were run for different future scenarios which represent different shared socioeconomic 
+pathways (SSPs), which make projections on what would happen in the future based on various 
+assumptions of human activity, e.g. how much carbon-based energy is used and the amount of
+carbon emissions, assuming no further climate change or changing policies. In the order of
+most to least sustainable, these assumptions are SSP1: Sustainability, SSP2: Middle-of-the-road,
+SSP3: Regional Rivalry, and SSP5: Fossil Fueled Development.
 
 For this project, we implemented data from the class of 21st century scenarios (Tier 1) listed 
 below ranging from highest to lowest
@@ -30,12 +30,11 @@ emission scenarios.
 *See [here](https://doi.org/10.5194/gmd-9-1937-2016) for a very detailed explanation.*
 
 #### Historical
-The CMIP6 data has a modeled version of historical data - These models were run for a historical
-experiment to recreate the past to validate the models and for several different future scenarios.
-These temperature observations come from the Berkeley Earth Surface Temperature (BEST) dataset,
-which consists of monthly means of land surface air temperature observations that have been
-structured onto a 1° x 1° latitude-longitude grid, although observations may not be available for
-every point on the grid at all time steps. For more information, visit
+The CMIP6 data has a modeled version of historical data - the models were run for a historical
+experiment to recreate the past to validate the models. We also use historical temperature observations
+that come from the Berkeley Earth Surface Temperature (BEST) dataset, which consists of monthly means 
+of land surface air temperature observations that have been structured onto a 1° x 1° latitude-longitude grid,
+although observations may not be available for every point on the grid at all time steps. For more information, visit
 [http://berkeleyearth.org/](http://berkeleyearth.org/).
 
 1. Modeled Historical: CMIP6 historical simulation
