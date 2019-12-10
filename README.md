@@ -88,12 +88,23 @@ This section describes the set up of the directories in this repository.
 **Data**: holds folders to hold the data from CMIP6 (scenario models and historical model), BEST (historical reanalysis data), and some smaller data files for testing. These directories are initially empty and will be populated when the data_wrangler is run or when processed files are downloaded from the google drive.
 
 **environment.yml**: contains dependencies for you to install the conda environment used for this project. 
+**requirements.txt**: contains extra dependencies that are installed in `setup.py`.
 
+- **Option 1**: Using setup.py to install minimum dependencies.\
+```
+python setup.py install --user
+```
+
+- **Option 2:** Importing the conda environment for development purposes.
 ```            
 conda env create -f environment.yml
 ```
 
-**requirements.txt**: contains extra dependencies that are installed in `setup.py`.
+- **option 3:** Manually install python packages using pip.
+```
+pip install -r requirements.txt
+```
+
 
 **docs**: contains documentation and documents required for cse583 class project as well as some other helpful documentation.
 1. Functional_specs.pdf
