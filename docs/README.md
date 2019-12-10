@@ -7,7 +7,7 @@ UW and other useful documents to inform you about our climate tool.
 Included here are:
 
 - **pylint_scores/**: a folder containing screenshots of sucessful pylint scores for each module
-    The overall score is shown in [here](pylint/README.md).
+    The overall score is shown in [here](pylint_scores/README.md).
 - **testng_docs/**: contains a summary of the results from our unit tests. 
 - ***Component_Specification.pdf***: describes the software components of the **Local Climate Change Tool**
     and gives a high-level layout of the structure of the data_wrangler and the dashboard_generator.
@@ -18,4 +18,6 @@ Included here are:
 - ***Functional_specs.pdf***: Describes our vision for this tool and lays out use cases.
 - ***TechnologyReview.pdf***: Another class presentation for CSE D 583 that overviews the use cases and
     demonstrates two python packages that could be used to generate an interactive panel. We decided
-    to go with panel instead of dash. 
+    to go with panel instead of dash.
+- ***Cover_Sheet.pdf***: Describes where and how we have met the project requirements and describes some
+    software engineering lessons we have learned along the way.

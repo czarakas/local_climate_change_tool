@@ -93,7 +93,9 @@ are initially empty and will be populated when the data_wrangler is run or when 
 are downloaded from the google drive.
 
 The documentation for this project including Functional and Component Specifications, and class
-presentations for CSE583 is in ```docs/```. This documentation includes an overview of our project structure and details on where and how we have met each of the project requirements contained in the **Cover Sheet** ([`docs/Cover_Sheet.pdf`](docs/Cover_Sheet.pdf)). The Cover Sheet also explains the software engineering lessons we have learned throughout this process.
+presentations for CSE583 is in ```docs/```. 
+This documentation includes an overview of our project structure and details on where and how we have met each of the project requirements contained in the **Cover Sheet** ([`docs/Cover_Sheet.pdf`](docs/Cover_Sheet.pdf)). The Cover Sheet also explains the software engineering lessons we have learned throughout this process.
+The ```docs/``` subdirectory also contains a folder ([`docs/pylint_scores/`](docs/pylint_scores/)) with screenshots of our successful ```pylint``` runs and details of the overall score for our package.
 
 For a easy-to-follow guide and instructions to set up the ***Local Climate Change Tool***, see
 the ```examples/User``` directory. 
