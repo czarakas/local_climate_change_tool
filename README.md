@@ -4,20 +4,12 @@
 
 # Local Climate Change Tool
 This local climate data tool displays the data from CMIP-6 output for historical
-and 4 different future scenarios via the Shared Socioeconomic Pathways (SSPs)
+and four different future scenarios via the Shared Socioeconomic Pathways (SSPs)
 described below. The motivation for this tool is to make climate data more
 accessible to people with little to no computing knowledge or background in
 atmospheric science or climate studies.
 
 #### SSPs
-Used the Tier 1 - 21st century scenarios listed below ranging from highest to lowest
-emission scenarios.
-
-1. SSP5: Fossil-Fueled Development
-1. SSP3: Regional Rivalry
-1. SSP2: Middle of the Road
-1. SSP1: Sustainability
-
 These scenarios are different shared socioeconomic pathways (SSPs), which make projections
 on what would happen in the future based on various assumptions of human activity, e.g. how
 much carbon-based energy is used and the amount of carbon emissions, assuming no further
@@ -25,12 +17,19 @@ climate change or changing policies. In the order of most to least sustainable, 
 are SSP1: Sustainability, SSP2: Middle-of-the-road, SSP3: Regional Rivalry, and SSP5: Fossil
 Fueled Development.
 
+For this project, we implemented data from the class of 21st century scenarios (Tier 1) listed 
+below ranging from highest to lowest
+emission scenarios.
+
+1. SSP5: Fossil-Fueled Development
+1. SSP3: Regional Rivalry
+1. SSP2: Middle of the Road
+1. SSP1: Sustainability
+
+
 *See [here](https://doi.org/10.5194/gmd-9-1937-2016) for a very detailed explanation.*
 
 #### Historical
-1. Modeled Historical: CMIP6 historical simulation
-1. Observed Historical: data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
-
 The CMIP6 data has a modeled version of historical data - These models were run for a historical
 experiment to recreate the past to validate the models and for several different future scenarios.
 These temperature observations come from the Berkeley Earth Surface Temperature (BEST) dataset,
@@ -39,16 +38,19 @@ structured onto a 1° x 1° latitude-longitude grid, although observations may n
 every point on the grid at all time steps. For more information, visit
 [http://berkeleyearth.org/](http://berkeleyearth.org/).
 
+1. Modeled Historical: CMIP6 historical simulation
+1. Observed Historical: data from Berkeley Earth Surface Temperatures ([BEST](http://berkeleyearth.org/about-data-set/))
+
 ## User Guide
 Install package by cloning this repository then running setup.py in this current directory. The package consists of two main components: the **data wrangler** and the **dashboard generator** (documented in more detail in the Component Specification). Because running the data wrangler requires access to large raw climate model datasets, and we would like users to be able to launch the dashboard without navigating a high performance computing system, we have uploaded the processed datasets that are output by the data wrangler to google drive and included a script to download that already processed data.
 We recommend users configure their python environments differently depending on which components of the package they intend to use:
 * *using the dashboard generator component with already processed data*: use SIMPLER ENVIRONMENT
 * *running tests of the data wrangler*: use SIMPLER ENVIRONMENT
 * *running both the data wrangler and the dashboard generator*: use COMPLICATED ENVIRONMENT.
-For more instructions on how to use the climate dashboard, please refer to the User Guide located in the examples folder (`examples/User_guide.pdf`).
+For more instructions on how to use the climate dashboard, please refer to the User Guide located in the examples folder ([`examples/User_guide.pdf`](examples/User_Guide.pdf)).
 
 Created by a team of researchers at the University of Washington. For bugs and
-    issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
+issues, report them [here](https://github.com/czarakas/local-climate-data-tool/issues).
 
 ## Directory Hierarchy
 This section describes the set up of the directories in this repository.
@@ -56,20 +58,21 @@ This section describes the set up of the directories in this repository.
 ```bash
 ├── LICENSE
 ├── README.md
-├── data
-│   ├── catalogs
-│   ├── files_for_testing
-│   ├── intermediate_processed_data
-│   └── processed_data
-├── docs
+├── data/
+│   ├── catalogs/
+│   ├── files_for_testing/
+│   ├── intermediate_processed_data/
+│   └── processed_data/
+├── docs/
 │   ├── Component_Specification.pdf
 │   ├── Data_Description.pdf
 │   ├── Final_Presentation_Dec_4.pdf
 │   ├── Functional_specs.pdf
 │   ├── TechnologyReview.pptx
-│   └── testing_docs
+│   ├── testing_docs/
+|   └── pylint_scores/
 ├── environment.yml
-├── examples
+├── examples/
 │   └── User_guide.pdf
 ├── local_climate_change_tool
 │   ├── Phase1_User_Interface.ipynb
@@ -79,40 +82,67 @@ This section describes the set up of the directories in this repository.
 ├── requirements.txt
 └── setup.py
 ```
-1. examples: contains a user guide explaining how to use the tool
-1. phase1_data_wrangler: files to process the data into a format that
-   readable for input into the panel application
-1. phase2_dashboard_generator: files to generate the panel application that
-   displays the interactive dash board for user interaction.
 
-**Data**: holds folders to hold the data from CMIP6 (scenario models and historical model), BEST (historical reanalysis data), and some smaller data files for testing. These directories are initially empty and will be populated when the data_wrangler is run or when processed files are downloaded from the google drive.
+#### Directory
+Within the ```local_climate_change_tool/``` directory, ```phase1_data_wrangler/``` is responsible
+for processing the raw model output into a format that is uniform and easily read by the
+dashboard app. The code that creates the climate dashboard with which the user can interact
+is contained within the ```phase2_dashboard_generator/``` directory. 
 
-**environment.yml**: contains dependencies for you to install the conda environment used for this project. 
+The ```data/``` holds folders to hold the data from CMIP6 (scenario models and historical model),
+BEST (historical reanalysis data), and some smaller data files for testing. These directories
+are initially empty and will be populated when the data_wrangler is run or when processed files
+are downloaded from the google drive.
+
+The documentation for this project including Functional and Component Specifications, and class
+presentations for CSE583 is in ```docs/```. 
+
+For a easy-to-follow guide and instructions to set up the ***Local Climate Change Tool***, see
+the ```examples/User``` directory. 
+
+#### Other Important Files
+**environment.yml**: contains dependencies for you to install the conda environment 
+used for this project. 
+    
 **requirements.txt**: contains extra dependencies that are installed in `setup.py`.
 
-- **Option 1**: Using setup.py to install minimum dependencies.\
-```
-python setup.py install --user
-```
+### How to Install the Local Climate Change Tool
+#### Step 1: Create your environment
+Choose from any of the three options below to set up your environment. 
+- **Option 1**: Using setup.py to install minimum dependencies.
+    
+    ```python setup.py install --user```
+
 
 - **Option 2:** Importing the conda environment for development purposes.
-```            
-conda env create -f environment.yml
-```
+    
+    ```conda env create -f environment.yml```
+
 
 - **Option 3:** Manually install python packages using pip.
-```
-pip install -r requirements.txt
-```
+    
+    ```pip install -r requirements.txt```
+    
+#### Step 2: Download/Generate the processed climate data
+Follow the instructions in 
+[```local_climate_change_tool/Phase1_User_Interface.ipynb```](local_climate_change_tool/Phase1_User_Interface.ipynb)
+by doing either of the following:
+- **Option 1**: Download data from google drive as shown in the script above.
+- **Option 2**: Run the data_wrangler module manually which will automatically incorporates
+    the most up-to-date datasets on the google-cloud-based Coupled Model Intercomparison 
+    Project Phase 6 (CMIP6) data archive. 
 
+#### Step 3: Run the climate dashboard
+Follow the instructions [here](local_climate_change_tool/phase2_dashboard_generator/README.md).
+Generate the climate dashboard app by running the 
+[climate_dashboard](local_climate_change_tool/phase2_dashboard_generator/climate_dashboard.ipynb)
+notebook or opening it in a new window by using the command line prompt:
 
-**docs**: contains documentation and documents required for cse583 class project as well as some other helpful documentation.
-1. Functional_specs.pdf
-1. Component_Specification.pdf
-1. TechnologyReview.pptx
-1. Data_Description.pdf
-1. Final_Presentation_Dec_4.pdf
-1. pylint_scores/
+```panel serve --show climate_dashboard.ipynb```
+
+#### Step 4: Interact with the data through the dashboard app
+The [userguide](examples/User_guide.pdf) shows instructions on how to interact with the data using 
+the climate dashboard.
 
 ## Future Directions
 - Create display map of selected region and surroundings so that users can visualize the scale
