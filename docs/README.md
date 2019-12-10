@@ -7,7 +7,7 @@ UW and other useful documents to inform you about our climate tool.
 Included here are:
 
 - **pylint_scores/**: a folder containing screenshots of sucessful pylint scores for each module
-    The overall score is shown in [here](pylint/README.md).
+    The overall score is shown in [here](pylint_scores/README.md).
 - **testng_docs/**: contains a summary of the results from our unit tests. 
 - ***Component_Specification.pdf***: describes the software components of the **Local Climate Change Tool**
     and gives a high-level layout of the structure of the data_wrangler and the dashboard_generator.
