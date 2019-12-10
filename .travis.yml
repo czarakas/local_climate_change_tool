@@ -44,7 +44,7 @@ before_script:
 
 # the actual commands to run
 script:
-- pylint local_climate_change_tool/phase1_data_wrangler/test_data_wrangler.py
+- pytest local_climate_change_tool/phase1_data_wrangler/test_data_wrangler.py
 
 # generate a coverage report to send to back to user
 after_success:
