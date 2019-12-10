@@ -1,3 +1,4 @@
+[![GitHub contributors](https://img.shields.io/github/contributors/czarakas/local_climate_change_tool)](#contributors) 
 [![Build Status](https://travis-ci.org/czarakas/local_climate_change_tool.svg?branch=master)](https://travis-ci.org/czarakas/local_climate_change_tool)
 [![GitHub license](https://img.shields.io/github/license/czarakas/local_climate_change_tool)](https://github.com/czarakas/local_climate_change_tool/blob/master/LICENSE)
 
@@ -125,6 +126,14 @@ pip install -r requirements.txt
     they are uploaded/added to CMIP6. 
 - Make a feature to toggle between absolute temperature and temperature differences from pre-industrial era. 
     they are uploaded/added to CMIP6.
+
+## Contributors
+Thanks to the following people for their work on this project.
+- @smturbev
+- @czarakas
+- @jacnugent
+- @ihsankahveci
+- @lesnyder
 
 ## Acknowledgements
 Cities and country lists corresponding to latitude and longitude are
