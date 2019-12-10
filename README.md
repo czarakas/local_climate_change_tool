@@ -107,13 +107,13 @@ used for this project.
 #### Step 1: Create your environment
 Run the following commands from the terminal to create the environment. 
 
-    ```
+```
     conda create --name climate_tool
     conda activate climate_tool
     conda install pip
     pip install -r requirements.txt
     python setup.py install --user
-    ```
+```
 
 #### Step 2: Download/Generate the processed climate data
 Follow the instructions in 
