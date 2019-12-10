@@ -2,7 +2,7 @@
 
 We pride ourselves on creating code that is easily understood with good comments and style. This folder is proof. It contains screenshots of pylint scores for the python files in the package. For the overall score of every module, checkout *overall_pylint.png* in this folder. 
 
-### Overall Pylint Score = 8.73/10
+### Overall Pylint Score = 8.10/10
 
 For the individual breakdown of the pylint scores, see pylint_(filename).png within this folder. The files being tested for syle come from the following directories:
 ```
