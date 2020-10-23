@@ -25,3 +25,20 @@ In your local browser go to:
     https://ocean.pangeo.io/user/XXXX-XXXX-XXXX-XXXX/proxy/5006/climate_dashboard
 
 * but replace XXXX-XXXX-XXXX-XXXX with your unique user ID (e.g. mine is 0000-0001-9992-3785)
+
+## How to run dashboard via SSH connection:
+
+### STEP 1:
+In your terminal, connect via SSH to your desire host. On the command line, enter:
+
+```panel serve climate_dashboard.ipynb --port=8888```
+
+making sure to exclude the ```--show``` command used in the options above.
+This will then run the dashboard on port number 8888 or whichever you desire.
+
+### STEP 2:
+In your terminal on your local computer, connect the local port to the ssh host port (in this case, localhost:8888) by entering the following:
+
+```ssh -N -f -L 8888:localhost:8888 username@host_url.edu ```
+
+In your local browser, open a new tab and go to [localhost:8888/climate_dashboard](localhost:8888/climate_dashboard). Give it a minute to load and you are set!
