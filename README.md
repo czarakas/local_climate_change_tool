@@ -110,6 +110,12 @@ used for this project.
 Run the following commands from the terminal to create the environment. 
 
 ```
+    conda env create -f environment.yml
+```
+
+Alternatively, you can run:
+
+```
     conda create --name climate_tool
     conda activate climate_tool
     conda install pip
