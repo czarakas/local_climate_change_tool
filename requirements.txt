@@ -10,7 +10,7 @@ pytest-cov==2.8.1
 hvplot==0.5.2
 jupyter-client
 jupyter-core==4.6.1
-jupyterlab==1.2.3
+jupyterlab==1.2.21
 jupyterlab-server==1.0.6
 google-api-python-client==1.7.11
 google-auth==1.7.1
