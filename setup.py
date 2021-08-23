@@ -35,7 +35,7 @@ VERSION = '1.0'
 
 REQUIRES = ['dask==2.8.1','numpy==1.17.3', 'pandas==0.25.3', 'pandocfilters==1.4.2', 
 'panel==0.7.0', 'param==1.9.2', 'hvplot==0.5.2', 'jupyter-client', 'jupyter-core==4.6.1', 
- 'jupyterlab==1.2.3', 'jupyterlab-server==1.0.6', 'google-api-python-client==1.7.11', 
+ 'jupyterlab==1.2.21', 'jupyterlab-server==1.0.6', 'google-api-python-client==1.7.11', 
  'google-auth==1.7.1', 'google-auth-httplib2==0.0.3','bokeh==1.4.0', 
  'ipykernel==5.1.3', 'ipython==7.10.1', 'ipython-genutils==0.2.0', 
  'oauth2client', 'xarray==0.14.1', 'zarr==2.3.2']
