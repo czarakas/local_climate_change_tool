@@ -1,4 +1,4 @@
-dask==2.8.1
+dask==2021.10.0
 numpy==1.17.3
 pandas==0.25.3
 pandocfilters==1.4.2
