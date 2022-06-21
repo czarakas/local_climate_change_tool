@@ -1,5 +1,5 @@
 dask==2.8.1
-numpy==1.17.3
+numpy==1.22.0
 pandas==0.25.3
 pandocfilters==1.4.2
 panel==0.7.0
